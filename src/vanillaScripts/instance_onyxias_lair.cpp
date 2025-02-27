@@ -23,7 +23,8 @@
 ObjectData const creatureData[] =
         {
                 { NPC_ONYXIA, DATA_ONYXIA },
-                { NPC_ONYXIA_40, DATA_ONYXIA }
+                { NPC_ONYXIA_40, DATA_ONYXIA },
+                { 0, 0 }
         };
 
 class instance_onyxias_lair_40 : public InstanceMapScript
