@@ -107,7 +107,7 @@ INSERT INTO `creature` (`guid`, `id1`, `id2`, `id3`, `map`, `zoneId`, `areaId`, 
 
 DELETE FROM `creature_queststarter` WHERE `id` IN (@HW, @ABG, @HW_TBC, @ABG_TBC);
 INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES 
--- 
+-- Vanilla (Horde)
 (@HW, 13476),  -- For Great Honor
 (@HW, 13475),  -- For Great Honor (repeatable)
 (@HW, 8369),   -- Invaders of Alterac Valley
@@ -134,7 +134,7 @@ INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES
 (@HW, 8442),   -- lvl50 Conquering Arathi Basin (repeatable)
 (@HW, 8439),   -- lvl60 Conquering Arathi Basin
 (@HW, 8443),   -- lvl60 Conquering Arathi Basin (repeatable)
---
+-- Vanilla (Alliance)
 (@ABG, 13478), -- Concerted Efforts
 (@ABG, 13477), -- Concerted Efforts (repeatable)
 (@ABG, 8375),  -- Remember Alterac Valley!
@@ -161,14 +161,14 @@ INSERT INTO `creature_queststarter` (`id`, `quest`) VALUES
 (@ABG, 8407),  -- lvl50 Fight for Warsong Gulch (repeatable)
 (@ABG, 8403),  -- lvl60 Fight for Warsong Gulch
 (@ABG, 8408),  -- lvl60 Fight for Warsong Gulch (repeatable)
---
+-- TBC (Horde)
 (@HW_TBC, 8367),   -- For Great Honor
 (@HW_TBC, 8388),   -- For Great Honor (repeatable)
 (@HW_TBC, 11339),  -- Call to Arms: Arathi Basin (repeatable)
 (@HW_TBC, 11340),  -- Call to Arms: Alterac Valley (repeatable)
 (@HW_TBC, 11341),  -- Call to Arms: Eye of the Storm (repeatable)
 (@HW_TBC, 11342),  -- Call to Arms: Warsong Gulch (repeatable)
---
+-- TBC (Alliance)
 (@ABG_TBC, 8371),  -- Concerted Efforts
 (@ABG_TBC, 8385),  -- Concerted Efforts (repeatable)
 (@ABG_TBC, 11335), -- Call to Arms: Arathi Basin (repeatable)
@@ -357,8 +357,17 @@ UPDATE `quest_template` SET `QuestType` = 2 WHERE `ID` IN
 
 UPDATE `quest_template` SET `MinLevel` = 61 WHERE `ID` IN (11335, 11336, 11337, 11338, 11339, 11340, 11341, 11342);
 
-UPDATE `quest_template` SET `RewardHonor` = 314, `RewardKillHonor` = 0  WHERE `ID` IN (8367, 8371);   -- first time completion
-UPDATE `quest_template` SET `RewardMoney` = 27000, `RewardHonor` = 2388 WHERE `ID` IN (13476, 13478); -- first time completion
+-- For Great Honor / Concerted Efforts, Vanilla
+UPDATE `quest_template` SET `RewardMoney` = 49900, `RewardHonor` = 2388 WHERE `ID` IN (13476, 13478); -- first time completion
+UPDATE `quest_template` SET `RewardMoney` = 0, `RewardHonor` = 2388 WHERE `ID` IN (13475, 13477); -- repeatable
+UPDATE `quest_template` SET `RewardFactionID1` = 729, `RewardFactionID2` = 510, `RewardFactionID3` = 889 WHERE `ID` IN (13475, 13476); -- For Great Honor
+UPDATE `quest_template` SET `RewardFactionID1` = 730, `RewardFactionID2` = 509, `RewardFactionID3` = 890 WHERE `ID` IN (13477, 13478); -- Concerted Efforts
+UPDATE `quest_template` SET `RewardFactionOverride1` = 20000, `RewardFactionOverride2` = 15000, `RewardFactionOverride3` = 15000 WHERE `ID` IN (13476, 13478); -- first time completion
+UPDATE `quest_template` SET `RewardFactionOverride1` = 15000, `RewardFactionOverride2` = 10000, `RewardFactionOverride3` = 10000 WHERE `ID` IN (13475, 13477); -- repeatable
+
+-- For Great Honor / Concerted Efforts,TBC
+UPDATE `quest_template` SET `RewardMoney` = 119900, `RewardHonor` = 629 WHERE `ID` IN (8367, 8371); -- first time completion
+UPDATE `quest_template` SET `RewardMoney` = 0, `RewardHonor` = 629 WHERE `ID` IN (8385, 8388); -- repeatable
 
 UPDATE `quest_template` SET `RewardArenaPoints` = 0, `RewardKillHonor` = 0  WHERE `ID` IN 
 (8367, 8388, 11339, 11340, 11341, 11342,  -- horde
@@ -375,6 +384,12 @@ UPDATE `quest_template` SET `RewardItem1` = 20558, `RewardAmount1` = 3 WHERE `ID
 
 UPDATE `quest_template_addon` SET `PrevQuestID` = 13476, `SpecialFlags` = 1 WHERE `ID` = 13475;
 UPDATE `quest_template_addon` SET `PrevQuestID` = 13478, `SpecialFlags` = 1 WHERE `ID` = 13477;
+
+UPDATE `quest_template_addon` SET `SpecialFlags` = 0 WHERE `ID` IN (8369, 8375); -- set AV quests to not repeatable
+
+UPDATE quest_template_addon SET `ExclusiveGroup` = 0 WHERE `id` IN 
+(8368, 8370, 8372, 8374, 8384, 8386, 8389, 8390, 8391, 8392, 8393, 8394, 8395, 8396, 8397, 8398, 8399, 8400, 8401, 8402, 8403, 8404, 
+8405, 8406, 8407, 8408, 8426, 8427, 8428, 8429, 8430, 8431, 8432, 8433, 8434, 8435, 8436, 8437, 8438, 8439, 8440, 8441, 8442, 8443);
 
 DELETE FROM `disables` WHERE `sourceType` = 1 AND `entry` IN 
 (8367, 8371, 8384, 8385, 8386, 8388, 8389, 8390, 8391, 8392, 8397, 8398, 

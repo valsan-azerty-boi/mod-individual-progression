@@ -187,9 +187,13 @@ public:
     bool OnGossipHello(Player* player, GameObject* /*go*/) override
     {
         if (player->GetLevel() > IP_LEVEL_TBC)
-            player->SendSystemMessage("Your level is too high for this instance.");
+        {
+            player->SendSystemMessage("Your level is too high to enter the level 60 version of Onyxia\'s Lair.");
+        }
         else if (!player->HasItemCount(ITEM_DRAKEFIRE_AMULET))
-            player->SendSystemMessage("You must have the Drakefire Amulet in your inventory before entering this instance.");
+        {
+            player->SendSystemMessage("You must have the Drakefire Amulet in your inventory to enter Onyxia\'s Lair.");
+        }
         else if (!sIndividualProgression->groupHaveLevelDisparity(player)
             && player->GetLevel() <= IP_LEVEL_TBC
             && (sIndividualProgression->isExcludedFromProgression(player)

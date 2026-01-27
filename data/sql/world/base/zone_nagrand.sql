@@ -17,6 +17,20 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (1806902,9,9,0,0,0,100,0,0,0,0,0,0,0,1,6,0,1,0,0,0,12,1,0,0,0,0,0,0,0,                'Mogor - Actionlist - Say Line 6'),
 (1806902,9,10,0,0,0,100,0,0,0,0,0,0,0,42,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,               'Mogor - Actionlist - Reset Invincibility Hp');
 
+-- fix Hero of the Mag'har event
+-- all three need smartAI for the event to play, but they are only used for the scripted event, 
+-- so I'm just giving them something to prevent an error on server startup saying they have SmartAI enabled but no SmartAI entries in the database.
+UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN (18075, 18076, 19647);
+DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` IN (18075, 18076, 19647);
+INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, 
+`event_param1`, `event_param2`, `event_param3`, `event_param4`, `event_param5`, `event_param6`, 
+`action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, 
+`target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES 
+--
+(18075, 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Mannoroth - On Just Summoned - Set Sheath Melee'),
+(18076, 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Grom Hellscream - On Just Summoned - Set Sheath Melee'),
+(19647, 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Thrall - On Just Summoned - Set Sheath Melee');
+
 -- fix drop rate flawless greater windroc beak / aged clefthoof blubber
 UPDATE `creature_loot_template` SET `Chance` = 20 WHERE `Item` IN (28667, 28668);
 
@@ -30,10 +44,10 @@ DELETE FROM `creature` WHERE `id1`  IN (23022); -- needed to remove creature pla
 INSERT INTO `creature` (`guid`, `id1`, `id2`, `id3`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, 
 `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`) VALUES
 --
-(@CGUID+1, 17133, 0, 0, 530, 0, 0, 1, 1, 0, -1179.0300, 8585.5195, 35.3682, 2.7576, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, NULL),
-(@CGUID+2, 17133, 0, 0, 530, 0, 0, 1, 1, 0, -1016.1700, 8313.7002, 16.7102, 5.0091, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, NULL),
-(@CGUID+3, 17133, 0, 0, 530, 0, 0, 1, 1, 0, -918.2130, 8454.0098, 36.3233, 3.3510, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, NULL),
-(@CGUID+4, 17133, 0, 0, 530, 0, 0, 1, 1, 0, -781.6080, 8482.6299, 40.5285, 5.8294, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, NULL),
+(@CGUID+1, 17133, 0, 0, 530, 0, 0, 1, 1, 0, -1179.0300, 8585.5195, 35.3682, 2.7576, 300, 0, 0, 1, 0, 0, 0, 258, 0, '', NULL, 0, NULL),
+(@CGUID+2, 17133, 0, 0, 530, 0, 0, 1, 1, 0, -1016.1700, 8313.7002, 16.7102, 5.0091, 300, 0, 0, 1, 0, 0, 0, 258, 0, '', NULL, 0, NULL),
+(@CGUID+3, 17133, 0, 0, 530, 0, 0, 1, 1, 0, -918.2130, 8454.0098, 36.3233, 3.3510, 300, 0, 0, 1, 0, 0, 0, 258, 0, '', NULL, 0, NULL),
+(@CGUID+4, 17133, 0, 0, 530, 0, 0, 1, 1, 0, -781.6080, 8482.6299, 40.5285, 5.8294, 300, 0, 0, 1, 0, 0, 0, 258, 0, '', NULL, 0, NULL),
 --
 (@CGUID+5, 23022, 0, 0, 530, 0, 0, 1, 1, 0, -1529.1022, 5971.2354, 192.3297, 0, 300, 0, 1, 27945, 6310, 2, 0, 0, 0, '', 0, 0, NULL),
 (@CGUID+6, 23022, 0, 0, 530, 0, 0, 1, 1, 0, -1337.0262, 5707.4595, 180.8865, 0, 300, 0, 1, 27945, 6310, 2, 0, 0, 0, '', 0, 0, NULL),
@@ -41,7 +55,7 @@ INSERT INTO `creature` (`guid`, `id1`, `id2`, `id3`, `map`, `zoneId`, `areaId`, 
 (59582, 17129, 0, 0, 530, 0, 0, 1, 1, 0, -788.8040, 8474.4004, 44.6907, 2.3430, 300, 5, 0, 1, 0, 1, 0, 0, 0, '', NULL, 0, NULL),
 (60208, 17146, 0, 0, 530, 0, 0, 1, 1, 0, -3014.7700, 6524.4902, 99.2735, 2.9321, 300, 0, 0, 1, 0, 0, 0, 0, 0, '', NULL, 0, NULL);
 
--- feign death kodos
+-- feign death kodos (doesn't seem to work correctly, they do feign death, but their health still shows 100%)
 DELETE FROM `creature_addon` WHERE `guid` BETWEEN @CGUID+1 AND @CGUID+4;
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`) VALUES 
 (@CGUID+1, 0, 0, 7, 0, 65, 0, NULL),

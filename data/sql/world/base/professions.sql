@@ -26,6 +26,9 @@ INSERT IGNORE INTO `item_template_locale` (`ID`, `locale`, `Name`, `Description`
 -- TBC First Aid vendors
 UPDATE `creature_template` SET `npcflag` = 128 WHERE `entry` IN (18990, 18991); -- set to vendors, no longer trainers
 
+-- remove Poisons skill reward from alliance quest Klaven's Tower
+UPDATE `quest_template` SET `RewardSpell` = 0 WHERE `ID` IN (2480, 2359);
+
 -- lockpicking
 UPDATE `gameobject` SET `spawntimesecs` = 900 WHERE `id` IN (179488, 179486); -- change respawn time of footlockers from 2 hours to 15 minutes
 
@@ -38,9 +41,6 @@ UPDATE `quest_template` SET `RewardItem1` = 16073, `RewardAmount1` = 1 WHERE id 
 UPDATE `item_template` SET `spellid_1` = 19887, `spellcharges_1` = -1, `spellppmRate_1` = -1 WHERE `entry` = 16073;
 INSERT IGNORE INTO `item_template_locale` (`ID`, `locale`, `Name`, `Description`, `VerifiedBuild`) VALUES 
 (16073, 'frFR', 'Livre de cuisine pour artisan', '', 0);
-
--- Make Spice Bread learnable for completion's sake, but only after reaching a level when it will no longer allow skipping early cooking
-UPDATE `trainer_spell` SET `ReqSkillRank` = 200 WHERE `SpellID` = 37836;
 
 -- Fishing needs to be learned from Quests and Books, remove from trainers
 DELETE FROM `trainer_spell` WHERE `SpellID` IN (18249, 54083, 54084);
@@ -281,7 +281,6 @@ INSERT INTO `trainer` (`Id`, `Type`, `Requirement`, `Greeting`, `VerifiedBuild`)
 (@TRAINER_ID+47, 2, 0, 'I can teach you how to use a fishing pole to catch fish.', 0),
 (@TRAINER_ID+48, 1, 0, 'Hello!  Can I teach you something?', 0),
 --
-(@TRAINER_ID+50, 0, 0, 'Hello, rogue!  Ready for some training?', 0),
 (@TRAINER_ID+51, 2, 0, 'Greetings!  Can I teach you how to turn beast hides into armor?', 0);
 
 /* Crafting Professions */
@@ -1177,6 +1176,8 @@ INSERT INTO `creature_default_trainer` (`CreatureId`, `TrainerId`) VALUES
 --
 (12920, @TRAINER_ID+46),
 (12939, @TRAINER_ID+46);
+
+UPDATE `creature_template` SET `npcflag` = 83 WHERE `entry` IN (12920, 12939);
 
 -- Fishing
 DELETE FROM `trainer_spell` WHERE `TrainerId` = @TRAINER_ID+47;

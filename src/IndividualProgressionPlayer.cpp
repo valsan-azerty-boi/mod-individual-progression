@@ -10,9 +10,8 @@ private:
     {
         Map const *map = sMapMgr->FindMap(mapid, 0);
         uint32 zoneId = map->GetZoneId(0, x, y, z);
-        return (zoneId == ZONE_AZUREMYST || zoneId == ZONE_BLOODMYST || zoneId == ZONE_GHOSTLANDS ||
-                zoneId == ZONE_EVERSONG || zoneId == ZONE_EXODAR || zoneId == ZONE_SILVERMOON ||
-                zoneId == ZONE_VEILED_SEA);
+        return (zoneId == AREA_AZUREMYST_ISLE || zoneId == AREA_BLOODMYST_ISLE || zoneId == AREA_GHOSTLANDS || zoneId == AREA_EVERSONG_WOODS || 
+                zoneId == AREA_THE_EXODAR || zoneId == AREA_SILVERMOON_CITY || zoneId == AREA_AMMEN_VALE || zoneId == AREA_VEILED_SEA);
     }
 
 public:
@@ -145,17 +144,6 @@ public:
         sIndividualProgression->CheckAdjustments(player);
     }
 
-    bool OnPlayerShouldBeRewardedWithMoneyInsteadOfExp(Player* player) override
-    {
-        if (!player || !player->IsInWorld() || !sIndividualProgression->questMoneyAtLevelCap)
-            return false;
-
-        // Player is still in Vanilla content - give money at 60 level cap
-        return ((!sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40) && player->GetLevel() == IP_LEVEL_VANILLA) ||
-                // Player is in TBC content - give money at 70 level cap
-                (!sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5) && player->GetLevel() == IP_LEVEL_TBC));
-    }
-
     void OnPlayerQuestComputeXP(Player* player, Quest const* quest, uint32& xpValue) override
     {
         if (!sIndividualProgression->enabled || !quest || !xpValue || !player || !player->IsInWorld())
@@ -213,7 +201,7 @@ public:
 
         if (mapid == MAP_BLACKWING_LAIR && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_MOLTEN_CORE))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_MOLTEN_CORE);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_MOLTEN_CORE);
             return false;
         }
         if (mapid == MAP_ONYXIAS_LAIR) // needed to prevent summoning invalid characters from inside the instance
@@ -233,18 +221,18 @@ public:
 
             if (!sIndividualProgression->hasPassedProgression(player, REQUIRED_ZG_PROGRESSION))
             {
-                ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", REQUIRED_ZG_PROGRESSION);
+                //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", REQUIRED_ZG_PROGRESSION);
                 return false;
             }
         }
         if (mapid == MAP_AHN_QIRAJ_TEMPLE && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_BLACKWING_LAIR))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_PRE_AQ);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_PRE_AQ);
             return false;
         }
         if (mapid == MAP_RUINS_OF_AHN_QIRAJ && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_BLACKWING_LAIR))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_PRE_AQ);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_PRE_AQ);
             return false;
         }
         if (mapid == MAP_OUTLAND)
@@ -256,51 +244,51 @@ public:
             }
             Map const *map = sMapMgr->FindMap(mapid, 0);
             uint32 zoneId = map->GetZoneId(0, x, y, z);
-            if (!sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_4) && zoneId == ZONE_QUELDANAS)
+            if (!sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_4) && zoneId == AREA_ISLE_OF_QUEL_DANAS)
             {
-                ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_4);
+                //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_4);
                 return false;
             }
         }
         if (mapid == MAP_ZUL_AMAN && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_3))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_3);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_3);
             return false;
         }
         if (mapid == MAP_NORTHREND && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_5);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_5);
             return false;
         }
         if (mapid == MAP_ULDUAR && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_WOTLK_TIER_1))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_WOTLK_TIER_1);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_WOTLK_TIER_1);
             return false;
         }
         if ((mapid == MAP_TRIAL_OF_THE_CHAMPION || mapid == MAP_TRIAL_OF_THE_CRUSADER) && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_WOTLK_TIER_2))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_WOTLK_TIER_2);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_WOTLK_TIER_2);
             return false;
         }
         // This will also restrict other Frozen Halls dungeons, because Forge of Souls must be completed first to access them
         if ((mapid == MAP_ICECROWN_CITADEL || mapid == MAP_THE_FORGE_OF_SOULS) && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_WOTLK_TIER_3))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_WOTLK_TIER_3);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_WOTLK_TIER_3);
             return false;
         }
         if (mapid == MAP_THE_RUBY_SANCTUM && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_WOTLK_TIER_4))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_WOTLK_TIER_4);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_WOTLK_TIER_4);
             return false;
         }
         if (mapid == MAP_MAGISTERS_TERRACE && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_4))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_4);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_4);
             return false;
         }
         if (mapid == MAP_THE_SUNWELL && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_4))
         {
-            ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_4);
+            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_4);
             return false;
         }
         
@@ -325,51 +313,77 @@ public:
 
     void OnPlayerCompleteQuest(Player* player, Quest const* quest) override
     {
-        if (!player || !player->IsInWorld() || !sIndividualProgression->enabled || sIndividualProgression->isExcludedFromProgression(player))
+        if (!player || !player->IsInWorld() || !quest || !sIndividualProgression->enabled )
             return;
 
-        switch (quest->GetQuestId())
+        if (sIndividualProgression->questMoneyAtLevelCap)
         {
-            case BANG_A_GONG:
-                if (!sIndividualProgression->disableDefaultProgression)
-                {
-                    sIndividualProgression->UpdateProgressionState(player, PROGRESSION_PRE_AQ);
-                    sIndividualProgression->UpdateProgressionQuests(player);
-                }
-                break;
-            case SIMPLY_BANG_A_GONG:
-                if (!sIndividualProgression->disableDefaultProgression)
-                {
-                    sIndividualProgression->UpdateProgressionState(player, PROGRESSION_PRE_AQ);
-                    sIndividualProgression->UpdateProgressionQuests(player);
-                }
-                break;
-            case CHAOS_AND_DESTRUCTION:
-                if (!sIndividualProgression->disableDefaultProgression)
-                {
-                    sIndividualProgression->UpdateProgressionState(player, PROGRESSION_PRE_AQ);
-                    //sIndividualProgression->UpdateProgressionState(player, PROGRESSION_AQ_WAR);
-                    sIndividualProgression->UpdateProgressionQuests(player);
-                }
-                break;
-            case INTO_THE_BREACH:
-                if (!sIndividualProgression->disableDefaultProgression)
-                {
-                    sIndividualProgression->UpdateProgressionState(player, PROGRESSION_NAXX40);
-                    //sIndividualProgression->UpdateProgressionState(player, PROGRESSION_PRE_TBC);
-                    sIndividualProgression->UpdateProgressionQuests(player);
-                }
-                break;
-            case QUEST_MORROWGRAIN:
-            case QUEST_TROLL_NECKLACE:
-            case QUEST_DEADWOOD:
-            case QUEST_WINTERFALL:
-                if (sIndividualProgression->repeatableVanillaQuestsXp)
-                {
-                    // Reset the quest status so the player can take it and receive rewards again
-                    player->RemoveRewardedQuest(quest->GetQuestId());
-                }
-                break;
+            int32 moneyRew = 0;
+            int32 XPValue = 0;
+
+            if (!sIndividualProgression->hasPassedProgression(player, PROGRESSION_PRE_TBC) && player->GetLevel() == IP_LEVEL_VANILLA)
+            {
+                XPValue = quest->XPValue(quest->GetQuestLevel() == -1 ? IP_LEVEL_VANILLA : quest->GetQuestLevel());
+            }
+            else if (!sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5) && player->GetLevel() == IP_LEVEL_TBC)
+		    {
+                XPValue = quest->XPValue(quest->GetQuestLevel() == -1 ? IP_LEVEL_TBC : quest->GetQuestLevel());
+		    }
+
+            moneyRew = (XPValue * (6 * COPPER)) * sWorld->getRate(RATE_REWARD_BONUS_MONEY);
+
+            if (moneyRew > 0)
+            {
+                player->ModifyMoney(moneyRew);
+                //ChatHandler(player->GetSession()).SendSysMessage("Received bonus gold from: |cffccccccquestMoneyAtLevelCap|r.");
+            }
+        }
+
+        if (!sIndividualProgression->isExcludedFromProgression(player))
+        {
+            switch (quest->GetQuestId())
+            {
+                case BANG_A_GONG:
+                    if (!sIndividualProgression->disableDefaultProgression)
+                    {
+                        sIndividualProgression->UpdateProgressionState(player, PROGRESSION_PRE_AQ);
+                        sIndividualProgression->UpdateProgressionQuests(player);
+                    }
+                    break;
+                case SIMPLY_BANG_A_GONG:
+                    if (!sIndividualProgression->disableDefaultProgression)
+                    {
+                        sIndividualProgression->UpdateProgressionState(player, PROGRESSION_PRE_AQ);
+                        sIndividualProgression->UpdateProgressionQuests(player);
+                    }
+                    break;
+                case CHAOS_AND_DESTRUCTION:
+                    if (!sIndividualProgression->disableDefaultProgression)
+                    {
+                        sIndividualProgression->UpdateProgressionState(player, PROGRESSION_PRE_AQ);
+                        //sIndividualProgression->UpdateProgressionState(player, PROGRESSION_AQ_WAR);
+                        sIndividualProgression->UpdateProgressionQuests(player);
+                    }
+                    break;
+                case INTO_THE_BREACH:
+                    if (!sIndividualProgression->disableDefaultProgression)
+                    {
+                        sIndividualProgression->UpdateProgressionState(player, PROGRESSION_NAXX40);
+                        //sIndividualProgression->UpdateProgressionState(player, PROGRESSION_PRE_TBC);
+                        sIndividualProgression->UpdateProgressionQuests(player);
+                    }
+                    break;
+                case QUEST_MORROWGRAIN:
+                case QUEST_TROLL_NECKLACE:
+                case QUEST_DEADWOOD:
+                case QUEST_WINTERFALL:
+                    if (sIndividualProgression->repeatableVanillaQuestsXp)
+                    {
+                        // Reset the quest status so the player can take it and receive rewards again
+                        player->RemoveRewardedQuest(quest->GetQuestId());
+                    }
+                    break;
+            }
         }
     }
 
@@ -399,7 +413,7 @@ public:
                         }
                         else
                         {
-                            ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too high.|r");
+                            //ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too high.|r");
                             return false;
                         }
                     }
@@ -411,7 +425,7 @@ public:
                         }
                         else
                         {
-                            ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too low or too high.|r");
+                            //ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too low or too high.|r");
                             return false;
                         }
                     }
@@ -423,7 +437,7 @@ public:
                         }
                         else
                         {
-                            ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too low.|r");
+                            //ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too low.|r");
                             return false;
                         }
                     }
@@ -445,7 +459,7 @@ public:
                         }
                         else
                         {
-                            ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too high.|r");
+                            //ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too high.|r");
                             return false;
                         }
                     }
@@ -457,7 +471,7 @@ public:
                         }
                         else
                         {
-                            ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too low or too high.|r");
+                            //ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too low or too high.|r");
                             return false;
                         }
                     }
@@ -469,14 +483,14 @@ public:
                         }
                         else
                         {
-                            ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too low.|r");
+                            //ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player's level is too low.|r");
                             return false;
                         }
                     }
                 }
                 else // player or ALTbot
                 {
-                    ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player does not have an excluded account.|r");
+                    //ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Enforce Group Rules is enabled: |cffccccccthis player does not have an excluded account.|r");
                     return false;
                 }
             }
@@ -587,7 +601,7 @@ public:
         {
             if (!sIndividualProgression->isExcludedFromProgression(player) && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_4) && newArea == 4087) // Sun's Reach Harbor
             {
-                ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_4);
+                //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_4);
 
                 TeamId teamId = player->GetTeamId(true);
                 if (teamId == TEAM_ALLIANCE)

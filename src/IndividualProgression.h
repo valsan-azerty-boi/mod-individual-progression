@@ -156,18 +156,6 @@ enum ProgressionAchievements
     HALION_KILL          = 4815
 };
 
-enum ProgressionZones
-{
-    ZONE_AZUREMYST       = 3524,
-    ZONE_BLOODMYST       = 3525,
-    ZONE_GHOSTLANDS      = 3433,
-    ZONE_EVERSONG        = 3430,
-    ZONE_EXODAR          = 3557,
-    ZONE_SILVERMOON      = 3487,
-    ZONE_QUELDANAS       = 4080,
-    ZONE_VEILED_SEA      = 3479
-};
-
 enum ProgressionAreas
 {
     AREA_THE_DARK_PORTAL                 = 72,
@@ -211,8 +199,10 @@ enum ProgressionAreas
     AREA_HIVE_ASHI                       = 2742,
     AREA_HIVE_ZORA                       = 2743,
     AREA_HIVE_REGAL                      = 2744,
+    AREA_VEILED_SEA                      = 3479,
     AREA_HATCHET_HILLS                   = 3507,
     AREA_AMANI_PASS                      = 3508,
+    AREA_AMMEN_VALE                      = 3526,
     AREA_TERRACE_OF_LIGHT                = 3897,
     AREA_SILVERMOON_S_PRIDE              = 4083,
     AREA_SHATTERED_SUN_STAGING           = 4085,

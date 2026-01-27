@@ -103,7 +103,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_param4`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES 
 --
 (9045, 0, 0, 0, 0, 0, 100, 0, 7000, 15000, 21000, 33000, 0, 0, 11, 14032, 32, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,   'Scarshield Acolyte - In Combat - Cast Shadow Word: Pain'),
-(9045, 0, 1, 0, 2, 0, 100, 1, 0, 75, 0, 0, 0, 0, 11, 12039, 64, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                 'Scarshield Acolyte - Between 0-75% Health - Cast Heal (No Repeat)'),
+(9045, 0, 1, 0, 2, 0, 100, 1, 0, 75, 0, 0, 0, 0, 11, 12039, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                  'Scarshield Acolyte - Between 0-75% Health - Cast Heal (No Repeat)'),
 (9045, 0, 2, 0, 74, 0, 100, 0, 0, 0, 17000, 24000, 35, 40, 11, 8362, 32, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,        'Scarshield Acolyte - On Friendly Between 0-35% Health - Cast Renew'),
 (9045, 0, 3, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Scarshield Acolyte - Between 0-15% Health - Flee For Assist (No Repeat)'),
 (9097, 0, 0, 0, 0, 0, 100, 0, 7800, 11500, 8000, 22100, 0, 0, 11, 15496, 0, 0, 0, 0, 0, 21, 5, 0, 0, 0, 0, 0, 0, 0,    'Scarshield Legionnaire - Within 0-5 Range - Cast Cleave'),
@@ -417,30 +417,29 @@ INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, 
 (@OGUID+23, 175785, 229, 0, 0, 1, 1, -18.376, -299.271, 31.6183, 0, 0, 0, 0, 0, 300, 0, 1, '', 0, NULL),
 (@OGUID+24, 175785, 229, 0, 0, 1, 1, -16.1217, -492.558, 90.6585, 0, 0, 0, 0, 0, 300, 0, 1, '', 0, NULL);
 
-DELETE FROM `pool_gameobject` WHERE `pool_entry` IN (601001, 601002);
+DELETE FROM `pool_gameobject` WHERE `guid` BETWEEN @OGUID+1 AND @OGUID+24;
 INSERT INTO `pool_gameobject` (`guid`, `pool_entry`, `chance`, `description`) VALUES 
-(@OGUID+1,  601001, 0, 'Bijou''s Belongings'),
-(@OGUID+2,  601001, 0, 'Bijou''s Belongings'),
-(@OGUID+3,  601001, 0, 'Bijou''s Belongings'),
-(@OGUID+4,  601001, 0, 'Bijou''s Belongings'),
-(@OGUID+5,  601001, 0, 'Bijou''s Belongings'),
-(@OGUID+6,  601001, 0, 'Bijou''s Belongings'),
-(@OGUID+7,  601001, 0, 'Bijou''s Belongings'),
-(@OGUID+8,  601001, 0, 'Bijou''s Belongings'),
-(@OGUID+9,  601001, 0, 'Bijou''s Belongings'),
-(@OGUID+10, 601001, 0, 'Bijou''s Belongings'),
-(@OGUID+11, 601001, 0, 'Bijou''s Belongings'),
+(@OGUID+1,  601017, 0, 'Bijou\'s Belongings'),
+(@OGUID+2,  601017, 0, 'Bijou\'s Belongings'),
+(@OGUID+3,  601017, 0, 'Bijou\'s Belongings'),
+(@OGUID+4,  601017, 0, 'Bijou\'s Belongings'),
+(@OGUID+5,  601017, 0, 'Bijou\'s Belongings'),
+(@OGUID+6,  601017, 0, 'Bijou\'s Belongings'),
+(@OGUID+7,  601017, 0, 'Bijou\'s Belongings'),
+(@OGUID+8,  601017, 0, 'Bijou\'s Belongings'),
+(@OGUID+9,  601017, 0, 'Bijou\'s Belongings'),
+(@OGUID+10, 601017, 0, 'Bijou\'s Belongings'),
+(@OGUID+11, 601017, 0, 'Bijou\'s Belongings'),
 --
-(@OGUID+21, 601002, 0, 'Important Blackrock Documents'),
-(@OGUID+22, 601002, 0, 'Important Blackrock Documents'),
-(@OGUID+23, 601002, 0, 'Important Blackrock Documents'),
-(@OGUID+24, 601002, 0, 'Important Blackrock Documents');
+(@OGUID+21, 601018, 0, 'Important Blackrock Documents'),
+(@OGUID+22, 601018, 0, 'Important Blackrock Documents'),
+(@OGUID+23, 601018, 0, 'Important Blackrock Documents'),
+(@OGUID+24, 601018, 0, 'Important Blackrock Documents');
 
-DELETE FROM `pool_template` WHERE `entry` IN (601001, 601002);
+DELETE FROM `pool_template` WHERE `entry` IN (601017, 601018);
 INSERT INTO `pool_template` (`entry`, `max_limit`, `description`) VALUES 
-(601001, 1, 'Bijou''s Belongings - LBRS'),
-(601002, 1, 'Important Blackrock Documents - LBRS');
-
+(601017, 1, 'Bijou\'s Belongings - LBRS'),
+(601018, 1, 'Important Blackrock Documents - LBRS');
 
 -- fix missing patrols
 DELETE FROM `creature` WHERE `guid` IN (@CGUID+1, @CGUID+2, @CGUID+3, @CGUID+4, @CGUID+5, @CGUID+6, @CGUID+7, @CGUID+8,  @CGUID+9, @CGUID+21, @CGUID+22);

@@ -35,7 +35,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (8894, 0, 0, 0, 16, 0, 100, 0, 13864, 1, 1000, 2000, 0, 0, 11, 13864, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,        'Anvilrage Medic - On Friendly Unit Missing Buff Power Word: Fortitude - Cast Power Word: Fortitude'),
 (8894, 0, 1, 0, 0, 0, 100, 0, 0, 0, 2000, 3000, 0, 0, 11, 15587, 64, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,            'Anvilrage Medic - In Combat - Cast Mind Blast'),
 (8894, 0, 2, 0, 0, 0, 100, 0, 7000, 11000, 6000, 9000, 0, 0, 11, 15585, 64, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,     'Anvilrage Medic - In Combat - Cast Prayer of Healing'),
-(8894, 0, 3, 0, 14, 0, 100, 0, 2500, 40, 4000, 6000, 0, 0, 11, 15586, 64, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,       'Anvilrage Medic - Friendly Missing 2500 Health - Cast Heal'),
+(8894, 0, 3, 0, 14, 0, 100, 0, 2500, 40, 4000, 6000, 0, 0, 11, 15586, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,        'Anvilrage Medic - Friendly Missing 2500 Health - Cast Heal'),
 (8894, 0, 4, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Anvilrage Medic - Between 0-15% Health - Flee For Assist'),
 (8895, 0, 0, 0, 4, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 9128, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                    'Anvilrage Officer - On Aggro - Cast Battle Shout'),
 (8895, 0, 1, 0, 9, 0, 100, 0, 0, 0, 9000, 15000, 0, 5, 11, 6253, 32, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,            'Anvilrage Officer - Within 0-5 Range - Cast Backhand'),
@@ -51,7 +51,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (8896, 0, 6, 0, 0, 0, 10, 0, 7000, 12000, 120000, 120000, 0, 0, 11, 6713, 32, 0, 0, 0, 0, 21, 5, 0, 0, 0, 0, 0, 0, 0,  'Shadowforge Peasant - Within 0-5 Range - Cast Disarm'),
 (8896, 0, 7, 0, 0, 0, 100, 0, 3000, 20000, 10000, 20000, 0, 0, 11, 13584, 0, 0, 0, 0, 0, 21, 5, 0, 0, 0, 0, 0, 0, 0,   'Shadowforge Peasant - Within 0-5 Range - Cast Strike'),
 (8896, 0, 8, 0, 0, 0, 10, 0, 5000, 10000, 120000, 120000, 0, 0, 11, 3604, 32, 0, 0, 0, 0, 21, 5, 0, 0, 0, 0, 0, 0, 0,  'Shadowforge Peasant - Within 0-5 Range - Cast Tendon Rip'),
-(8896, 0, 9, 0, 74, 0, 100, 0, 0, 00, 20000, 25000, 50, 40, 11, 11642, 64, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,      'Shadowforge Peasant - Friendly Between 0-50% Health - Cast Heal'),
+(8896, 0, 9, 0, 74, 0, 100, 0, 0, 00, 20000, 25000, 50, 40, 11, 11642, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,       'Shadowforge Peasant - Friendly Between 0-50% Health - Cast Heal'),
 (8896, 0, 10, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                     'Shadowforge Peasant - Between 0-15% Health - Flee For Assist'),
 (8897, 0, 0, 0, 9, 0, 100, 0, 0, 0, 4000, 4000, 30, 60, 21, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,               'Doomforge Craftsman - Outside 30 Range - Start Combat Movement'),
 (8897, 0, 1, 0, 9, 0, 100, 0, 0, 0, 4000, 4000, 5, 30, 21, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                'Doomforge Craftsman - Within 5-30 Range - Stop Combat Movement'),
@@ -338,7 +338,7 @@ INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entr
 `RegenHealth`, `mechanic_immune_mask`, `spell_school_immune_mask`, `flags_extra`, `ScriptName`, `VerifiedBuild`) VALUES
 --
 (108982, 0, 0, 0, 0, 0, 'Ironhand Guardian', NULL, NULL, 0, 60, 60, 0, 15, 0, 1, 1.14286, 1, 1, 20, 1, 1, 0, 0.1, 2000, 2000, 
-1, 1, 1, 64, 2048, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartAI', 0, 1, 3, 2, 1, 1, 0, 0, 1, 16384, 0, 2050, '', 0);
+1, 1, 1, 70, 2048, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 'SmartAI', 0, 1, 3, 2, 1, 1, 0, 0, 1, 16384, 0, 2050, '', 0);
 
 DELETE FROM `creature` WHERE `id1` IN (8982, 108982);
 INSERT INTO `creature` (`guid`, `id1`, `id2`, `id3`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, 
@@ -355,7 +355,6 @@ DELETE FROM `creature_template_model` WHERE `CreatureID` = 108982;
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES 
 (108982, 0, 9189, 1, 1, 12340);
 
--- smart scripts
 UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` IN (108982);
 DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` IN (108982);
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, 
