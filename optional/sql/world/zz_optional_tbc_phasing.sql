@@ -10,6 +10,7 @@ UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_class_trainer' WHERE `id1` IN 
 23128, -- Master Pyreanor <Paladin Trainer>, Orgrimmar
 20406, -- Champion Cyssa Dawnrose <Paladin Trainer>, Undercity
 20407, -- Farseer Umbrua <Shaman Trainer>, Stormwind
+23127, 35073, -- <Shaman Trainer>, Ironforge
 35281 -- Rukua <Paladin Trainer>, Darnassus
 );
 
