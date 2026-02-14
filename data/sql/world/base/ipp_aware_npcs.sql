@@ -20,8 +20,8 @@ UPDATE `creature` SET `phaseMask` = @IPPPHASE_III WHERE `id1` = 29346; -- Apothe
 UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_ds2' WHERE `entry` IN (15270, 15282, 16012, 16013);
 
 -- Phasing Cenarion Hold NPCs
-UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_preaq' WHERE `entry` IN (15176, 15180, 15181, 15183, 15188, 15189, 15190, 15191, 15293, 15194,
-                                                                                15306, 15419, 15612, 15613, 15614, 15903, 16543, 17081, 17082);
+UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_preaq' WHERE `entry` IN
+(15176, 15180, 15181, 15183, 15187, 15188, 15189, 15190, 15191, 15194, 15293, 15306, 15419, 15612, 15613, 15614, 15903, 16543, 17081, 17082);
 
 UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_aqwewar' WHERE `entry` IN (15693); -- Jonathan the Revelator
 
@@ -63,15 +63,16 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_wotlk_icc' WHERE `entry` 
 -- Phasing the portals to Blasted Lands until TBC is unlocked
 UPDATE `gameobject_template` SET `ScriptName` = 'gobject_ipp_tbc' WHERE `entry` IN (195141, 195142);
 
--- Phasing Eye of the Storm Emissary until TBC
+-- Phasing battlemasters
+UPDATE `creature_template` SET `flags_extra` = 2, `ScriptName` = 'npc_ipp_wotlk' WHERE `entry` IN 
+(15351, 34955, 34988, 34991, 34997, 34998, 35007, 35008, 35017, 35020, 35021, 35023, 35024, 35025, 35598, 35599, 35600, 35602, 35603, 35611);
+UPDATE `creature_template` SET `flags_extra` = 2, `ScriptName` = 'npc_ipp_pre_wotlk' WHERE `entry` IN (347, 2804, 14942, 15007);
+UPDATE `creature_template` SET `flags_extra` = 2, `ScriptName` = 'npc_ipp_tbc'   WHERE `entry` IN (20374, 20381, 20383, 20385, 20386, 20388);
+
+-- Phasing emissaries
 UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_tbc' WHERE `entry` IN (22013, 22015);
+UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `entry` IN (30566, 30567, 34948, 34949, 34950, 34951);
 UPDATE `gameobject_template` SET `ScriptName` = 'gobject_ipp_tbc' WHERE `entry` IN (185106, 185107);
-
--- Phasing Strand of the Ancients Emissary until WotLK
-UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `entry` IN (30566, 30567);
-
--- Phasing Isle of Conquest Emissary and banner until WotLK
-UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `entry` IN (34948, 34949, 34950, 34951);
 UPDATE `gameobject_template` SET `ScriptName` = 'gobject_ipp_wotlk' WHERE `entry` IN (195532, 195533);
 
 -- Phasing Zul'Aman quest npcs until TBC T4.

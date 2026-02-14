@@ -1,10 +1,12 @@
 /*
     This optional file sets the required level to train certain class spells to the expansion they were introduced in
-    Level 61/71 is required to prevent the spell from being available too early. 
+    Level 61/71 is required to prevent the spell from being available too early.
+    This does not effect RNDbots, they don't learn their spells from trainers.
 */
 
 -- Warrior
 UPDATE `trainer_spell` SET `ReqLevel` = 62 WHERE `TrainerId` = 1 AND `SpellId` = 34428;  -- Victory Rush, level 6 -> 62
+UPDATE `trainer_spell` SET `ReqLevel` = 62 WHERE `TrainerId` = 2 AND `SpellId` = 34428;  -- Victory Rush, level 6 -> 62
 
 -- Paladin
 UPDATE `trainer_spell` SET `ReqLevel` = 61 WHERE `TrainerId` = 3 AND `SpellId` = 31789;  -- Righteous Defense, level 14 -> 61

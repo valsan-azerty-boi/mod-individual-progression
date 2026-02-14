@@ -34,22 +34,41 @@ public:
 
     bool OnGossipHello(Player* player, GameObject* /*go*/) override
     {
-        if (!sIndividualProgression->groupHaveLevelDisparity(player)
-            && player->GetLevel() <= IP_LEVEL_TBC
-            && (sIndividualProgression->isExcludedFromProgression(player)
-                || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                || ((!sIndividualProgression->requireNaxxStrath || player->GetQuestStatus(NAXX40_ENTRANCE_FLAG) == QUEST_STATUS_REWARDED))
-                || player->IsGameMaster()))
+        if (player->GetLevel() > IP_LEVEL_TBC)
         {
-            //player->SetRaidDifficulty(RAID_DIFFICULTY_25MAN_HEROIC); // quick hack #ZhengPeiRu21/mod-individual-progression/issues/359
-            player->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
-            player->SendRaidDifficulty(true);
-
-            if (!sIndividualProgression->groupHaveLevelDisparity(player) && player->GetLevel() <= IP_LEVEL_TBC
-                    && (sIndividualProgression->isAttuned(player) || sIndividualProgression->isExcludedFromProgression(player)))
-                player->TeleportTo(MAP_NAXXRAMAS, 3006.05f, -3466.81f, 298.219f, 4.6824f);
+            ChatHandler(player->GetSession()).PSendSysMessage("Your level is too high to enter the level 60 version of Naxxramas.");
+            return false;
         }
-        return true;
+
+        if (sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5))
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("Your progression level is too high to enter the level 60 version of Naxxramas.");
+            return false;
+        }
+
+        if (sIndividualProgression->groupHaveLevelDisparity(player))
+        {
+            return false;
+        }
+
+        if (sIndividualProgression->isExcludedFromProgression(player) || player->IsGameMaster() || 
+            ((!sIndividualProgression->requireNaxxStrath || player->GetQuestStatus(NAXX40_ENTRANCE_FLAG) == QUEST_STATUS_REWARDED)))
+        {
+            if (sIndividualProgression->isAttuned(player) || sIndividualProgression->isExcludedFromProgression(player))
+            {
+                //player->SetRaidDifficulty(RAID_DIFFICULTY_25MAN_HEROIC);
+                player->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
+                player->SendRaidDifficulty(true);
+                player->TeleportTo(MAP_NAXXRAMAS, 3006.05f, -3466.81f, 298.219f, 4.6824f);
+                return true;
+            }
+            else
+            {
+                ChatHandler(player->GetSession()).PSendSysMessage("You have not completed the Naxxramas attunement quest.");
+                return false;
+            }
+        }
+        return false;
     }
 };
 

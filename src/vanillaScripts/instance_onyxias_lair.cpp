@@ -136,14 +136,54 @@ public:
 
     bool OnTrigger(Player* player, AreaTrigger const* /*areaTrigger*/) override
     {
-        if (!sIndividualProgression->groupHaveLevelDisparity(player)
-            && player->GetLevel() >= IP_LEVEL_WOTLK
-            && (sIndividualProgression->isExcludedFromProgression(player)
-                || sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5)
-                || player->IsGameMaster()))
+        if (!player || !player->IsInWorld())
+            return false;
+
+        ChatHandler handler(player->GetSession());
+    
+        if (player->GetLevel() <= IP_LEVEL_TBC)
         {
-            // Do not allow entrance to Onyxia 40 with level 80 players
-            // Change 10 man heroic to regular 10 man, as when 10 man heroic is not available
+            return false;
+            
+            //if (player->GetLevel() < 50)
+            //{
+            //    handler.PSendSysMessage("You need to be at least level 50 to enter Onyxia\'s Lair.");
+            //    return false;
+            //}
+            //if (sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5)) // death knights
+            //{
+            //    handler.PSendSysMessage("Your progression level is too high to enter the level 60 version of Onyxia\'s Lair.");
+            //    return false;
+            //}
+            //if (!player->HasItemCount(ITEM_DRAKEFIRE_AMULET) && !sIndividualProgression->isExcludedFromProgression(player))
+            //{
+            //    handler.PSendSysMessage("You must have the Drakefire Amulet in your inventory to enter Onyxia\'s Lair.");
+            //    return false;
+            //}
+
+            //player->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
+            //player->TeleportTo(249, 29.1607f, -71.3372f, -8.18032f, 4.58f);
+            //return true;
+
+        }
+        else // (player->GetLevel() > IP_LEVEL_TBC)
+        {
+            if (player->GetLevel() != IP_LEVEL_WOTLK)
+            {
+                handler.PSendSysMessage("You need to be level 80 to enter Onyxia\'s Lair.");
+                return false;
+            }
+            /* if (!player->HasItemCount(ITEM_DRAKEFIRE_AMULET) && !sIndividualProgression->isExcludedFromProgression(player))
+            {
+                handler.PSendSysMessage("You must have the Drakefire Amulet in your inventory to enter Onyxia\'s Lair.");
+                return false;
+            } */
+            
+            if (sIndividualProgression->groupHaveLevelDisparity(player))
+            {
+                return false;
+            }
+
             Difficulty diff = player->GetGroup() ? player->GetGroup()->GetDifficulty(true) : player->GetDifficulty(true);
             if (diff == RAID_DIFFICULTY_10MAN_HEROIC)
             {
@@ -151,11 +191,9 @@ public:
                 player->SendRaidDifficulty(true);
             }
 
-            if (!sIndividualProgression->groupHaveLevelDisparity(player) && player->GetLevel() >= IP_LEVEL_WOTLK)
-                player->TeleportTo(MAP_ONYXIAS_LAIR, 29.1607f, -71.3372f, -8.18032f, 4.58f);
+            player->TeleportTo(MAP_ONYXIAS_LAIR, 29.1607f, -71.3372f, -8.18032f, 4.58f);
+            return true;
         }
-
-        return true;
     }
 };
 
