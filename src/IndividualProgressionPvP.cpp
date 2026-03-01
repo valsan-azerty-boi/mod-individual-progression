@@ -14,20 +14,14 @@ public:
         {
             Player* target = ObjectAccessor::FindConnectedPlayer(player->GetGUID());
 			uint32 PVP_RANK6_QUEST = 66106;
-			
+
             if (player->IsGameMaster() || !sIndividualProgression->enabled || sIndividualProgression->isExcludedFromProgression(target) || sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40))
-            {
                 return false;
-            }
-			
+
             if (target->GetQuestStatus(PVP_RANK6_QUEST) == QUEST_STATUS_REWARDED || target->GetLevel() > IP_LEVEL_VANILLA || player->getClass() == CLASS_DEATH_KNIGHT)
-            {
                 return false;
-            }
             else
-            {
                 return true;
-            }
         }
     };
 
@@ -50,20 +44,14 @@ public:
         {
             Player* target = ObjectAccessor::FindConnectedPlayer(player->GetGUID());
 			uint32 PVP_RANK6_QUEST = 66106;
-			
+
             if (player->IsGameMaster() || !sIndividualProgression->enabled || sIndividualProgression->isExcludedFromProgression(target) || sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40))
-            {
                 return true;
-            }
-			
+
             if (target->GetQuestStatus(PVP_RANK6_QUEST) == QUEST_STATUS_REWARDED || target->GetLevel() > IP_LEVEL_VANILLA || player->getClass() == CLASS_DEATH_KNIGHT)
-            {
                 return true;
-            }
             else
-            {
                 return false;
-            }
         }
     };
 
@@ -85,20 +73,14 @@ public:
         bool CanBeSeen(Player const* player) override
         {
             if (player->IsGameMaster())
-            {
                 return true;
-            }
 
             Player* target = ObjectAccessor::FindConnectedPlayer(player->GetGUID());
 			
             if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40) && sIndividualProgression->isBeforeProgression(target, PROGRESSION_TBC_TIER_5))
-            {
                 return true;
-            }
             else
-            {
                 return false;
-            }
         }
     };
 
@@ -135,21 +117,10 @@ public:
                 return false;
             }
 
-            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40) && sIndividualProgression->isBeforeProgression(target, PROGRESSION_TBC_TIER_5))
-            {
-                if (sIndividualProgression->tbcArenaSeason == 1)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40) && sIndividualProgression->isBeforeProgression(target, PROGRESSION_TBC_TIER_5) && sIndividualProgression->tbcArenaSeason == 1)
+                return true;
             else
-            {
                 return false;
-            }
         }
     };
 
@@ -185,21 +156,10 @@ public:
                 return false;
             }
 
-            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40) && sIndividualProgression->isBeforeProgression(target, PROGRESSION_TBC_TIER_5))
-            {
-                if (sIndividualProgression->tbcArenaSeason == 2)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40) && sIndividualProgression->isBeforeProgression(target, PROGRESSION_TBC_TIER_5) && sIndividualProgression->tbcArenaSeason == 2)
+                return true;
             else
-            {
                 return false;
-            }
         }
     };
 
@@ -235,21 +195,10 @@ public:
                 return false;
             }
 
-            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40) && sIndividualProgression->isBeforeProgression(target, PROGRESSION_TBC_TIER_5))
-            {
-                if (sIndividualProgression->tbcArenaSeason == 3)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40) && sIndividualProgression->isBeforeProgression(target, PROGRESSION_TBC_TIER_5) && sIndividualProgression->tbcArenaSeason == 3)
+                return true;
             else
-            {
                 return false;
-            }
         }
     };
 
@@ -285,21 +234,10 @@ public:
                 return false;
             }
 
-            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40) && sIndividualProgression->isBeforeProgression(target, PROGRESSION_TBC_TIER_5))
-            {
-                if (sIndividualProgression->tbcArenaSeason == 4)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40) && sIndividualProgression->isBeforeProgression(target, PROGRESSION_TBC_TIER_5) && sIndividualProgression->tbcArenaSeason == 4)
+                return true;
             else
-            {
                 return false;
-            }
         }
     };
 
@@ -335,21 +273,10 @@ public:
                 return false;
             }
 
-            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_TBC_TIER_5))
-            {
-                if (sIndividualProgression->wotlkArenaSeason == 5)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_TBC_TIER_5) && sIndividualProgression->wotlkArenaSeason == 5)
+                return true;
             else
-            {
                 return false;
-            }
         }
     };
 
@@ -385,21 +312,10 @@ public:
                 return false;
             }
 
-            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_TBC_TIER_5))
-            {
-                if (sIndividualProgression->wotlkArenaSeason == 6)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_TBC_TIER_5) && sIndividualProgression->wotlkArenaSeason == 6)
+                return true;
             else
-            {
                 return false;
-            }
         }
     };
 
@@ -435,21 +351,10 @@ public:
                 return false;
             }
 
-            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_TBC_TIER_5))
-            {
-                if (sIndividualProgression->wotlkArenaSeason == 7)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_TBC_TIER_5) && sIndividualProgression->wotlkArenaSeason == 7)
+                return true;
             else
-            {
                 return false;
-            }
         }
     };
 
@@ -484,21 +389,10 @@ public:
                 return false;
             }
 
-            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_TBC_TIER_5))
-            {
-                if (sIndividualProgression->wotlkArenaSeason == 8)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_TBC_TIER_5) && sIndividualProgression->wotlkArenaSeason == 8)
+                return true;
             else
-            {
                 return false;
-            }
         }
     };
 

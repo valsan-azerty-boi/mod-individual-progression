@@ -17,10 +17,8 @@ bool IndividualProgression::hasPassedProgression(Player* player, ProgressionStat
     if (!enabled || !state || !player || !player->IsInWorld())
         return false;
 
-    if (progressionLimit && state > progressionLimit)
-	{
+    if (progressionLimit && (state > progressionLimit))
         return false;
-	}
 
     return player->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value >= state;
 }
@@ -39,9 +37,7 @@ void IndividualProgression::UpdateProgressionState(Player* player, ProgressionSt
         return;
 
     if (progressionLimit && newState > progressionLimit)
-	{
         return;
-	}
 
     uint8 currentState = player->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value;
     if (newState > currentState)
@@ -91,8 +87,9 @@ void IndividualProgression::CheckAdjustments(Player* player) const
     else if (player->GetLevel() <= IP_LEVEL_TBC && player->getClass() != CLASS_DEATH_KNIGHT)
     {
         float computedPowerAdjustment = -100.0f * (1.0f - tbcPowerAdjustment);
+        float computedHealthAdjustment = -100.0f * (1.0f - tbcHealthAdjustment);
 
-	    AdjustStats(player, computedPowerAdjustment, tbcHealthAdjustment);
+	    AdjustStats(player, computedPowerAdjustment, computedHealthAdjustment);
     }
     else
     {
@@ -103,9 +100,6 @@ void IndividualProgression::CheckAdjustments(Player* player) const
 void IndividualProgression::AdjustStats(Player* player, float computedPowerAdjustment, float computedHealthAdjustment)
 {
     if (!player || !player->IsInWorld())
-        return;
-
-    if (!computedPowerAdjustment || !computedHealthAdjustment)
         return;
 
     auto bp1 = static_cast<int32>(computedPowerAdjustment);
@@ -134,9 +128,8 @@ uint8 IndividualProgression::GetAccountProgression(uint32 accountId)
 {
     uint8 progressionLevel = 0;
     if (!sWorld->getBoolConfig(CONFIG_PLAYER_SETTINGS_ENABLED))
-    {
         return 0; // Prevent crash if player settings are not enabled
-    }
+
     QueryResult result = CharacterDatabase.Query("SELECT `data` FROM `character_settings` WHERE `source` = 'mod-individual-progression' AND `guid` IN (SELECT `guid` FROM `characters` WHERE `account` = {});", accountId);
     if (result)
     {
@@ -157,10 +150,10 @@ uint8 IndividualProgression::GetAccountProgression(uint32 accountId)
 
 void IndividualProgression::RemovePlayerAchievement(uint16 playerGUID, uint16 achievementId)
 {
-	if (playerGUID && achievementId)
-    {
-        CharacterDatabase.Query("DELETE FROM `character_achievement` WHERE `guid` = {} AND `achievement` = {}", playerGUID, achievementId);
-    }
+	if (!playerGUID || !achievementId)
+        return;
+
+    CharacterDatabase.Query("DELETE FROM `character_achievement` WHERE `guid` = {} AND `achievement` = {}", playerGUID, achievementId);
 }
 
 bool IndividualProgression::groupHaveLevelDisparity(Player* player)
@@ -236,9 +229,8 @@ bool IndividualProgression::hasCustomProgressionValue(uint32 creatureEntry)
         return false;
 
     if (customProgressionMap.empty())
-    {
         return false;
-    }
+
     return (customProgressionMap.find(creatureEntry) != customProgressionMap.end());
 }
 
@@ -247,18 +239,13 @@ bool IndividualProgression::isAttuned(Player* player)
     if (!player || !player->IsInWorld())
         return false;
 
-    if ((player->GetQuestStatus(NAXX40_ATTUNEMENT_1) == QUEST_STATUS_REWARDED) ||
-        (player->GetQuestStatus(NAXX40_ATTUNEMENT_2) == QUEST_STATUS_REWARDED) ||
-        (player->GetQuestStatus(NAXX40_ATTUNEMENT_3) == QUEST_STATUS_REWARDED) ||
-        player->IsGameMaster() ||
-        sIndividualProgression->isExcludedFromProgression(player))
+    if ((player->GetQuestStatus(NAXX40_ATTUNEMENT_1) == QUEST_STATUS_REWARDED) || (player->GetQuestStatus(NAXX40_ATTUNEMENT_2) == QUEST_STATUS_REWARDED) || (player->GetQuestStatus(NAXX40_ATTUNEMENT_3) == QUEST_STATUS_REWARDED)
+        || player->IsGameMaster()
+        || sIndividualProgression->isExcludedFromProgression(player))
     {
         return true;
-    }
     else
-    {
         return false;
-    }
 }
 
 bool IndividualProgression::isExcludedFromProgression(Player* player)
@@ -933,113 +920,85 @@ void IndividualProgression::checkIPProgression(Player* killer)
     if (killer->HasAchieved(HALION_KILL)) // 4815
     {
         if (currentState < PROGRESSION_WOTLK_TIER_5)
-        {
             UpdateProgressionState(killer, PROGRESSION_WOTLK_TIER_5);
-        }
         return;
     }
     else if (killer->HasAchieved(LICH_KING_KILL)) // 4597
     {
         if (currentState < PROGRESSION_WOTLK_TIER_4)
-        {
             UpdateProgressionState(killer, PROGRESSION_WOTLK_TIER_4);
-        }
         return;
     }
     else if (killer->HasAchieved(ANUB_ARAK_KILL)) // 3916
     {
         if (currentState < PROGRESSION_WOTLK_TIER_3)
-        {
             UpdateProgressionState(killer, PROGRESSION_WOTLK_TIER_3);
-        }
         return;
     }
     else if (killer->HasAchieved(KEL_THUZAD_KILL)) // 575
     {
         if (currentState < PROGRESSION_WOTLK_TIER_1)
-        {
             UpdateProgressionState(killer, PROGRESSION_WOTLK_TIER_1);
-        }
         return;
     }
     else if (killer->HasAchieved(KIL_JAEDEN_KILL)) // 698
     {
         if (currentState < PROGRESSION_TBC_TIER_5)
-        {
             UpdateProgressionState(killer, PROGRESSION_TBC_TIER_5);
-        }
         return;
     }
     else if (killer->HasAchieved(ZUL_JIN_KILL)) // 691
     {
         if (currentState < PROGRESSION_TBC_TIER_4)
-        {
             UpdateProgressionState(killer, PROGRESSION_TBC_TIER_4);
-        }
         return;
     }
     else if (killer->HasAchieved(ILLIDAN_KILL)) // 697
     {
         if (currentState < PROGRESSION_TBC_TIER_3)
-        {
             UpdateProgressionState(killer, PROGRESSION_TBC_TIER_3);
-        }
         return;
     }
     else if (killer->HasAchieved(KAEL_THAS_KILL)) // 696
     {
         if (currentState < PROGRESSION_TBC_TIER_2)
-        {
             UpdateProgressionState(killer, PROGRESSION_TBC_TIER_2);
-        }
         return;
     }
     else if (killer->HasAchieved(MALCHEZAAR_KILL)) //  690
     {
         if (currentState < PROGRESSION_TBC_TIER_1)
-        {
             UpdateProgressionState(killer, PROGRESSION_TBC_TIER_1);
-        }
         return;
     }
     else if (killer->HasAchieved(KEL_THUZAD_40_KILL)) // 533
     {
         if (currentState < PROGRESSION_NAXX40)
-        {
             UpdateProgressionState(killer, PROGRESSION_NAXX40);
-        }
         return;
     }
     else if (killer->HasAchieved(C_THUN_KILL)) // 687
     {
         if (currentState < PROGRESSION_AQ)
-        {
             UpdateProgressionState(killer, PROGRESSION_AQ);
-        }
         return;
     }
     else if (killer->HasAchieved(NEFARIAN_KILL)) // 685
     {
         if (currentState < PROGRESSION_BLACKWING_LAIR)
-        {
             UpdateProgressionState(killer, PROGRESSION_BLACKWING_LAIR);
-        }
         return;
     }
     else if (killer->HasAchieved(ONYXIAS_KILL)) // 684
     {
         if (currentState < PROGRESSION_ONYXIA)
-        {
             UpdateProgressionState(killer, PROGRESSION_ONYXIA);
-        }
         return;
     }
     else if (killer->HasAchieved(RAGNAROS_KILL)) // 686
     {
         if (currentState < PROGRESSION_MOLTEN_CORE)
-        {
             UpdateProgressionState(killer, PROGRESSION_MOLTEN_CORE);
-        }
         return;
     }
 }
@@ -1387,11 +1346,11 @@ void IndividualProgression::UpdateProgressionAchievements(Player* player, uint16
         return;
 
     AchievementEntry const* entry = sAchievementStore.LookupEntry(achievementID);
+    if (!entry)
+        return;
+    
+    player->CompletedAchievement(entry);
 
-    if (entry)
-    {
-        player->CompletedAchievement(entry);
-    }
 }
 
 void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
@@ -1427,9 +1386,7 @@ void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
         for (IppPvPTitles title : pvpTitlesList)
         {
             if (player->HasTitle(title.TitleId))
-            {
                 player->SetTitle(sCharTitlesStore.LookupEntry(title.TitleId), true);
-            }
         }
     }
     else
@@ -1437,9 +1394,7 @@ void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
         for (IppPvPTitles title : pvpTitlesList)
         {
             if (kills < title.RequiredKills && player->HasTitle(title.TitleId))
-            {
                 player->SetTitle(sCharTitlesStore.LookupEntry(title.TitleId), true);
-            }
         }
     }
 
@@ -1459,9 +1414,7 @@ void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
 		uint32_t achievementId = AchievementData[i].TitleId[teamId];
 
 		if (highestRank == i || !player->HasAchieved(achievementId))
-		{
 			continue;
-		}
 
 		RemovePlayerAchievement(playerGUID, achievementId);
     }
@@ -1472,9 +1425,7 @@ void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
         uint32 questId = PVP_QUEST + i;
 
         if (player->GetQuestStatus(questId) == QUEST_STATUS_REWARDED)
-		{
             player->RemoveRewardedQuest(questId);
-        }
     }
 
     uint8 i = 1;
@@ -1556,9 +1507,7 @@ void IndividualProgression::AwardEarnedVanillaPvpTitles(Player* player)
                 const int titleId = title.TitleId;
 
                 if (highestTitle != titleId)
-				{
                     player->SetTitle(sCharTitlesStore.LookupEntry(titleId), true);
-				}
             }
 
 			if (highestTitle != -1 && usesPvPTitle)
@@ -1670,9 +1619,7 @@ public:
         }
 
         if (sIndividualProgression->DisableRDF)
-        {
             sWorld->setIntConfig(CONFIG_LFG_OPTIONSMASK, 4);
-        }
     }
 };
 

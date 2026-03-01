@@ -15,9 +15,12 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 --
 (15634, 0, 0, 0, 101, 0, 100, 0, 1, 20, 0, 50000, 60000, 0, 11, 25839, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,       'Priestess of the Moon - On Near Player - Cast Mass Healing'),
 --
-(15740, 0, 0, 0, 0, 0, 100, 0, 60000, 60000, 60000, 60000, 0, 0, 11, 26167, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,  'Colossus of Zora - In Combat - Cast Colossal Smash'),
-(15741, 0, 0, 0, 0, 0, 100, 0, 60000, 60000, 60000, 60000, 0, 0, 11, 26167, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,  'Colossus of Regal - In Combat - Cast Colossal Smash'), -- https://www.youtube.com/watch?v=F4aAAo_GSrw
+(15740, 0, 0, 0, 0, 0, 100, 0, 60000, 60000, 60000, 60000, 0, 0, 11, 26167, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,  'Colossus of Zora - In Combat - Cast Colossal Smash'), -- https://www.youtube.com/watch?v=F4aAAo_GSrw
+(15740, 0, 1, 0, 6, 0, 100, 0, 0, 0, 0, 0, 0, 0, 15, 108745, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0,                'Colossus of Zora - On Death - Reward Quest Credit'),
+(15741, 0, 0, 0, 0, 0, 100, 0, 60000, 60000, 60000, 60000, 0, 0, 11, 26167, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,  'Colossus of Regal - In Combat - Cast Colossal Smash'),
+(15741, 0, 1, 0, 6, 0, 100, 0, 0, 0, 0, 0, 0, 0, 15, 108746, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0,                'Colossus of Regal - On Death - Reward Quest Credit'),
 (15742, 0, 0, 0, 0, 0, 100, 0, 60000, 60000, 60000, 60000, 0, 0, 11, 26167, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,  'Colossus of Ashi - In Combat - Cast Colossal Smash'),
+(15742, 0, 1, 0, 6, 0, 100, 0, 0, 0, 0, 0, 0, 0, 15, 108747, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0,                'Colossus of Ashi - On Death - Reward Quest Credit'),
 --
 (15758, 0, 0, 0, 0, 0, 100, 0, 8000, 12000, 8000, 12000, 0, 0, 11, 11971, 0, 0, 0, 0, 0, 21, 5, 0, 0, 0, 0, 0, 0, 0,   'Supreme Anubisath Warbringer - Within 0-5 Range - Cast Sundering Cleave'),
 (15810, 0, 0, 0, 9, 0, 100, 0, 0, 0, 6000, 9000, 0, 5, 11, 15496, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,            'Eroded Anubisath Warbringer - 0-5 Range - Cast Cleave'),
@@ -127,12 +130,12 @@ INSERT INTO `pool_creature` (`guid`, `pool_entry`, `chance`, `description`) VALU
 -- add Resonating Crystal Formations to Silithus and Darkshore
 DELETE FROM `gameobject` WHERE `guid` BETWEEN @OGUID+101 AND @OGUID+106;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`, `ScriptName`, `VerifiedBuild`) VALUES
-(@OGUID+101, 180810, 1, 0, 0, 1, 1, 6431.208496, 7.873897, 25.929821, 6.005887, 0, 0, 0, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0),
-(@OGUID+102, 180810, 1, 0, 0, 1, 1, 5070.317383, 106.293625, 42.326523, 3.869612, 0, 0, 0, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0),
-(@OGUID+103, 180810, 1, 0, 0, 1, 1, 4370.228027, 540.763245, 59.281170, 6.165329, 0, 0, 0, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0),
-(@OGUID+104, 180810, 1, 0, 0, 1, 1, -7648.079590, 1426.084717, 2.876715, 3.538846, 0, 0, 0, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0),
-(@OGUID+105, 180810, 1, 0, 0, 1, 1, -7831.400879, 857.148376, -4.281037, 1.477178, 0, 0, 0, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0),
-(@OGUID+106, 180810, 1, 0, 0, 1, 1, -6317.880371, 738.097473, 9.361129, 2.939591, 0, 0, 0, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0);
+(@OGUID+101, 180810, 1, 0, 0, 1, 1, 6431.208496, 7.873897, 25.929821, 6.005887, 0, 0, -1, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0),
+(@OGUID+102, 180810, 1, 0, 0, 1, 1, 5070.317383, 106.293625, 42.326523, 3.869612, 0, 0, -1, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0),
+(@OGUID+103, 180810, 1, 0, 0, 1, 1, 4370.228027, 540.763245, 59.281170, 6.165329, 0, 0, -1, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0),
+(@OGUID+104, 180810, 1, 0, 0, 1, 1, -7648.079590, 1426.084717, 2.876715, 3.538846, 0, 0, -1, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0),
+(@OGUID+105, 180810, 1, 0, 0, 1, 1, -7831.400879, 857.148376, -4.281037, 1.477178, 0, 0, -1, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0),
+(@OGUID+106, 180810, 1, 0, 0, 1, 1, -6317.880371, 738.097473, 9.361129, 2.939591, 0, 0, -1, 0, 3600, 255, 1, 'gobject_ipp_aqwar', 0);
 
 -- set Resonating Crystal Formations to 'Not selectable'
 UPDATE `gameobject_template_addon` SET `flags` = 16 WHERE `entry` = 180810;

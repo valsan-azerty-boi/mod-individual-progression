@@ -311,12 +311,11 @@ public:
         bool CanBeSeen(Player const* player) override
         {
             Player* target = ObjectAccessor::FindConnectedPlayer(player->GetGUID());
+            
             if (!target)
-            {
                 return false;
-            }
 
-            /* The Scarab Gong can still be seen during the outdoor AQ war.  */        
+            /* The Scarab Gong can still be seen during the outdoor AQ war.  */     
             return sIndividualProgression->isBeforeProgression(target, PROGRESSION_AQ);
         }
 
@@ -445,9 +444,7 @@ public:
         {
             Player* target = ObjectAccessor::FindConnectedPlayer(player->GetGUID());
             if (!target)
-            {
                 return false;
-            }
 
             return sIndividualProgression->isBeforeProgression(target, PROGRESSION_PRE_AQ); // gate can be opened during the AQ WAR by interacting with the Scarab Gong
         }
@@ -504,9 +501,7 @@ public:
             Player* player = ObjectAccessor::FindConnectedPlayer(PlayerGUID);
 
             if (!player)
-            {
                 return;
-            }
 
             Creature* Fandral = player->FindNearestCreature(C_FANDRAL_STAGHELM, 100.0f);
             Creature* Arygos = player->FindNearestCreature(C_ARYGOS, 100.0f);
