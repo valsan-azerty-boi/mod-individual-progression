@@ -242,7 +242,6 @@ bool IndividualProgression::isAttuned(Player* player)
     if ((player->GetQuestStatus(NAXX40_ATTUNEMENT_1) == QUEST_STATUS_REWARDED) || (player->GetQuestStatus(NAXX40_ATTUNEMENT_2) == QUEST_STATUS_REWARDED) || (player->GetQuestStatus(NAXX40_ATTUNEMENT_3) == QUEST_STATUS_REWARDED)
         || player->IsGameMaster()
         || sIndividualProgression->isExcludedFromProgression(player))
-    {
         return true;
     else
         return false;
