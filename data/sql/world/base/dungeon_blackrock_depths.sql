@@ -15,7 +15,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (8889, 0, 1, 0, 0, 0, 100, 0, 8000, 11000, 7000, 12000, 0, 0, 11, 15580, 0, 0, 0, 0, 0, 21, 5, 0, 0, 0, 0, 0, 0, 0,    'Anvilrage Overseer - Within 0-5 Range - Cast Strike'),
 (8889, 0, 2, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Anvilrage Overseer - Between 0-15% Health - Flee For Assist'),
 (8890, 0, 0, 0, 9, 0, 100, 0, 0, 0, 13000, 18000, 0, 30, 11, 14030, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,          'Anvilrage Warden - Within 0-30 Range - Cast Hooked Net'),
-(8890, 0, 1, 0, 105, 0, 100, 0, 0, 0, 9000, 12000, 0, 5, 11, 11972, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,          'Anvilrage Warden - Target Casting - Cast Shield Bash'),
+(8890, 0, 1, 0, 105, 0, 50, 0, 0, 0, 9000, 12000, 0, 5, 11, 11972, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,           'Anvilrage Warden - Target Casting - Cast Shield Bash'),
 (8890, 0, 2, 0, 54, 0, 100, 512, 0, 0, 0, 0, 0, 0, 53, 1, 8912, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0,                 'Anvilrage Warden - Just Summoned - Start Waypoint (React State Aggressive)'),
 (8890, 0, 3, 0, 40, 0, 100, 0, 4, 8912, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 19, 9020, 0, 0, 0, 0, 0, 0, 0,               'Anvilrage Warden - On Waypoint 4 Reached - Start Attacking'),
 (8890, 0, 4, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Anvilrage Warden - Between 0-15% Health - Flee For Assist'),
@@ -27,7 +27,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (8891, 0, 5, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Anvilrage Guardsman - Between 0-15% Health - Flee For Assist'),
 (8892, 0, 0, 0, 4, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 674, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                     'Anvilrage Footman - On Aggro - Cast Dual Wield'),
 (8892, 0, 1, 0, 0, 0, 100, 0, 3000, 5000, 5000, 8000, 0, 0, 11, 15580, 0, 0, 0, 0, 0, 21, 5, 0, 0, 0, 0, 0, 0, 0,      'Anvilrage Footman - Within 0-5 Range - Cast Strike'),
-(8892, 0, 2, 0, 105, 0, 100, 0, 0, 0, 8000, 12000, 0, 5, 11, 15614, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,          'Anvilrage Footman - Target Casting - Cast Kick'),
+(8892, 0, 2, 0, 105, 0, 50, 0, 0, 0, 8000, 12000, 0, 5, 11, 15614, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,           'Anvilrage Footman - Target Casting - Cast Kick'),
 (8892, 0, 3, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Anvilrage Footman - Between 0-15% Health - Flee For Assist'),
 (8893, 0, 0, 0, 0, 0, 100, 0, 4000, 8000, 6000, 10000, 0, 0, 11, 15284, 0, 0, 0, 0, 0, 21, 5, 0, 0, 0, 0, 0, 0, 0,     'Anvilrage Soldier - Within 0-5 Range - Cast Cleave'),
 (8893, 0, 1, 0, 9, 0, 100, 0, 0, 0, 11000, 16000, 0, 5, 11, 9080, 32, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,           'Anvilrage Soldier - Within 0-5 Range - Cast Hamstring'),
@@ -92,7 +92,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (8902, 0, 9, 0, 0, 0, 100, 0, 7000, 14000, 7000, 14000, 0, 0, 11, 13339, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,     'Shadowforge Citizen - In Combat - Cast Fire Blast'),
 (8902, 0, 10, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                     'Shadowforge Citizen - Between 0-15% Health - Flee For Assist (No Repeat)'),
 (8903, 0, 0, 0, 0, 0, 100, 0, 5000, 8000, 9000, 13000, 0, 0, 11, 13737, 0, 0, 0, 0, 0, 21, 5, 0, 0, 0, 0, 0, 0, 0,     'Anvilrage Captain - Within 0-5 Range - Cast Mortal Strike'),
-(8903, 0, 1, 0, 105, 0, 100, 0, 0, 0, 9000, 12000, 0, 5, 11, 11972, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,          'Anvilrage Captain - Target Casting - Cast Shield Bash'),
+(8903, 0, 1, 0, 105, 0, 50, 0, 0, 0, 9000, 12000, 0, 5, 11, 11972, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,           'Anvilrage Captain - Target Casting - Cast Shield Bash'),
 (8903, 0, 2, 0, 0, 0, 100, 0, 2000, 4000, 7000, 11000, 0, 0, 11, 12169, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,      'Anvilrage Captain - In Combat - Cast Shield Block'),
 (8903, 0, 3, 0, 9, 0, 100, 0, 0, 0, 14000, 20000, 0, 8, 11, 13730, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,           'Anvilrage Captain - Within 0-8 Range - Cast Demoralizing Shout'),
 (8903, 0, 4, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Anvilrage Captain - Between 0-15% Health - Flee For Assist (No Repeat)'),
@@ -143,12 +143,12 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (8913, 0, 6, 0, 0, 4, 100, 0, 0, 0, 2000, 4000, 0, 0, 11, 13748, 64, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,            'Twilight Emissary - In Combat - Cast Arcane Bolt (Phase 3)'),
 (8913, 0, 7, 0, 106, 4, 100, 0, 0, 0, 10000, 30000, 0, 8, 11, 13745, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,         'Twilight Emissary - Within 0-8 Range - Cast Arcane Explosion (Phase 3)'),
 (8913, 0, 8, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Twilight Emissary - Between 0-15% Health - Flee For Assist (No Repeat)'),
-(8914, 0, 0, 0, 105, 0, 100, 0, 0, 0, 4000, 8000, 0, 5, 11, 15615, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,           'Twilight Bodyguard - Target Casting - Cast Pummel'),
+(8914, 0, 0, 0, 105, 0, 50, 0, 0, 0, 4000, 8000, 0, 5, 11, 15615, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,            'Twilight Bodyguard - Target Casting - Cast Pummel'),
 (8914, 0, 1, 0, 0, 0, 100, 0, 16000, 16000, 14000, 14000, 0, 0, 11, 13902, 0, 0, 0, 0, 0, 21, 10, 0, 0, 0, 0, 0, 0, 0, 'Twilight Bodyguard - Within 0-10 Range - Cast Fist of Ragnaros'),
 (8914, 0, 2, 0, 14, 0, 100, 0, 3500, 40, 31000, 33000, 0, 0, 11, 13903, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,      'Twilight Bodyguard - Friendly Missing 3500 Health - Cast Seal of Sacrifice'),
 (8914, 0, 3, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Twilight Bodyguard - Between 0-15% Health - Flee For Assist (No Repeat)'),
 (8915, 0, 0, 0, 11, 0, 100, 0, 0, 0, 0, 0, 0, 0, 31, 1, 4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                      'Twilights Hammer Ambassador - On Respawn - Set Phase Random Between 1-4'), -- test!
-(8915, 0, 1, 0, 105, 1, 100, 0, 0, 0, 1000, 7000, 0, 20, 11, 15501, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,          'Twilights Hammer Ambassador - Target Casting - Cast Earth Shock (Phase 1)'),
+(8915, 0, 1, 0, 105, 1, 50, 0, 0, 0, 1000, 7000, 0, 20, 11, 15501, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,           'Twilights Hammer Ambassador - Target Casting - Cast Earth Shock (Phase 1)'),
 (8915, 0, 2, 0, 0, 1, 100, 0, 0, 0, 12000, 16000, 0, 0, 11, 11980, 32, 0, 0, 0, 0, 21, 30, 0, 0, 0, 0, 0, 0, 0,        'Twilights Hammer Ambassador - In Combat - Cast Curse of Weakness (Phase 1)'),
 (8915, 0, 3, 0, 0, 2, 100, 0, 5000, 8000, 30000, 45000, 0, 0, 11, 15499, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,     'Twilights Hammer Ambassador - In Combat - Cast Frost Shock (Phase 2)'),
 (8915, 0, 4, 0, 1, 2, 100, 0, 1000, 1000, 90000, 90000, 0, 0, 11, 12544, 32, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,    'Twilights Hammer Ambassador - Out of Combat - Cast Frost Armor (Phase 2)'),
@@ -235,11 +235,11 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (9056, 0, 1, 0, 2, 0, 100, 1, 0, 60, 0, 0, 0, 0, 11, 15493, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                  'Fineous Darkvire - Between 0-60% Health - Cast Holy Light (No Repeat)'),
 (9056, 0, 2, 0, 2, 0, 100, 1, 0, 40, 0, 0, 0, 0, 11, 15493, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                  'Fineous Darkvire - Between 0-40% Health - Cast Holy Light (No Repeat)'),
 (9056, 0, 3, 0, 9, 0, 100, 0, 0, 0, 6000, 8500, 0, 5, 11, 13953, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,             'Fineous Darkvire - Within 0-5 Range - Cast Holy Strike'),
-(9056, 0, 4, 0, 105, 0, 100, 0, 0, 0, 11000, 15000, 0, 5, 11, 11978, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,         'Fineous Darkvire - Target Casting - Cast Kick'),
+(9056, 0, 4, 0, 105, 0, 50, 0, 0, 0, 11000, 15000, 0, 5, 11, 11978, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,          'Fineous Darkvire - Target Casting - Cast Kick'),
 (9056, 0, 5, 0, 2, 0, 100, 1, 0, 20, 0, 0, 0, 0, 11, 15346, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                  'Fineous Darkvire - Between 0-20% Health - Cast Seal of Reckoning (No Repeat)'),
 --
 (9319, 0, 0, 0, 0, 0, 100, 0, 9000, 10000, 15000, 60000, 0, 0, 11, 13730, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,    'Houndmaster Grebmar - In Combat - Cast Demoralizing Shout'),
-(9319, 0, 1, 0, 105, 0, 100, 0, 0, 0, 7000, 25000, 0, 5, 11, 15615, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,          'Houndmaster Grebmar - Target Casting - Cast Pummel'),
+(9319, 0, 1, 0, 105, 0, 50, 0, 0, 0, 7000, 25000, 0, 5, 11, 15615, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,           'Houndmaster Grebmar - Target Casting - Cast Pummel'),
 (9319, 0, 2, 0, 0, 0, 100, 0, 4000, 12000, 4000, 12000, 0, 0, 11, 21049, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,     'Houndmaster Grebmar - In Combat - Cast Bloodlust'), -- https://www.youtube.com/watch?v=RdBpOWNqZeg
 (9319, 0, 3, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Houndmaster Grebmar - Between 0-15% Health - Flee For Assist (No Repeat)'),
 --
@@ -264,7 +264,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (9543, 0, 5, 0, 0, 0, 100, 0, 5000, 14000, 5000, 14000, 0, 0, 11, 9080, 0, 0, 0, 0, 0, 21, 5, 0, 0, 0, 0, 0, 0, 0,     'Ribbly Screwspigot - Within 0-5 Range - Cast Hamstring'),
 (9543, 0, 6, 0, 2, 0, 100, 1, 0, 30, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Ribbly Screwspigot - Between 0-30% Health - Flee For Assist (No Repeat)'),
 --
-(9545, 0, 0, 0, 105, 0, 100, 0, 0, 0, 11000, 15000, 0, 5, 11, 15610, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,         'Grim Patron - Target Casting - Cast Kick'),
+(9545, 0, 0, 0, 105, 0, 50, 0, 0, 0, 11000, 15000, 0, 5, 11, 15610, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,          'Grim Patron - Target Casting - Cast Kick'),
 (9545, 0, 1, 0, 2, 0, 100, 1, 0, 30, 0, 0, 0, 0, 11, 14822, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                  'Grim Patron - Between 0-30% Health - Cast Drunken Rage (No Repeat)'),
 (9545, 0, 2, 0, 1, 0, 55, 0, 7000, 15000, 7000, 15000, 0, 0, 10, 1, 4, 11, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,         'Grim Patron - OOC - Play Random Emotes'),
 (9545, 0, 3, 0, 38, 0, 100, 0, 1, 1, 0, 0, 0, 0, 49, 0, 0, 0, 0, 0, 0, 21, 30, 0, 0, 0, 0, 0, 0, 0,                    'Grim Patron - On Data set - Start Attack'),
@@ -313,10 +313,11 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (-608891, 0, 4, 5, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 47, 1, 0, 0, 0, 0, 0, 10, 91107, 0, 0, 0, 0, 0, 0, 0,   'BRD Bridge Trigger - On Near Player - Set visible Anvilrage Guardsman 91107'),
 (-608891, 0, 5, 0, 61, 0, 100, 0, 0, 0, 0, 0, 0, 0, 2, 21, 0, 0, 0, 0, 0, 10, 91107, 0, 0, 0, 0, 0, 0, 0,   'BRD Bridge Trigger - On Near Player - Set Faction Anvilrage Guardsman 91107');
 
-DELETE FROM `creature` WHERE `guid` IN (91106, 91107, 608891);
+DELETE FROM `creature` WHERE `guid` IN (90728, 91106, 91107, 608891);
 INSERT INTO `creature` (`guid`, `id1`, `id2`, `id3`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, 
 `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`) VALUES 
 --
+(90728,  8911, 0, 0, 230, 0, 0, 1, 1, 0, 754.091, -73.9451, -46.2159, 0.84735, 7200, 0, 1, 7599, 0, 2, 0, 0, 0, '', 0, 0, NULL),
 (91106,  8891, 0, 0, 230, 0, 0, 1, 1, 1, 642.366, -274.516, -43.1092, 0.471239, 7200, 0, 0, 6645, 0, 0, 0, 0, 0, '', 0, 0, NULL),
 (91107,  8891, 0, 0, 230, 0, 0, 1, 1, 1, 740.114, -283.345, -42.7508, 2.86234, 7200, 0, 0, 6645, 0, 0, 0, 0, 0, '', 0, 0, NULL),
 (608891, 8891, 0, 0, 230, 0, 0, 1, 1, 1, 686.649, -280.075, -43.1966, 0.0844455, 300, 0, 0, 6876, 0, 0, 0, 0, 0, '', 0, 0, NULL);
@@ -365,8 +366,8 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (108982, 0, 0, 0, 11, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 15533, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                'Ironhand Guardian - On Spawn - Cast Stoned Visual'),
 (108982, 0, 1, 0, 1, 0, 100, 0, 4000, 8000, 13000, 18000, 0, 0, 11, 15529, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,   'Ironhand Guardian - Out of Combat - Cast Gout of Flame');
 
--- fix Fireguard patrols near Pyromancer Loregrain and in front of the vault.
-DELETE FROM `waypoint_data` WHERE `id` IN (477380, 908280);
+-- fix Fireguard patrols
+DELETE FROM `waypoint_data` WHERE `id` IN (477380, 907280, 908280);
 INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `orientation`, `delay`, `move_type`, `action`, `action_chance`, `wpguid`) VALUES 
 --
 (477380, 1, 712.727, -278.328, -43.2147, 0.075571, 0, 0, 0, 100, 0), -- Fireguard Destroyer(8911)
@@ -380,6 +381,25 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (477380, 9, 645.91, -284.733, -43.2395, 0.005052, 0, 0, 0, 100, 0),
 (477380, 10, 660.339, -282.755, -43.2208, 0.10519, 0, 0, 0, 100, 0),
 --
+(907280, 1, 761.283, -65.8021, -46.2337, NULL, 0, 0, 0, 100, 0), -- Fireguard Destroyer(8911)
+(907280, 2, 762.053, -59.3832, -46.2337, NULL, 0, 0, 0, 100, 0),
+(907280, 3, 740.873, -15.4984, -46.2337, NULL, 0, 0, 0, 100, 0),
+(907280, 4, 733.056, -6.43943, -46.1815, NULL, 0, 0, 0, 100, 0),
+(907280, 5, 710.789, -8.89487, -45.9405, NULL, 0, 0, 0, 100, 0),
+(907280, 6, 706.555, 13.0863, -45.5852, NULL, 0, 0, 0, 100, 0),
+(907280, 7, 710.562, 22.7446, -45.4594, NULL, 0, 0, 0, 100, 0),
+(907280, 8, 696.138, 34.8861, -45.467, NULL, 0, 0, 0, 100, 0),
+(907280, 9, 691.576, 46.4976, -45.467, NULL, 0, 0, 0, 100, 0),
+(907280, 10, 696.138, 34.8861, -45.467, NULL, 0, 0, 0, 100, 0),
+(907280, 11, 710.562, 22.7446, -45.4594, NULL, 0, 0, 0, 100, 0),
+(907280, 12, 706.555, 13.0863, -45.5852, NULL, 0, 0, 0, 100, 0),
+(907280, 13, 710.789, -8.89487, -45.9405, NULL, 0, 0, 0, 100, 0),
+(907280, 14, 733.056, -6.43943, -46.1815, NULL, 0, 0, 0, 100, 0),
+(907280, 15, 740.873, -15.4984, -46.2337, NULL, 0, 0, 0, 100, 0),
+(907280, 16, 762.053, -59.3832, -46.2337, NULL, 0, 0, 0, 100, 0),
+(907280, 17, 761.283, -65.8021, -46.2337, NULL, 0, 0, 0, 100, 0),
+(907280, 18, 747.48, -80.9312, -46.2337, NULL, 0, 0, 0, 100, 0),
+--
 (908280, 1, 853.993, -261.658, -49.9364, 1.5072, 0, 0, 0, 100, 0), -- Blazing Fireguard(8910)
 (908280, 2, 853.608, -277.92, -49.9364, 4.93155, 0, 0, 0, 100, 0),
 (908280, 3, 860.549, -295.867, -49.9364, 5.14754, 0, 0, 0, 100, 0),
@@ -388,7 +408,6 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (908280, 6, 880.836, -310.104, -49.9364, 2.56556, 0, 0, 0, 100, 0),
 (908280, 7, 860.108, -296.642, -49.9364, 2.16697, 0, 0, 0, 100, 0),
 (908280, 8, 854.253, -279.573, -49.9364, 1.9019, 0, 0, 0, 100, 0);
-
 
 -- fix officer patrols in Bael'Gar area
 DELETE FROM `creature` WHERE `guid` IN (
@@ -1005,19 +1024,59 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (910840, 11, 435.508, -82.24, -64.5627, 2.89846, 0, 0, 0, 100, 0),
 (910840, 12, 423.312, -79.215, -64.0575, 2.89846, 0, 0, 0, 100, 0);
 
-
 -- remove default auras from Twilight Emissaries, they cast them on Respawn
 UPDATE `creature_addon` SET `auras` = NULL WHERE `guid` IN 
 (47736, 47741, 47751, 47760, 47765, 47766, 47772, 47773, 90633, 90636, 90644, 90645, 90649, 90820, 90823, 90825, 90832, 90833);
 
--- Group General Angerforge together with the 4 Anvilrage Reservists
-DELETE FROM `creature_formations` WHERE `leaderGUID` = 45954;
+-- link creatures together
+DELETE FROM `creature_formations` WHERE `leaderGUID` IN (45954, 45850, 47796, 90663, 90665, 90844, 47704, 47708, 47712, 47717, 47721, 47725, 47729);
 INSERT INTO `creature_formations` (`leaderGUID`, `memberGUID`, `dist`, `angle`, `groupAI`, `point_1`, `point_2`) VALUES 
-(45954, 45954, 0, 0, 515, 0, 0),
-(45954, 45955, 0, 0, 515, 0, 0),
-(45954, 45956, 0, 0, 515, 0, 0),
-(45954, 45958, 0, 0, 515, 0, 0),
-(45954, 45959, 0, 0, 515, 0, 0);
+--
+(45954, 45954, 0, 0, 3, 0, 0), -- General Angerforge
+(45954, 45955, 0, 0, 3, 0, 0),
+(45954, 45956, 0, 0, 3, 0, 0),
+(45954, 45958, 0, 0, 3, 0, 0),
+(45954, 45959, 0, 0, 3, 0, 0),
+--
+(45850, 45850, 0, 0, 3, 0, 0), -- Blazing Fireguard
+(45850, 45851, 0, 0, 3, 0, 0),
+(47796, 47796, 0, 0, 3, 0, 0),
+(47796, 47797, 0, 0, 3, 0, 0),
+(90665, 90665, 0, 0, 3, 0, 0), 
+(90665, 90666, 0, 0, 3, 0, 0),
+(90663, 90663, 0, 0, 3, 0, 0),
+(90663, 90664, 0, 0, 3, 0, 0),
+(90844, 90844, 0, 0, 3, 0, 0),
+(90844, 90845, 0, 0, 3, 0, 0),
+--
+(47704, 47704, 0, 0, 3, 0, 0), -- Warbringer Construct
+(47704, 47705, 0, 0, 3, 0, 0),
+(47704, 47706, 0, 0, 3, 0, 0),
+(47704, 47707, 0, 0, 3, 0, 0),
+(47708, 47708, 0, 0, 3, 0, 0),
+(47708, 47709, 0, 0, 3, 0, 0),
+(47708, 47710, 0, 0, 3, 0, 0),
+(47708, 47711, 0, 0, 3, 0, 0),
+(47712, 47712, 0, 0, 3, 0, 0),
+(47712, 47713, 0, 0, 3, 0, 0),
+(47712, 47714, 0, 0, 3, 0, 0),
+(47712, 47715, 0, 0, 3, 0, 0),
+(47717, 47717, 0, 0, 3, 0, 0),
+(47717, 47718, 0, 0, 3, 0, 0),
+(47717, 47719, 0, 0, 3, 0, 0),
+(47717, 47720, 0, 0, 3, 0, 0),
+(47721, 47721, 0, 0, 3, 0, 0),
+(47721, 47722, 0, 0, 3, 0, 0),
+(47721, 47723, 0, 0, 3, 0, 0),
+(47721, 47724, 0, 0, 3, 0, 0),
+(47725, 47725, 0, 0, 3, 0, 0),
+(47725, 47726, 0, 0, 3, 0, 0),
+(47725, 47727, 0, 0, 3, 0, 0),
+(47725, 47728, 0, 0, 3, 0, 0),
+(47729, 47729, 0, 0, 3, 0, 0),
+(47729, 47730, 0, 0, 3, 0, 0),
+(47729, 47731, 0, 0, 3, 0, 0),
+(47729, 47732, 0, 0, 3, 0, 0);
 
 -- Shadowforge Torch drop rate
 UPDATE `creature_loot_template` SET `Chance` = 80 WHERE `Entry` = 9956 AND `Item` = 11885;

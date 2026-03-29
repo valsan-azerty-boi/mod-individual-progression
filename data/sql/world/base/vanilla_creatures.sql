@@ -13248,7 +13248,7 @@ UPDATE `creature_template` SET `DamageModifier` = 9.0 WHERE `entry` = 8197;
 UPDATE `creature_template` SET `DamageModifier` = 2.9 WHERE `entry` = 8198;
 
 /*  Warleader Krazzilak  */
-UPDATE `creature_template` SET `DamageModifier` = 3.15 WHERE `entry` = 8199;
+UPDATE `creature_template` SET `DamageModifier` = 3.15, `Rank` = 2 WHERE `entry` = 8199;
 
 /*  Jin'Zallah the Sandbringer  */
 UPDATE `creature_template` SET `DamageModifier` = 3.25 WHERE `entry` = 8200;
@@ -18358,9 +18358,6 @@ UPDATE `creature_template` SET `speed_run` = 1.14286, `DamageModifier` = 1.15 WH
 
 /*  Hraug  */
 UPDATE `creature_template` SET `subname` = 'Demon Trainer', `DamageModifier` = 0.8, `RangeAttackTime` = 2112 WHERE `entry` = 12776;
-
-/*  Captain Dirgehammer  */
-UPDATE `creature_template` SET `minlevel` = 55, `maxlevel` = 55, `DamageModifier` = 2.2, `ArmorModifier` = 1.65 WHERE `entry` = 26393;
 
 /*  Lieutenant Rachel Vaccar  */
 UPDATE `creature_template` SET `minlevel` = 55, `maxlevel` = 55, `DamageModifier` = 1.05, `ArmorModifier` = 2.6 WHERE `entry` = 12778;

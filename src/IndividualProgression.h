@@ -162,7 +162,7 @@ enum ProgressionAchievements
 enum ProgressionAreas
 {
     AREA_THE_DARK_PORTAL                 = 72,
-    AREA_TIRISFAL_RUINS                  = 153,
+    AREA_RUINS_OF_LORDAERON_B            = 153,
     AREA_DREADMAUL_ROCK                  = 249,
     AREA_RUINS_OF_THAURISSAN             = 250,
     AREA_BLACKROCK_MOUNTAIN              = 254,
@@ -414,8 +414,8 @@ public:
     std::map<uint32, uint8> customProgressionMap;
     questXpMapType questXpMap;
     float vanillaPowerAdjustment, vanillaHealthAdjustment, tbcPowerAdjustment, tbcHealthAdjustment, vanillaHealingAdjustment, tbcHealingAdjustment;
-    bool enabled, questXpFix, hunterPetLevelFix, moltenCoreOnySamePhase, requirePreAQQuests, enforceGroupRules, fishingFix, simpleConfigOverride, questMoneyAtLevelCap, repeatableVanillaQuestsXp, disableDefaultProgression, earlyDungeonSet2, requireNaxxStrath, naxxExitViaPortals, naxxSkipToSaphiron, doableNaxx40Bosses, DisableRDF, excludeAccounts, VanillaPvpTitlesKeepPostVanilla, VanillaPvpTitlesEarnPostVanilla, ExcludedAccountsEarnPvPTitles;
-    int progressionLimit, startingProgression, tbcRacesProgressionLevel, deathKnightProgressionLevel, deathKnightStartingProgression, RequiredZulGurubProgression, tbcArenaSeason, wotlkArenaSeason, ExcludedAccountsMaxLevel;
+    bool enabled, questXpFix, hunterPetLevelFix, moltenCoreOnySamePhase, requirePreAQQuests, enforceGroupRules, fishingFix, simpleConfigOverride, questMoneyAtLevelCap, repeatableVanillaQuestsXp, disableDefaultProgression, earlyDungeonSet2, earlyScourgeBosses, requireNaxxStrath, naxxExitViaPortals, naxxSkipToSaphiron, doableNaxx40Bosses, DisableRDF, excludeAccounts, VanillaPvpTitlesKeepPostVanilla, VanillaPvpTitlesEarnPostVanilla, ExcludedAccountsEarnPvPTitles;
+    int progressionLimit, startingProgression, tbcRacesProgressionLevel, tbcRacesStartingProgression, deathKnightProgressionLevel, deathKnightStartingProgression, RequiredZulGurubProgression, tbcArenaSeason, wotlkArenaSeason, ExcludedAccountsMaxLevel;
     uint32 VanillaPvpKillRank1, VanillaPvpKillRank2, VanillaPvpKillRank3, VanillaPvpKillRank4, VanillaPvpKillRank5, VanillaPvpKillRank6, VanillaPvpKillRank7, VanillaPvpKillRank8, VanillaPvpKillRank9, VanillaPvpKillRank10, VanillaPvpKillRank11, VanillaPvpKillRank12, VanillaPvpKillRank13, VanillaPvpKillRank14;
     std::string excludedAccountsRegex;
 
@@ -424,9 +424,6 @@ public:
     void UpdateProgressionState(Player* player, ProgressionState newState) const;
     static void ForceUpdateProgressionState(Player* player, ProgressionState newState);
     void CheckAdjustments(Player* player) const;
-    void AdjustVanillaStats(Player* player) const;
-    void AdjustTBCStats(Player* player) const;
-    void AdjustWotLKStats(Player* player) const;
     bool hasCustomProgressionValue(uint32 creatureEntry);
     bool isExcludedFromProgression(Player* player);
     void SyncBotsProgressionToLeader(Group* group);
@@ -440,7 +437,6 @@ public:
     void AwardEarnedVanillaPvpTitles(Player* player);
     static void LoadCustomProgressionEntries(const std::string& customProgressionString);
     static void RemovePlayerAchievement(uint16 playerGUID, uint16 achievementId);
-    static void AdjustStats(Player* player, float computedPowerAdjustment, float computedHealthAdjustment);
     static float ComputeVanillaAdjustment(uint8 playerLevel, float configAdjustmentValue);
     static uint8 GetAccountProgression(uint32 accountId);
     bool groupHaveLevelDisparity(Player* player);

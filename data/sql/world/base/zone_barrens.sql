@@ -172,7 +172,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (3384, 0, 4, 0, 0, 0, 100, 0, 4000, 6000, 9000, 13000, 0, 0, 11, 3011, 0, 0, 0, 0, 0, 28, 30, 1, 1, 5, 0, 0, 0, 0,     'Southsea Privateer - Within 5-30 Range - Cast Fire Shot'),
 (3384, 0, 5, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Southsea Privateer - Between 0-15% Health - Flee For Assist (No Repeat)'),
 (3385, 0, 0, 0, 4, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 7164, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                    'Theramore Marine - On Aggro - Cast Defensive Stance'),
-(3385, 0, 1, 0, 105, 0, 100, 0, 3000, 5000, 15000, 21000, 0, 5, 11, 72, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,      'Theramore Marine - Target Casting - Cast Shield Bash'),
+(3385, 0, 1, 0, 105, 0, 50, 0, 3000, 5000, 15000, 21000, 0, 5, 11, 72, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,       'Theramore Marine - Target Casting - Cast Shield Bash'),
 (3385, 0, 2, 0, 0, 0, 100, 0, 12000, 18000, 20000, 33000, 0, 0, 11, 6713, 32, 0, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0,   'Theramore Marine - Within 0-5 Range - Cast Disarm'),
 (3385, 0, 3, 0, 2, 0, 100, 1, 0, 20, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Theramore Marine - Between 0-20% Health - Flee For Assist (No Repeat)'),
 (3386, 0, 0, 0, 0, 0, 100, 0, 0, 0, 2000, 2000, 0, 0, 11, 9734, 64, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,             'Theramore Preserver - In Combat - Cast Holy Smite'),
@@ -183,7 +183,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (3392, 0, 0, 0, 0, 0, 100, 0, 7000, 14000, 10000, 16000, 0, 0, 11, 6253, 0, 0, 0, 0, 0, 5, 5, 0, 0, 0, 0, 0, 0, 0,     'Prospector Khazgorm - Within 0-5 Range - Cast Backhand'),
 (3393, 0, 0, 0, 4, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 9128, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                    'Captain Fairmount - On Aggro - Cast Battle Shout'),
 (3393, 0, 1, 0, 2, 0, 100, 0, 0, 30, 27500, 27500, 0, 0, 11, 19134, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,          'Captain Fairmount - Between 0-30% Health - Cast Frightening Shout'),
-(3393, 0, 2, 0, 105, 0, 100, 0, 0, 0, 40000, 40000, 0, 5, 11, 12555, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,         'Captain Fairmount - Target Casting - Cast Pummel'),
+(3393, 0, 2, 0, 105, 0, 50, 0, 0, 0, 40000, 40000, 0, 5, 11, 12555, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,          'Captain Fairmount - Target Casting - Cast Pummel'),
 (3394, 0, 0, 0, 9, 0, 100, 0, 0, 0, 4000, 4000, 30, 60, 21, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,               'Barak Kodobane - Outside 30 Range - Start Combat Movement'),
 (3394, 0, 1, 0, 9, 0, 100, 0, 0, 0, 4000, 4000, 5, 30, 21, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                'Barak Kodobane - Within 5-30 Range - Stop Combat Movement'),
 (3394, 0, 2, 0, 9, 0, 100, 0, 0, 0, 4000, 4000, 0, 5, 21, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                 'Barak Kodobane - Within 0-5 Range - Start Combat Movement'),
@@ -274,7 +274,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (5849, 0, 4, 0, 0, 0, 100, 0, 0, 0, 9000, 14000, 0, 5, 11, 6253, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0,             'Digger Flameforge - Within 0-5 Range - Cast Backhand'),
 (5849, 0, 5, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Digger Flameforge - Between 0-15% Health - Flee For Assist (No Repeat)'),
 (5851, 0, 0, 0, 4, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 7164, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                    'Captain Gerogg Hammertoe - On Aggro - Cast Defensive Stance'),
-(5851, 0, 1, 0, 105, 0, 100, 0, 0, 0, 11000, 13000, 0, 5, 11, 11972, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,         'Captain Gerogg Hammertoe - Target Casting - Cast Shield Bash'),
+(5851, 0, 1, 0, 105, 0, 50, 0, 0, 0, 11000, 13000, 0, 5, 11, 11972, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,          'Captain Gerogg Hammertoe - Target Casting - Cast Shield Bash'),
 (5851, 0, 2, 0, 2, 0, 100, 1, 0, 30, 30000, 40000, 0, 0, 11, 15062, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,          'Captain Gerogg Hammertoe - Between 0-30% Health - Cast Shield Wall'),
 (5851, 0, 3, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Captain Gerogg Hammertoe - Between 0-15% Health - Flee For Assist (No Repeat)'),
 (5859, 0, 0, 0, 11, 0, 100, 0, 0, 0, 0, 0, 0, 0, 11, 7165, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                   'Hagg Taurenbane - On Respawn - Cast Battle Stance'),
@@ -382,7 +382,7 @@ UPDATE `quest_template_addon` SET `PrevQuestID` = 871  WHERE `ID` = 5041; -- Sup
 
 UPDATE `creature` SET `MovementType` = 2, `currentwaypoint` = 1 WHERE `guid` = 15085; -- Isha Iwak, waypoints
 
-DELETE FROM `creature` WHERE `id1` IN (3392, 3434, 3435, 3436, 3472, 3474, 5830, 5832, 5834, 5835);
+DELETE FROM `creature` WHERE `id1` IN (3392, 3434, 3435, 3436, 3438, 3472, 3474, 5830, 5832, 5834, 5835);
 INSERT INTO `creature` (`guid`, `id1`, `id2`, `id3`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, 
 `spawntimesecs`, `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`) VALUES
 --
@@ -394,6 +394,8 @@ INSERT INTO `creature` (`guid`, `id1`, `id2`, `id3`, `map`, `zoneId`, `areaId`, 
 (14365, 3434, 0, 0, 1, 0, 0, 1, 1, 1, -4001.8, -1816.72, 92.5149, 6.09076, 413, 0, 1, 544, 581, 2, 0, 0, 0, '', 0, 0, NULL),     -- Nak
 (14367, 3435, 0, 0, 1, 0, 0, 1, 1, 1, -3829.2, -1445.56, 134.164, 5.78225, 413, 0, 0, 713, 0, 0, 0, 0, 0, '', 0, 0, NULL),       -- Lok Orcbane
 (14383, 3436, 0, 0, 1, 0, 0, 1, 1, 1, -3814.72, -1955.13, 94.3856, 1.31559, 413, 0, 1, 864, 1272, 2, 0, 0, 0, '', 0, 0, NULL),   -- Kuz
+--
+(14386, 3438, 0, 0, 1, 0, 0, 1, 1, 0, -214.253, -3307.53, 91.7917, 5.16115, 275, 0, 1, 328, 0, 2, 0, 0, 0, '', 0, 0, NULL),      -- Kreenig Snarlsnout
 --
 (15081,  3472, 0, 0, 1, 0, 0, 1, 1, 0, -3849.84, -1749.75, 93.9752, 3.5057, 413, 25, 0, 713, 0, 1, 0, 0, 0, '', 0, 0, NULL),     -- Washte Pawne
 (695064, 3472, 0, 0, 1, 0, 0, 1, 1, 0, -3716.85, -1917.62, 91.7601, 5.45846, 413, 40, 0, 713, 0, 1, 0, 0, 0, '', 0, 0, NULL),
@@ -434,17 +436,18 @@ INSERT INTO `pool_template` (`entry`, `max_limit`, `description`) VALUES
 (601037, 1, 'Washte Pawne - Barrens'),
 (601038, 1, 'Lakota Mani - Barrens');
 
-DELETE FROM `creature_addon` WHERE `guid` IN (14365, 14383, 15085, 20429, 51808, 51813, 51816);
+DELETE FROM `creature_addon` WHERE `guid` IN (14365, 14383, 14386, 15085, 20429, 51808, 51813, 51816);
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`) VALUES 
 (14365, 143650, 0, 0, 1, 0, 0, NULL),
 (14383, 143830, 0, 0, 1, 0, 0, NULL),
+(14386, 143860, 0, 0, 0, 0, 0, NULL),
 (15085, 150850, 0, 0, 0, 0, 0, NULL),
 (20429, 204290, 0, 0, 1, 0, 0, NULL),
 (51808, 518080, 0, 0, 1, 0, 0, NULL),
 (51813, 518130, 0, 0, 1, 0, 0, NULL),
 (51816, 518160, 0, 0, 0, 0, 0, NULL);
 
-DELETE FROM `waypoint_data` WHERE `id` IN (143650, 143830, 150850, 204290, 518080, 518130, 518160);
+DELETE FROM `waypoint_data` WHERE `id` IN (143650, 143830, 143860, 150850, 204290, 518080, 518130, 518160);
 INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `orientation`, `delay`, `move_type`, `action`, `action_chance`, `wpguid`) VALUES 
 --
 (143650, 1, -4012.59, -1810.81, 92.8317, NULL, 0, 0, 0, 100, 0), -- Nak
@@ -498,6 +501,15 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (143830, 30, -3834.72, -1967.38, 92.9835, NULL, 0, 0, 0, 100, 0),
 (143830, 31, -3815.43, -1961.57, 94.2241, NULL, 0, 0, 0, 100, 0),
 (143830, 32, -3804.81, -1954.99, 95.0912, NULL, 0, 0, 0, 100, 0),
+--
+(143860, 1, -218.01, -3332.16, 91.6676, 4.60185, 0, 0, 0, 100, 0), -- Kreenig Snarlsnout
+(143860, 2, -225.482, -3341.16, 91.6676, 3.96175, 0, 0, 0, 100, 0),
+(143860, 3, -237.319, -3343.2, 91.7107, 2.57474, 0, 0, 0, 100, 0),
+(143860, 4, -245.034, -3333.29, 92.3149, 1.87023, 0, 0, 0, 100, 0),
+(143860, 5, -244.485, -3324.63, 92.7759, 1.24192, 0, 0, 0, 100, 0),
+(143860, 6, -235.332, -3302.28, 92.9443, 1.09505, 0, 0, 0, 100, 0),
+(143860, 7, -221.838, -3302.11, 91.668, 6.27475, 0, 0, 0, 100, 0),
+(143860, 8, -221.838, -3302.11, 91.668, 6.27475, 0, 0, 0, 100, 0),
 --
 (150850, 1, -2095.51, -3839.77, -8.44877, 3.89162, 0, 0, 0, 100, 0), -- Isha Awak
 (150850, 2, -2124.57, -3884.88, -8.93047, 3.95838, 0, 0, 0, 100, 0),

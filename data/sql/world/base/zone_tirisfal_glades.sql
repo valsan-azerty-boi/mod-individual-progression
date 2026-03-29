@@ -47,7 +47,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (1539, 0, 3, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Scarlet Neophyte - Between 0-15% Health - Flee For Assist (No Repeat)'),
 (1540, 0, 0, 0, 4, 0, 15, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,                         'Scarlet Vanguard - On Aggro - Say Line 0'),
 (1540, 0, 1, 0, 0, 0, 100, 0, 1000, 3000, 180000, 184000, 0, 0, 11, 7164, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,    'Scarlet Vanguard - In Combat - Cast Defensive Stance'),
-(1540, 0, 2, 0, 105, 0, 100, 0, 0, 0, 9000, 16000, 0, 5, 11, 72, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,             'Scarlet Vanguard - Target Casting - Cast Shield Bash'),
+(1540, 0, 2, 0, 105, 0, 50, 0, 0, 0, 9000, 16000, 0, 5, 11, 72, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,              'Scarlet Vanguard - Target Casting - Cast Shield Bash'),
 (1540, 0, 3, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Scarlet Vanguard - Between 0-15% Health - Flee For Assist (No Repeat)'),
 --
 (1544, 0, 0, 0, 1, 0, 100, 0, 1000, 1000, 600000, 600000, 0, 0, 11, 324, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,     'Vile Fin Minor Oracle - Out of Combat - Cast Lightning Shield'),
@@ -67,7 +67,7 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (1660, 0, 1, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Scarlet Bodyguard - Between 0-15% Health - Flee For Assist (No Repeat)'),
 (1662, 0, 0, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Captain Perrine - Between 0-15% Health - Flee For Assist (No Repeat)'),
 (1664, 0, 0, 0, 0, 0, 100, 0, 1000, 3000, 182000, 186000, 0, 0, 11, 7164, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,    'Captain Vachon - In Combat - Cast Defensive Stance'),
-(1664, 0, 1, 0, 105, 0, 100, 0, 0, 0, 16000, 24000, 0, 5, 11, 72, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,            'Captain Vachon - Target Casting - Cast Shield Bash'),
+(1664, 0, 1, 0, 105, 0, 50, 0, 0, 0, 16000, 24000, 0, 5, 11, 72, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,             'Captain Vachon - Target Casting - Cast Shield Bash'),
 (1664, 0, 2, 0, 0, 0, 100, 0, 8000, 14000, 18000, 30000, 0, 0, 11, 3248, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,     'Captain Vachon - In Combat - Cast Improved Blocking'),
 (1664, 0, 3, 0, 2, 0, 100, 1, 0, 15, 0, 0, 0, 0, 25, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                      'Captain Vachon - Between 0-15% Health - Flee For Assist (No Repeat)'),
 (1665, 0, 0, 0, 0, 0, 100, 0, 1000, 3000, 240000, 300000, 0, 0, 11, 8258, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,    'Captain Melrache - In Combat - Cast Devotion Aura'),
@@ -113,10 +113,14 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 /* Drop chance for Rattlecage Skull was incorrectly set to 15 - updated to 80 */
 UPDATE `creature_loot_template` SET `Chance` = 80 WHERE `Entry` = 1890 AND `Item` = 6281;
 
--- Undertaker Mordo
+-- Undertaker Mordo (not sure why we creating a new version of this guy, we only seem to be moving him)
 DELETE FROM `creature` WHERE `id1` = 1568;
-INSERT INTO `creature` (`guid`, `id1`, `map`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`) VALUES 
-(601568, 1568, 0, 1678.99, 1667.86, 135.855, 3.76991, 300);
+INSERT INTO `creature` (`guid`, `id1`, `map`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`) VALUES 
+(601568, 1568, 0, 1, 1678.99, 1667.86, 135.855, 3.76991, 300);
+
+DELETE FROM `creature_addon` WHERE `guid` IN (29803, 601568);
+INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`) VALUES 
+(601568, 0, 0, 0, 1, 0, 0, NULL);
 
 -- update npc names
 UPDATE `creature_template` SET `name` = 'Wretched Zombie' WHERE `entry` = 1502; -- Wretched Zombie
