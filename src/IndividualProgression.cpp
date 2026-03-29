@@ -60,6 +60,18 @@ void IndividualProgression::ForceUpdateProgressionState(Player* player, Progress
     player->UpdatePlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE, newState);
 }
 
+void IndividualProgression::AdjustStats(Player* player, float computedPowerAdjustment, float computedHealthAdjustment)
+{
+    if (!player || !player->IsInWorld())
+        return;
+
+    auto bp1 = static_cast<int32>(computedPowerAdjustment);
+	auto bp2 = static_cast<int32>(computedHealthAdjustment);
+
+    player->RemoveAura(HP_AURA_SPELL);
+    player->RemoveAura(ABSORB_SPELL);
+}
+
 void IndividualProgression::CheckAdjustments(Player* player) const
 {
     if (!enabled || !player || !player->IsInWorld())
@@ -95,18 +107,6 @@ void IndividualProgression::CheckAdjustments(Player* player) const
     {
         return;
     }
-}
-
-void IndividualProgression::AdjustStats(Player* player, float computedPowerAdjustment, float computedHealthAdjustment)
-{
-    if (!player || !player->IsInWorld())
-        return;
-
-    auto bp1 = static_cast<int32>(computedPowerAdjustment);
-	auto bp2 = static_cast<int32>(computedHealthAdjustment);
-
-    player->RemoveAura(HP_AURA_SPELL);
-    player->RemoveAura(ABSORB_SPELL);
 }
 
 float IndividualProgression::ComputeVanillaAdjustment(uint8 playerLevel, float configAdjustmentValue)
