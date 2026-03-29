@@ -91,10 +91,6 @@ void IndividualProgression::CheckAdjustments(Player* player) const
 
 	    AdjustStats(player, computedPowerAdjustment, computedHealthAdjustment);
     }
-    else
-    {
-        return;
-    }
 }
 
 void IndividualProgression::AdjustStats(Player* player, float computedPowerAdjustment, float computedHealthAdjustment)
@@ -277,6 +273,7 @@ void IndividualProgression::SyncBotsProgressionToLeader(Group* group)
             continue;
 
         ForceUpdateProgressionState(member, static_cast<ProgressionState>(refProgress));
+        CheckAdjustments(member);
     }
 }
 

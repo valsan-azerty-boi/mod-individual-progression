@@ -424,6 +424,9 @@ public:
     void UpdateProgressionState(Player* player, ProgressionState newState) const;
     static void ForceUpdateProgressionState(Player* player, ProgressionState newState);
     void CheckAdjustments(Player* player) const;
+    //void AdjustVanillaStats(Player* player) const;
+    //void AdjustTBCStats(Player* player) const;
+    //void AdjustWotLKStats(Player* player) const;
     bool hasCustomProgressionValue(uint32 creatureEntry);
     bool isExcludedFromProgression(Player* player);
     void SyncBotsProgressionToLeader(Group* group);
