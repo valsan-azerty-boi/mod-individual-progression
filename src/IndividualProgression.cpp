@@ -102,9 +102,10 @@ void IndividualProgression::AdjustStats(Player* player, float computedPowerAdjus
 	auto bp2 = static_cast<int32>(computedHealthAdjustment);
 	
     player->RemoveAura(HP_AURA_SPELL);
-    //player->CastCustomSpell(player, HP_AURA_SPELL, &bp2, nullptr, nullptr, true);
+    player->CastCustomSpell(player, HP_AURA_SPELL, &bp2, nullptr, nullptr, true);
+    
     player->RemoveAura(ABSORB_SPELL);
-    //player->CastCustomSpell(player, ABSORB_SPELL, &bp1, nullptr, nullptr, true);
+    player->CastCustomSpell(player, ABSORB_SPELL, &bp1, nullptr, nullptr, true);
 }
 
 float IndividualProgression::ComputeVanillaAdjustment(uint8 playerLevel, float configAdjustmentValue)
@@ -1319,8 +1320,10 @@ private:
     {
         sIndividualProgression->customProgressionMap.clear();
         sIndividualProgression->enabled = sConfigMgr->GetOption<bool>("IndividualProgression.Enable", true);
+        sIndividualProgression->vanillaHealthAdjustment = sConfigMgr->GetOption<float>("IndividualProgression.VanillaHealthAdjustment", 1);
         sIndividualProgression->vanillaPowerAdjustment = sConfigMgr->GetOption<float>("IndividualProgression.VanillaPowerAdjustment", 1);
         sIndividualProgression->vanillaHealingAdjustment = sConfigMgr->GetOption<float>("IndividualProgression.VanillaHealingAdjustment", 1);
+        sIndividualProgression->tbcHealthAdjustment = sConfigMgr->GetOption<float>("IndividualProgression.TBCHealthAdjustment", 1);
         sIndividualProgression->tbcPowerAdjustment = sConfigMgr->GetOption<float>("IndividualProgression.TBCPowerAdjustment", 1);
         sIndividualProgression->tbcHealingAdjustment = sConfigMgr->GetOption<float>("IndividualProgression.TBCHealingAdjustment", 1);
         sIndividualProgression->questXpFix = sConfigMgr->GetOption<bool>("IndividualProgression.QuestXPFix", true);
