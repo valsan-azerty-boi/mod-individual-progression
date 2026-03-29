@@ -77,7 +77,8 @@ public:
             if (!player->GetSession())
                 return;
 
-            ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Individual Progression: |cffccccccenabled|r");
+            if (player->GetSession()->GetSecurity() > SEC_PLAYER)
+                ChatHandler(player->GetSession()).SendSysMessage("|cff00ff00Individual Progression: |cffccccccenabled|r");
         }
     }
 
