@@ -106,9 +106,9 @@ void IndividualProgression::AdjustStats(Player* player, float computedPowerAdjus
 	auto bp2 = static_cast<int32>(computedHealthAdjustment);
 	
     player->RemoveAura(HP_AURA_SPELL);
-    //player->CastCustomSpell(player, HP_AURA_SPELL, &bp2, nullptr, nullptr, true);
+    player->CastCustomSpell(player, HP_AURA_SPELL, &bp2, nullptr, nullptr, true);
     player->RemoveAura(ABSORB_SPELL);
-    //player->CastCustomSpell(player, ABSORB_SPELL, &bp1, nullptr, nullptr, true);
+    player->CastCustomSpell(player, ABSORB_SPELL, &bp1, nullptr, nullptr, true);
 }
 
 float IndividualProgression::ComputeVanillaAdjustment(uint8 playerLevel, float configAdjustmentValue)
