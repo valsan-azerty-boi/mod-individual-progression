@@ -140,7 +140,7 @@ public:
             return false;
 
         ChatHandler handler(player->GetSession());
-    
+
         if (player->GetLevel() <= IP_LEVEL_TBC)
         {
             return false;
@@ -178,7 +178,7 @@ public:
                 handler.PSendSysMessage("You must have the Drakefire Amulet in your inventory to enter Onyxia\'s Lair.");
                 return false;
             } */
-            
+
             if (sIndividualProgression->groupHaveLevelDisparity(player))
             {
                 return false;

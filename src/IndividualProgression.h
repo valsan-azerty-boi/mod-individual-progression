@@ -432,7 +432,7 @@ public:
     void SyncBotsProgressionToLeader(Group* group);
     bool isAttuned(Player* player);
     void checkIPPhasing(Player* player, uint32 newArea);
-    void checkIPProgression(Player* player);	
+    void checkIPProgression(Player* player);
     void UpdateProgressionQuests(Player* player);
     void UpdateProgressionAchievements(Player* player, uint16 achievementID);
     void checkKillProgression(Player* player, Creature* killed);
