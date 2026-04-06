@@ -229,7 +229,6 @@ enum DungeonKeys
 enum ShatteredSunOffensive
 {
     FACTION_SHATTERED_SUN                = 1077,
-    AREA_SUNWELL_RAID_ENTRANCE           = 4080,
     AREA_SHATTERED_SUN_STAGING           = 4085,
     AREA_SUNS_REACH_SANCTUM              = 4086,
     AREA_SUNS_REACH_HARBOR               = 4087,

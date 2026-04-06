@@ -410,7 +410,6 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
                 player->CastSpell(player, IPP_PHASE, false);
             }
             break;
-        case AREA_SUNWELL_RAID_ENTRANCE:
         case AREA_SILVERMOON_S_PRIDE:
         case AREA_GREENGILL_COAST:
         case AREA_MAGISTERS_TERRACE_EXTERIOR:
