@@ -425,7 +425,10 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_THE_DAWNING_SQUARE:
             player->RemoveAura(SONG_OF_VICTORY);
 
-            if (player->GetReputationRank(FACTION_SHATTERED_SUN) >= REP_REVERED)
+            if (player->GetReputationRank(FACTION_SHATTERED_SUN) >= REP_REVERED
+                || player->GetLevel() > IP_LEVEL_TBC
+                || sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5)
+                || sIndividualProgression->isExcludedFromProgression(player))
             {
                  player->CastSpell(player, IPP_PHASE, false);
                  player->CastSpell(player, IPP_PHASE_II, false);
@@ -453,13 +456,6 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
             else // if (player->GetReputationRank(FACTION_SHATTERED_SUN) < REP_FRIENDLY)
             {
                 player->CastSpell(player, IPP_PHASE, false);
-            }
-            if (sIndividualProgression->isExcludedFromProgression(player) && player->GetLevel() >= IP_LEVEL_TBC)
-            {
-                player->CastSpell(player, IPP_PHASE, false);
-                player->CastSpell(player, IPP_PHASE_II, false);
-                player->CastSpell(player, IPP_PHASE_III, false);
-                player->CastSpell(player, IPP_PHASE_IV, false);
             }
             break;
         case AREA_THE_DARK_PORTAL:
