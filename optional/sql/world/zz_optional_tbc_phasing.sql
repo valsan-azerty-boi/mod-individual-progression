@@ -52,20 +52,20 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_t5' WHERE `ScriptName` != 'npc_suns_reach_reclamation' AND `map` = 530 AND `id1` IN (
 19202, -- Emissary Mordin, Shattrath
 19475, -- Harbinger Haronem, Shattrath
-24813, -- Exarch Larethor, Isle of Quel Danas
+-- 24813, -- Exarch Larethor, Isle of Quel Danas
 24923, -- Shattered Sun Channeler, Shattrath
 24937, -- Magistrix Seyla, Hellfire Peninsula
-25032, -- Eldara Dawnrunner, Isle of Quel Danas
-25034, -- Tradesman Portanuus, Isle of Quel Danas
-25088, -- Captain Valindria, Isle of Quel Danas
-25133, -- Astromancer Darnarian, Isle of Quel Danas
+-- 25032, -- Eldara Dawnrunner, Isle of Quel Danas
+-- 25034, -- Tradesman Portanuus, Isle of Quel Danas
+-- 25088, -- Captain Valindria, Isle of Quel Danas
+-- 25133, -- Astromancer Darnarian, Isle of Quel Danas
 25140, -- Lord Torvos, Shattrath
 25142, -- Shattered Sun Marksman, Shattrath
 25153, -- Shattered Sun Magi, Shattrath
 25155, -- Shattered Sun Cleric, Shattrath
 25167, -- General Tiras'alan, Shattrath
 25885, -- Whirligig Wafflefry, Shattrath
-26560, -- Ohura, Isle of Quel Danas
+-- 26560, -- Ohura, Isle of Quel Danas
 27666, -- Ontuvo, Shattrath
 27667 -- Anwehu, Shattrath
 );
@@ -74,17 +74,17 @@ UPDATE `creature` SET `phaseMask` = 65536 WHERE `map` = 530 AND `id1` IN (
 5202, -- Archery Target, Shattrath & Isle of Quel Danas
 24932, -- Exarch Nasuun, Shattrath
 24938, -- Shattered Sun Marksman, Shattrath + Isle of Quel Danas
-24965, -- Vindicator Xayann, Isle of Quel Danas
-24967, -- Captain Theris Dawnhearth, Isle of Quel Danas
-24975, -- Mar nah, Isle of Quel Danas
-24979, -- Dawnblade Marksman, Isle of Quel Danas
-25036, -- Caregiver Inaara, Isle of Quel Danas
-25046, -- Smith Hauthaa, Isle of Quel Danas
-25057, -- Battlemage Arynna, Isle of Quel Danas
-25061, -- Harbinger Inuuro, Isle of Quel Danas
-25069, -- Magister Ilastar, Isle of Quel Danas
-25108, -- Vindicator Kaalan, Isle of Quel Danas
-25112, -- Anchorite Ayuri, Isle of Quel Danas
+-- 24965, -- Vindicator Xayann, Isle of Quel Danas
+-- 24967, -- Captain Theris Dawnhearth, Isle of Quel Danas
+-- 24975, -- Mar nah, Isle of Quel Danas
+-- 24979, -- Dawnblade Marksman, Isle of Quel Danas
+-- 25036, -- Caregiver Inaara, Isle of Quel Danas
+-- 25046, -- Smith Hauthaa, Isle of Quel Danas
+-- 25057, -- Battlemage Arynna, Isle of Quel Danas
+-- 25061, -- Harbinger Inuuro, Isle of Quel Danas
+-- 25069, -- Magister Ilastar, Isle of Quel Danas
+-- 25108, -- Vindicator Kaalan, Isle of Quel Danas
+-- 25112, -- Anchorite Ayuri, Isle of Quel Danas
 25115, -- Shattered Sun Warrior, Shattrath + Isle of Quel Danas
 25134, -- Shattered Sun Trainee, Shattrath
 25135, -- Shattered Sun Trainee, Shattrath
