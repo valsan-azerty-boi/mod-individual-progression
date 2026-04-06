@@ -95,7 +95,7 @@ UPDATE `creature` SET `phaseMask` = 65536 WHERE `map` = 530 AND `id1` IN (
 25143 -- Shattered Sun Veteran, Shattrath
 );
 /* Open world Sunwell gobjects, including meeting stone */
-UPDATE `gameobject` SET `ScriptName` = 'gobject_ipp_tbc_t5' WHERE `map` = 530 AND `id` IN (187056, 187116, 187345, 187356, 187357, 188171, 188172);
+-- UPDATE `gameobject` SET `ScriptName` = 'gobject_ipp_tbc_t5' WHERE `map` = 530 AND `id` IN (187056, 187116, 187345, 187356, 187357, 188171, 188172);
 /* Sunwell decorative gobjects in Shattrath */
 UPDATE `gameobject` SET `ScriptName` = 'gobject_ipp_tbc_t5' WHERE `map` = 530 AND `id` IN (183318, 183435, 187057, 187058) AND `guid` IN (24152, 24154, 24155, 24341, 47197, 47198, 47199, 47200, 47201, 47202, 47203);
 
