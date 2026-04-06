@@ -94,6 +94,20 @@ UPDATE `creature` SET `phaseMask` = 65536 WHERE `map` = 530 AND `id1` IN (
 25141, -- Commander Steele, Shattrath
 25143 -- Shattered Sun Veteran, Shattrath
 );
+
+/* Specific Quel Danas NPCs for late reputation progression phase */
+UPDATE `creature` SET `phaseMask` = 524288 WHERE `map` = 530 
+AND `id1` IN (24938, 24979, 25115, 25164) 
+AND `guid` IN (
+65682,
+65694, 65695, 65696, 65697, 65698, 65699, 65700, 65702, 
+71927, 71928, 72677, 72989,
+93942, 93943, 93944,
+94387, 
+94432, 94433,
+5300411, 5300412
+);
+
 /* Open world Sunwell gobjects, including meeting stone */
 -- UPDATE `gameobject` SET `ScriptName` = 'gobject_ipp_tbc_t5' WHERE `map` = 530 AND `id` IN (187056, 187116, 187345, 187356, 187357, 188171, 188172);
 /* Sunwell decorative gobjects in Shattrath */
