@@ -1,14 +1,30 @@
 /*
- * Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license: https://github.com/azerothcore/azerothcore-wotlk/blob/master/LICENSE-AGPL3
- */
+    Copyright (C) 2016+ AzerothCore <www.azerothcore.org>, released under GNU AGPL v3 license: https://github.com/azerothcore/azerothcore-wotlk/blob/master/LICENSE-AGPL3
+*/
 
 #include "IndividualProgression.h"
 #include "naxxramas_40.h"
+#include "ReputationMgr.h"
 
 IndividualProgression* IndividualProgression::instance()
 {
     static IndividualProgression instance;
     return &instance;
+}
+
+uint8 IndividualProgression::GetPlayerProgressionFromQuests(Player* player) const
+{
+    if (!player || !player->IsInWorld())
+        return 0;
+
+    uint8 progressionLevel = 0;
+    for (uint8 i = PROGRESSION_MOLTEN_CORE; i <= PROGRESSION_WOTLK_TIER_5; ++i)
+    {
+        uint32 PROGRESSION_QUEST = 66000 + i;
+        if (player->GetQuestStatus(PROGRESSION_QUEST) == QUEST_STATUS_REWARDED)
+            progressionLevel = i;
+    }
+    return progressionLevel;
 }
 
 bool IndividualProgression::hasPassedProgression(Player* player, ProgressionState state) const
@@ -19,7 +35,7 @@ bool IndividualProgression::hasPassedProgression(Player* player, ProgressionStat
     if (progressionLimit && (state > progressionLimit))
         return false;
 
-    return player->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value >= state;
+    return sIndividualProgression->GetPlayerProgressionFromQuests(player) >= state;
 }
 
 bool IndividualProgression::isBeforeProgression(Player* player, ProgressionState state)
@@ -27,7 +43,7 @@ bool IndividualProgression::isBeforeProgression(Player* player, ProgressionState
     if (!state || !player || !player->IsInWorld())
         return false;
 
-    return player->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value < state;
+    return sIndividualProgression->GetPlayerProgressionFromQuests(player) < state;
 }
 
 void IndividualProgression::UpdateProgressionState(Player* player, ProgressionState newState) const
@@ -38,10 +54,20 @@ void IndividualProgression::UpdateProgressionState(Player* player, ProgressionSt
     if (progressionLimit && newState > progressionLimit)
         return;
 
-    uint8 currentState = player->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value;
+    uint8 currentState = GetPlayerProgressionFromQuests(player);
     if (newState > currentState)
     {
-        player->UpdatePlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE, newState);
+        uint32 PROGRESSION_QUEST = 66000 + newState;
+        if (player->GetQuestStatus(PROGRESSION_QUEST) != QUEST_STATUS_REWARDED)
+        {
+            Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_QUEST);
+            if (quest)
+            {
+                player->AddQuest(quest, nullptr);
+                player->CompleteQuest(PROGRESSION_QUEST);
+                player->RewardQuest(quest, 0, player, false, false);
+            }
+        }
     }
 
     if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_MOLTEN_CORE)) && (player->GetQuestStatus(PROGRESSION_FLAG_MC) != QUEST_STATUS_REWARDED))
@@ -56,7 +82,29 @@ void IndividualProgression::UpdateProgressionState(Player* player, ProgressionSt
 
 void IndividualProgression::ForceUpdateProgressionState(Player* player, ProgressionState newState)
 {
-    player->UpdatePlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE, newState);
+    if (!player || !player->IsInWorld())
+        return;
+
+    // remove all hidden progression quests first
+    for (uint8 i = PROGRESSION_MOLTEN_CORE; i <= PROGRESSION_WOTLK_TIER_5; ++i)
+    {
+        uint32 PROGRESSION_QUEST = 66000 + i;
+        if (player->GetQuestStatus(PROGRESSION_QUEST) == QUEST_STATUS_REWARDED)
+            player->RemoveRewardedQuest(PROGRESSION_QUEST);
+    }
+
+    // if newState is non-zero, add the corresponding progression quest
+    if (newState)
+    {
+        uint32 PROGRESSION_QUEST = 66000 + newState;
+        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_QUEST);
+        if (quest)
+        {
+            player->AddQuest(quest, nullptr);
+            player->CompleteQuest(PROGRESSION_QUEST);
+            player->RewardQuest(quest, 0, player, false, false);
+        }
+    }
 }
 
 void IndividualProgression::CheckAdjustments(Player* player) const
@@ -117,25 +165,65 @@ float IndividualProgression::ComputeVanillaAdjustment(uint8 playerLevel, float c
 uint8 IndividualProgression::GetAccountProgression(uint32 accountId)
 {
     uint8 progressionLevel = 0;
-    if (!sWorld->getBoolConfig(CONFIG_PLAYER_SETTINGS_ENABLED))
-        return 0; // Prevent crash if player settings are not enabled
 
-    QueryResult result = CharacterDatabase.Query("SELECT `data` FROM `character_settings` WHERE `source` = 'mod-individual-progression' AND `guid` IN (SELECT `guid` FROM `characters` WHERE `account` = {});", accountId);
+    uint32 minQuest = 66000 + PROGRESSION_MOLTEN_CORE;
+    uint32 maxQuest = 66000 + PROGRESSION_WOTLK_TIER_5;
+
+    // Query rewarded hidden progression quests for all characters on the account
+    QueryResult result = CharacterDatabase.Query(
+        "SELECT cc.quest FROM character_queststatus_rewarded cc JOIN characters c ON cc.guid = c.guid WHERE c.account = {} AND cc.quest BETWEEN {} AND {};",
+        accountId, minQuest, maxQuest);
+
     if (result)
     {
         do
         {
-            std::string dataOne;
-            std::stringstream dataString((*result)[0].Get<std::string>());
-            dataString>>dataOne;
-            uint8 resultValue = atoi(dataOne.c_str());
-            if (resultValue > progressionLevel)
-            {
-                progressionLevel = resultValue;
-            }
+            uint32 questId = (*result)[0].Get<uint32>();
+            uint8 level = uint8(questId - 66000);
+            if (level > progressionLevel)
+                progressionLevel = level;
         } while (result->NextRow());
     }
     return progressionLevel;
+}
+
+void IndividualProgression::UpdateAccountReputation(uint32 factionId, uint32 accountId, Player* player)
+{
+    if (!factionId || !accountId || !player || !player->IsInWorld())
+        return;
+
+    Group* group = player->GetGroup();
+    uint32 account = player->GetSession()->GetAccountId();
+
+    if (!group)
+        return;
+
+    uint32 curRep = player->GetReputationMgr().GetReputation(factionId);
+    uint32 newRep = 0;
+
+    for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
+    {
+        Player* member = itr->GetSource();
+        if (!member || member->GetSession()->GetAccountId() != accountId)
+            continue;
+
+        uint32 repAmount = member->GetReputationMgr().GetReputation(factionId);
+
+        if (repAmount > newRep)
+            newRep = repAmount;
+    }
+
+    // ChatHandler(player->GetSession()).PSendSysMessage("Current {} Reputation = {}", factionId, curRep);
+    // ChatHandler(player->GetSession()).PSendSysMessage("Highest {} Reputation = {}", factionId, newRep);
+
+    if (newRep > curRep)
+    {
+        std::string factionName = sFactionStore.LookupEntry(factionId)->name[0];
+        uint32 addRep = newRep - curRep;
+
+        player->GetReputationMgr().ModifyReputation(sFactionStore.LookupEntry(factionId), addRep);
+        ChatHandler(player->GetSession()).PSendSysMessage("Reputation with {} increased by {}.", factionName, addRep);
+    }
 }
 
 void IndividualProgression::RemovePlayerAchievement(uint16 playerGUID, uint16 achievementId)
@@ -261,7 +349,7 @@ void IndividualProgression::SyncBotsProgressionToLeader(Group* group)
     if (!leader || isExcludedFromProgression(leader))
         return;
 
-    uint8 refProgress = leader->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value;
+    uint8 refProgress = GetPlayerProgressionFromQuests(leader);
 
     if (!refProgress)
         return;
@@ -286,6 +374,8 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
     player->RemoveAura(IPP_PHASE_II);
     player->RemoveAura(IPP_PHASE_III);
     player->RemoveAura(IPP_PHASE_IV);
+    player->RemoveAura(IPP_PHASE_V);
+    player->RemoveAura(IPP_PHASE_VI);
 
     switch (newArea) {
         case AREA_DARKSHORE:
@@ -332,6 +422,12 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
                 player->CastSpell(player, IPP_PHASE, false);
             }
             break;
+        case AREA_SILVERMOON_CITY:
+            if (isBeforeProgression(player, PROGRESSION_TBC_TIER_4))
+            {
+                player->CastSpell(player, IPP_PHASE_II, false);
+            }
+            break;
         case AREA_DUROTAR:
         case AREA_JAGGEDSWINE_FARM:
         case AREA_ROCKTUSK_FARM:
@@ -353,6 +449,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
                 player->CastSpell(player, IPP_PHASE, false);
             }
             break;
+        case AREA_CORINS_CROSSING:
         case AREA_BLASTED_LANDS:
         case AREA_RISE_OF_THE_DEFILER:
             if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40) && player->GetLevel() <= IP_LEVEL_VANILLA)
@@ -414,6 +511,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_GREENGILL_COAST:
         case AREA_MAGISTERS_TERRACE_EXTERIOR:
         case AREA_SUNWELL_PLATEAU:
+        case AREA_SUNWELL_PLATEAU_B:
         case AREA_ISLE_OF_QUEL_DANAS:
         case AREA_MAGISTERS_TERRACE:
         case AREA_SHATTERED_SUN_STAGING:
@@ -429,32 +527,35 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
                 || sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5)
                 || sIndividualProgression->isExcludedFromProgression(player))
             {
-                 player->CastSpell(player, IPP_PHASE, false);
-                 player->CastSpell(player, IPP_PHASE_II, false);
-                 player->CastSpell(player, IPP_PHASE_III, false);
-                 player->CastSpell(player, IPP_PHASE_IV, false);
+                player->CastSpell(player, IPP_PHASE_II, false);
+                player->CastSpell(player, IPP_PHASE_III, false);
+                player->CastSpell(player, IPP_PHASE_IV, false);
 
-                 if (player->GetQuestStatus(QUEST_CRUSH_DAWNBLADE) == QUEST_STATUS_REWARDED &&
+                if (isExcludedFromProgression(player) ||
+                    (player->GetQuestStatus(QUEST_CRUSH_DAWNBLADE) == QUEST_STATUS_REWARDED &&
                      player->GetQuestStatus(QUEST_GREENGILL_COAST) == QUEST_STATUS_REWARDED &&
-                     player->GetQuestStatus(QUEST_ENEMY_AT_BAY) == QUEST_STATUS_REWARDED)
-                 {
-                     player->CastSpell(player, SONG_OF_VICTORY, false);
-                 }
+                     player->GetQuestStatus(QUEST_ENEMY_AT_BAY) == QUEST_STATUS_REWARDED))
+                {
+                    player->CastSpell(player, SONG_OF_VICTORY, false);
+                }
             }
             else if (player->GetReputationRank(FACTION_SHATTERED_SUN) >= REP_HONORED)
             {
-                player->CastSpell(player, IPP_PHASE, false);
                 player->CastSpell(player, IPP_PHASE_II, false);
                 player->CastSpell(player, IPP_PHASE_III, false);
+                player->CastSpell(player, IPP_PHASE_VI, false);
             }
             else if (player->GetReputationRank(FACTION_SHATTERED_SUN) >= REP_FRIENDLY)
             {
-                player->CastSpell(player, IPP_PHASE, false);
                 player->CastSpell(player, IPP_PHASE_II, false);
+                player->CastSpell(player, IPP_PHASE_V, false);
+                player->CastSpell(player, IPP_PHASE_VI, false);
             }
             else // if (player->GetReputationRank(FACTION_SHATTERED_SUN) < REP_FRIENDLY)
             {
                 player->CastSpell(player, IPP_PHASE, false);
+                player->CastSpell(player, IPP_PHASE_V, false);
+                player->CastSpell(player, IPP_PHASE_VI, false);
             }
             break;
         case AREA_THE_DARK_PORTAL:
@@ -501,6 +602,10 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
             {
                 player->CastSpell(player, IPP_PHASE, false);
             }
+            if (player->GetQuestStatus(QUEST_MANA_CELLS) == QUEST_STATUS_REWARDED)
+            {
+                player->CastSpell(player, IPP_PHASE_III, false);
+            }
             break;
         case AREA_FOREST_SONG:
             if (hasPassedProgression(player, PROGRESSION_NAXX40))
@@ -511,7 +616,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_STORMWIND_CITY:
             if (!hasPassedProgression(player, PROGRESSION_NAXX40))
             {
-                player->CastSpell(player, IPP_PHASE, false);
+                player->CastSpell(player, IPP_PHASE_II, false);
             }
             else if (hasPassedProgression(player, PROGRESSION_TBC_TIER_5))
             {
@@ -568,13 +673,14 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
                     break;
                 }
             }
-            if (mapid == MAP_MAGISTERS_TERRACE)
+            if (mapid == MAP_MAGISTERS_TERRACE || mapid == MAP_THE_SUNWELL)
             {
                 player->RemoveAura(SONG_OF_VICTORY);
 
-                if (player->GetQuestStatus(QUEST_CRUSH_DAWNBLADE) == QUEST_STATUS_REWARDED &&
-                    player->GetQuestStatus(QUEST_GREENGILL_COAST) == QUEST_STATUS_REWARDED &&
-                    player->GetQuestStatus(QUEST_ENEMY_AT_BAY) == QUEST_STATUS_REWARDED)
+                if (isExcludedFromProgression(player) ||
+                    (player->GetQuestStatus(QUEST_CRUSH_DAWNBLADE) == QUEST_STATUS_REWARDED &&
+                     player->GetQuestStatus(QUEST_GREENGILL_COAST) == QUEST_STATUS_REWARDED &&
+                     player->GetQuestStatus(QUEST_ENEMY_AT_BAY) == QUEST_STATUS_REWARDED))
                 {
                     player->CastSpell(player, SONG_OF_VICTORY, false);
                 }
@@ -606,7 +712,7 @@ void IndividualProgression::checkIPProgression(Player* killer)
     if (!killer || !killer->IsInWorld())
         return;
 
-    uint8 currentState = killer->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value;
+    uint8 currentState = GetPlayerProgressionFromQuests(killer);
 
     static const std::vector<std::pair<uint16, ProgressionState>> achievementMap =
     {
@@ -680,207 +786,10 @@ void IndividualProgression::checkKillProgression(Player* killer, Creature* kille
     {
         ProgressionState prog = bossKill->second;
         if (!progressionLimit || (progressionLimit >= prog))
-        {
             UpdateProgressionState(killer, prog);
-            UpdateProgressionQuests(killer);
-        }
+
         if (entry == KELTHUZAD_40)
             UpdateProgressionAchievements(killer, KEL_THUZAD_40_KILL);
-    }
-}
-
-void IndividualProgression::UpdateProgressionQuests(Player* player)
-{
-    if (!player || !player->IsInWorld())
-        return;
-
-	// remove all hidden progression quests
-    for (uint8 i = PROGRESSION_MOLTEN_CORE; i <= 18; ++i) // not same number of phase as main repo but same numner of quests
-    {
-        uint32 PROGRESSION_QUEST = 66000;
-        PROGRESSION_QUEST = PROGRESSION_QUEST + i;
-
-        if (player->GetQuestStatus(PROGRESSION_QUEST) == QUEST_STATUS_REWARDED)
-            player->RemoveRewardedQuest(PROGRESSION_QUEST);
-    }
-
-    // add hidden progression quests
-    //for (uint8 i = PROGRESSION_MOLTEN_CORE; i <= PROGRESSION_WOTLK_TIER_5; ++i)
-    //{
-	//	ProgressionState PROGRESSION_STATE = static_cast<ProgressionState>(i);
-    //    uint32 PROGRESSION_QUEST = 66000;
-    //    PROGRESSION_QUEST = PROGRESSION_QUEST + i;
-    //
-    //    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_STATE)) && (player->GetQuestStatus(PROGRESSION_QUEST) != QUEST_STATUS_REWARDED))
-    //    {
-    //        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_QUEST);
-    //
-    //        player->AddQuest(quest, nullptr);
-    //        player->CompleteQuest(PROGRESSION_QUEST);
-    //        player->RewardQuest(quest, 0, player, false, false);
-    //    }
-    //}
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_MOLTEN_CORE)) && (player->GetQuestStatus(PROGRESSION_FLAG_MC) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_MC);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_MC);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_ONYXIA)) && (player->GetQuestStatus(PROGRESSION_FLAG_ONYXIA) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_ONYXIA);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_ONYXIA);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_BLACKWING_LAIR)) && (player->GetQuestStatus(PROGRESSION_FLAG_BWL) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_BWL);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_BWL);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_PRE_AQ)) && (player->GetQuestStatus(PROGRESSION_FLAG_PRE_AQ) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_PRE_AQ);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_PRE_AQ);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_PRE_AQ)) && (player->GetQuestStatus(PROGRESSION_FLAG_AQ_WAR) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_AQ_WAR);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_AQ_WAR);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_AQ)) && (player->GetQuestStatus(PROGRESSION_FLAG_AQ) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_AQ);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_AQ);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)) && (player->GetQuestStatus(PROGRESSION_FLAG_NAXX40) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_NAXX40);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_NAXX40);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)) && (player->GetQuestStatus(PROGRESSION_FLAG_PRE_TBC) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_PRE_TBC);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_PRE_TBC);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_1)) && (player->GetQuestStatus(PROGRESSION_FLAG_TBC_T1) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_TBC_T1);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_TBC_T1);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_2)) && (player->GetQuestStatus(PROGRESSION_FLAG_TBC_T2) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_TBC_T2);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_TBC_T2);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_3)) && (player->GetQuestStatus(PROGRESSION_FLAG_TBC_T3) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_TBC_T3);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_TBC_T3);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_4)) && (player->GetQuestStatus(PROGRESSION_FLAG_TBC_T4) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_TBC_T4);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_TBC_T4);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5)) && (player->GetQuestStatus(PROGRESSION_FLAG_TBC_T5) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_TBC_T5);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_TBC_T5);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_WOTLK_TIER_1)) && (player->GetQuestStatus(PROGRESSION_FLAG_WOTLK_T1) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_WOTLK_T1);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_WOTLK_T1);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_WOTLK_TIER_2)) && (player->GetQuestStatus(PROGRESSION_FLAG_WOTLK_T2) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_WOTLK_T2);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_WOTLK_T2);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_WOTLK_TIER_3)) && (player->GetQuestStatus(PROGRESSION_FLAG_WOTLK_T3) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_WOTLK_T3);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_WOTLK_T3);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_WOTLK_TIER_4)) && (player->GetQuestStatus(PROGRESSION_FLAG_WOTLK_T4) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_WOTLK_T4);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_WOTLK_T4);
-        player->RewardQuest(quest, 0, player, false, false);
-    }
-
-    if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_WOTLK_TIER_5)) && (player->GetQuestStatus(PROGRESSION_FLAG_WOTLK_T5) != QUEST_STATUS_REWARDED))
-    {
-        Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_FLAG_WOTLK_T5);
-
-        player->AddQuest(quest, nullptr);
-        player->CompleteQuest(PROGRESSION_FLAG_WOTLK_T5);
-        player->RewardQuest(quest, 0, player, false, false);
     }
 }
 
@@ -1034,13 +943,18 @@ void IndividualProgression::AwardEarnedVanillaPvpTitles(Player* player)
                 {
                     player->SetTitle(sCharTitlesStore.LookupEntry(title.TitleId));
                     highestTitle = title.TitleId;
+                        
+                    if (teamId == 0)
+                        player->SetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK, title.TitleId + 4);
+                    else // teamId == 1
+                        player->SetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK, title.TitleId - 10);
+                                
                     break;
                 }
             }
 
-			const uint32_t chosenTitleId = player->GetUInt32Value(PLAYER_CHOSEN_TITLE);
-			// PvP Titles go from 1 to 28.
-			const bool usesPvPTitle = chosenTitleId != 0 && chosenTitleId < 29;
+            const uint32_t chosenTitleId = player->GetUInt32Value(PLAYER_CHOSEN_TITLE);
+            const bool usesPvPTitle = ((chosenTitleId != 0 && chosenTitleId < 29) || isExcludedFromProgression(player)); // PvP Titles go from 1 to 28.
 
             // remove all titles except highest
             for (IppPvPTitles title : pvpTitlesList)
@@ -1051,8 +965,8 @@ void IndividualProgression::AwardEarnedVanillaPvpTitles(Player* player)
                     player->SetTitle(sCharTitlesStore.LookupEntry(titleId), true);
             }
 
-			if (highestTitle != -1 && usesPvPTitle)
-				player->SetCurrentTitle(sCharTitlesStore.LookupEntry(highestTitle));
+            if (highestTitle != -1 && usesPvPTitle)
+                player->SetCurrentTitle(sCharTitlesStore.LookupEntry(highestTitle));
         }
     }
 }
@@ -1079,6 +993,7 @@ private:
         sIndividualProgression->naxxSkipToSaphiron = sConfigMgr->GetOption<bool>("IndividualProgression.NaxxSkipToSaphiron", false);
         sIndividualProgression->doableNaxx40Bosses = sConfigMgr->GetOption<bool>("IndividualProgression.doableNaxx40Bosses", false);
         sIndividualProgression->enforceGroupRules = sConfigMgr->GetOption<bool>("IndividualProgression.EnforceGroupRules", true);
+        sIndividualProgression->EnableSetRepCommand = sConfigMgr->GetOption<bool>("IndividualProgression.EnableSetRepCommand", false);
         sIndividualProgression->fishingFix = sConfigMgr->GetOption<bool>("IndividualProgression.FishingFix", true);
         sIndividualProgression->simpleConfigOverride = sConfigMgr->GetOption<bool>("IndividualProgression.SimpleConfigOverride", true);
         sIndividualProgression->progressionLimit = sConfigMgr->GetOption<uint8>("IndividualProgression.ProgressionLimit", 0);
@@ -1096,8 +1011,8 @@ private:
         sIndividualProgression->LoadCustomProgressionEntries(sConfigMgr->GetOption<std::string>("IndividualProgression.CustomProgression", ""));
         sIndividualProgression->earlyDungeonSet2 = sConfigMgr->GetOption<bool>("IndividualProgression.AllowEarlyDungeonSet2", false);
         sIndividualProgression->earlyScourgeBosses = sConfigMgr->GetOption<bool>("IndividualProgression.AllowEarlyScourgeBosses", false);
-		sIndividualProgression->tbcArenaSeason = sConfigMgr->GetOption<uint8>("IndividualProgression.TBC.ArenaSeason", 1);
-		sIndividualProgression->wotlkArenaSeason = sConfigMgr->GetOption<uint8>("IndividualProgression.WotLK.ArenaSeason", 5);
+        sIndividualProgression->tbcArenaSeason = sConfigMgr->GetOption<uint8>("IndividualProgression.TBC.ArenaSeason", 1);
+        sIndividualProgression->wotlkArenaSeason = sConfigMgr->GetOption<uint8>("IndividualProgression.WotLK.ArenaSeason", 5);
         sIndividualProgression->VanillaPvpKillRank1 = sConfigMgr->GetOption<uint32>("IndividualProgression.VanillaPvpKillRequirement.Rank1", 100);
         sIndividualProgression->VanillaPvpKillRank2 = sConfigMgr->GetOption<uint32>("IndividualProgression.VanillaPvpKillRequirement.Rank2", 200);
         sIndividualProgression->VanillaPvpKillRank3 = sConfigMgr->GetOption<uint32>("IndividualProgression.VanillaPvpKillRequirement.Rank3", 400);
@@ -1116,8 +1031,10 @@ private:
         sIndividualProgression->VanillaPvpTitlesEarnPostVanilla = sConfigMgr->GetOption<bool>("IndividualProgression.VanillaPvpEarnTitlesAfterVanilla", false);
         sIndividualProgression->ExcludedAccountsEarnPvPTitles = sConfigMgr->GetOption<bool>("IndividualProgression.ExcludedAccountsEarnPvPTitles", false);
         sIndividualProgression->DisableRDF = sConfigMgr->GetOption<bool>("IndividualProgression.DisableRDF", false);
+        sIndividualProgression->DisableQuestMarkers = sConfigMgr->GetOption<bool>("IndividualProgression.DisableQuestMarkers", true);
         sIndividualProgression->excludeAccounts = sConfigMgr->GetOption<bool>("IndividualProgression.ExcludeAccounts", true);
         sIndividualProgression->excludedAccountsRegex = sConfigMgr->GetOption<std::string>("IndividualProgression.ExcludedAccountsRegex", "^RNDBOT.*");
+        sIndividualProgression->sharedFactionIdsRegex = sConfigMgr->GetOption<std::string>("IndividualProgression.sharedFactionIdsRegex", "59|270|349|509|510|529|576|589|609|729|730|749|889|890|909");
         sIndividualProgression->ExcludedAccountsMaxLevel = sConfigMgr->GetOption<uint8>("IndividualProgression.ExcludedAccountsMaxLevel", 80);
     }
 
@@ -1156,8 +1073,6 @@ public:
         if (sIndividualProgression->simpleConfigOverride)
         {
             sWorld->setIntConfig(CONFIG_WATER_BREATH_TIMER, 60000);
-            sWorld->setBoolConfig(CONFIG_OBJECT_QUEST_MARKERS, false);
-            sWorld->setBoolConfig(CONFIG_OBJECT_SPARKLES, false);
             sWorld->setBoolConfig(CONFIG_PLAYER_SETTINGS_ENABLED, true);
             sWorld->setBoolConfig(CONFIG_LOW_LEVEL_REGEN_BOOST, false);
             sWorld->setBoolConfig(CONFIG_DBC_ENFORCE_ITEM_ATTRIBUTES, false);
@@ -1165,6 +1080,12 @@ public:
 
         if (sIndividualProgression->DisableRDF)
             sWorld->setIntConfig(CONFIG_LFG_OPTIONSMASK, 4);
+
+        if (sIndividualProgression->DisableQuestMarkers)
+        {
+            sWorld->setBoolConfig(CONFIG_OBJECT_QUEST_MARKERS, false);
+            sWorld->setBoolConfig(CONFIG_OBJECT_SPARKLES, false);
+        }
     }
 };
 

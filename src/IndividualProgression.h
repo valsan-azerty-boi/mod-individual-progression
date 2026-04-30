@@ -195,6 +195,7 @@ enum ProgressionAreas
     AREA_MAZTHORIL                       = 2245,
     AREA_ICE_THISTLE_HILLS               = 2247,
     AREA_THE_MARRIS_STEAD                = 2260,
+    AREA_CORINS_CROSSING                 = 2264,
     AREA_LIGHTS_HOPE                     = 2268,
     AREA_FOREST_SONG                     = 2358,
     AREA_DRACO_DAR                       = 2421,
@@ -237,8 +238,8 @@ enum ShatteredSunOffensive
     AREA_THE_DAWNING_SQUARE              = 4090,
     AREA_SUNWELL_PLATEAU_B               = 4094,
     QUEST_MANA_CELLS                     = 11513,
-    QUEST_REDISCOVERING_ROOTS            = 11521,
-    QUEST_DONT_STOP_NOW                  = 11536,
+    QUEST_DISCOVERING_ROOTS              = 11520,
+    QUEST_MAKING_READY                   = 11535,
     QUEST_CRUSH_DAWNBLADE                = 11540,
     QUEST_GREENGILL_COAST                = 11541,
     QUEST_ENEMY_AT_BAY                   = 11543,
@@ -246,30 +247,27 @@ enum ShatteredSunOffensive
     SONG_OF_VICTORY                      = 46302
 };
 
-enum ProgressionSettings
-{
-    SETTING_PROGRESSION_STATE   = 0
-};
-
 enum ProgressionState : uint8         // Progression stands for what has been completed
 {
     PROGRESSION_START           = 0,
-    PROGRESSION_MOLTEN_CORE     = 1, // BWL available
-    PROGRESSION_ONYXIA          = 2,
-    PROGRESSION_BLACKWING_LAIR  = 3, // ZG, AQ War effort, AQ quest line
-    PROGRESSION_PRE_AQ          = 4, // AQ outdoors war + AQ gates open, raid available
-    PROGRESSION_AQ              = 5, // Naxx40 and Scourge Invasion
-    PROGRESSION_NAXX40          = 6, // Karazhan, Gruul's Lair, Magtheridon's Lair
-    PROGRESSION_TBC_TIER_1      = 7, // Serpentshrine Cavern, Tempest Keep
-    PROGRESSION_TBC_TIER_2      = 8, // Hyjal Summit and Black Temple
-    PROGRESSION_TBC_TIER_3      = 9, // Zul'Aman
-    PROGRESSION_TBC_TIER_4      = 10, // Sunwell Plateau
-    PROGRESSION_TBC_TIER_5      = 11, // WotLK Naxx, EoE, OS
-    PROGRESSION_WOTLK_TIER_1    = 12, // Ulduar
-    PROGRESSION_WOTLK_TIER_2    = 13, // TotC
-    PROGRESSION_WOTLK_TIER_3    = 14, // ICC
-    PROGRESSION_WOTLK_TIER_4    = 15, // Ruby Sanctum
-    PROGRESSION_WOTLK_TIER_5    = 16  
+    PROGRESSION_MOLTEN_CORE     = 1,  
+    PROGRESSION_ONYXIA          = 2,  // BWL available
+    PROGRESSION_DUMMY_1         = 3,  
+    PROGRESSION_BLACKWING_LAIR  = 4,  // ZG, AQ War effort, AQ quest line
+    PROGRESSION_PRE_AQ          = 5,  // AQ gates open
+    PROGRESSION_AQ              = 6,  // Naxx40 and Scourge Invasion
+    PROGRESSION_DUMMY_2         = 7,  
+    PROGRESSION_NAXX40          = 8,  // Karazhan, Gruul's Lair, Magtheridon's Lair
+    PROGRESSION_TBC_TIER_1      = 9,  // Serpentshrine Cavern, Tempest Keep
+    PROGRESSION_TBC_TIER_2      = 10, // Hyjal Summit and Black Temple
+    PROGRESSION_TBC_TIER_3      = 11, // Zul'Aman
+    PROGRESSION_TBC_TIER_4      = 12, // Sunwell Plateau
+    PROGRESSION_TBC_TIER_5      = 13, // WotLK Naxx, EoE, OS
+    PROGRESSION_WOTLK_TIER_1    = 14, // Ulduar
+    PROGRESSION_WOTLK_TIER_2    = 15, // TotC
+    PROGRESSION_WOTLK_TIER_3    = 16, // ICC
+    PROGRESSION_WOTLK_TIER_4    = 17, // Ruby Sanctum
+    PROGRESSION_WOTLK_TIER_5    = 18
 };
 
 enum RandomDungeonIds : uint16
@@ -430,15 +428,19 @@ public:
     std::map<uint32, uint8> customProgressionMap;
     questXpMapType questXpMap;
     float vanillaPowerAdjustment, vanillaHealthAdjustment, tbcPowerAdjustment, tbcHealthAdjustment, vanillaHealingAdjustment, tbcHealingAdjustment;
-    bool enabled, questXpFix, hunterPetLevelFix, moltenCoreOnySamePhase, requirePreAQQuests, enforceGroupRules, fishingFix, simpleConfigOverride, questMoneyAtLevelCap, repeatableVanillaQuestsXp, disableDefaultProgression, earlyDungeonSet2, earlyScourgeBosses, requireNaxxStrath, naxxExitViaPortals, naxxSkipToSaphiron, doableNaxx40Bosses, DisableRDF, excludeAccounts, VanillaPvpTitlesKeepPostVanilla, VanillaPvpTitlesEarnPostVanilla, ExcludedAccountsEarnPvPTitles;
+    bool enabled, questXpFix, hunterPetLevelFix, moltenCoreOnySamePhase, requirePreAQQuests, enforceGroupRules, EnableSetRepCommand, fishingFix, simpleConfigOverride, questMoneyAtLevelCap, repeatableVanillaQuestsXp, disableDefaultProgression, earlyDungeonSet2, earlyScourgeBosses, requireNaxxStrath, naxxExitViaPortals, naxxSkipToSaphiron, doableNaxx40Bosses, DisableQuestMarkers, DisableRDF, excludeAccounts, VanillaPvpTitlesKeepPostVanilla, VanillaPvpTitlesEarnPostVanilla, ExcludedAccountsEarnPvPTitles;
     int progressionLimit, startingProgression, tbcRacesProgressionLevel, tbcRacesStartingProgression, deathKnightProgressionLevel, deathKnightStartingProgression, RequiredZulGurubProgression, tbcArenaSeason, wotlkArenaSeason, ExcludedAccountsMaxLevel;
     uint32 VanillaPvpKillRank1, VanillaPvpKillRank2, VanillaPvpKillRank3, VanillaPvpKillRank4, VanillaPvpKillRank5, VanillaPvpKillRank6, VanillaPvpKillRank7, VanillaPvpKillRank8, VanillaPvpKillRank9, VanillaPvpKillRank10, VanillaPvpKillRank11, VanillaPvpKillRank12, VanillaPvpKillRank13, VanillaPvpKillRank14;
-    std::string excludedAccountsRegex;
+    std::string excludedAccountsRegex, sharedFactionIdsRegex;
+
+    // progression is derived from rewarded hidden quests (IDs 66000 + progression)
+    uint8 GetPlayerProgressionFromQuests(Player* player) const;
 
     bool hasPassedProgression(Player* player, ProgressionState state) const;
     static bool isBeforeProgression(Player* player, ProgressionState state) ;
     void UpdateProgressionState(Player* player, ProgressionState newState) const;
     static void ForceUpdateProgressionState(Player* player, ProgressionState newState);
+
     void CheckAdjustments(Player* player) const;
     //void AdjustVanillaStats(Player* player) const;
     //void AdjustTBCStats(Player* player) const;
@@ -449,9 +451,9 @@ public:
     bool isAttuned(Player* player);
     void checkIPPhasing(Player* player, uint32 newArea);
     void checkIPProgression(Player* player);
-    void UpdateProgressionQuests(Player* player);
     void UpdateProgressionAchievements(Player* player, uint16 achievementID);
     void checkKillProgression(Player* player, Creature* killed);
+	void UpdateAccountReputation(uint32 factionId, uint32 accountId, Player* player);
     void CleanUpVanillaPvpTitles(Player* player);
     void AwardEarnedVanillaPvpTitles(Player* player);
     static void LoadCustomProgressionEntries(const std::string& customProgressionString);

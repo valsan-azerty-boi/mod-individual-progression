@@ -1,4 +1,3 @@
-#include "Chat.h"
 #include "Player.h"
 #include "ScriptMgr.h"
 #include "Tokenize.h"
@@ -20,6 +19,7 @@ public:
             { "set",    HandleSetIndividualProgressionCommand,    SEC_GAMEMASTER,    Console::Yes },
             { "tele",   HandleTeleIndividualProgressionCommand,   SEC_GAMEMASTER,    Console::Yes },
             { "setbot", HandleSetBotIndividualProgressionCommand, SEC_GAMEMASTER,    Console::Yes },
+            { "setrep", HandleSetRepIndividualProgressionCommand, SEC_GAMEMASTER,    Console::Yes },
         };
 
         static ChatCommandTable commandTable =
@@ -32,7 +32,7 @@ public:
 
     static void CheckProgressionAchievements(Player* target, uint8 currentState, uint32 progressionLevel)
     {
-        if (!currentState || !progressionLevel || !target || !target->IsInWorld())
+        if (!currentState || (!progressionLevel && progressionLevel != 0) || !target || !target->IsInWorld())
             return;
 
         uint16 playerGUID = target->GetGUID().GetCounter();
@@ -105,7 +105,7 @@ public:
         }
 
         Player* target = player->GetConnectedPlayer();
-        uint32 progressionLevel = target->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value;
+        uint32 progressionLevel = sIndividualProgression->GetPlayerProgressionFromQuests(target);
         std::string playername = target->GetName();
 
         handler->PSendSysMessage("Progression Level for |cff00ffff{}|r = |cff00ffff{}|r", playername, progressionLevel);
@@ -126,8 +126,7 @@ public:
         player = PlayerIdentifier::FromTargetOrSelf(handler);
         Player* target = player->GetConnectedPlayer();
         std::string playername = target->GetName();
-        // uint16 playerGUID = target->GetGUID().GetCounter();
-        uint8 currentState = target->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value;
+        uint8 currentState = sIndividualProgression->GetPlayerProgressionFromQuests(target);
         uint32 currentArea = target->GetAreaId();
 
         if (progressionLevel < currentState)
@@ -136,7 +135,6 @@ public:
         }
 
         sIndividualProgression->ForceUpdateProgressionState(target, static_cast<ProgressionState>(progressionLevel));
-        sIndividualProgression->UpdateProgressionQuests(target);
         sIndividualProgression->checkIPPhasing(target, currentArea);
 
         handler->PSendSysMessage("Updated Progression Level for |cff00ffff{}|r = |cff00ffff{}|r", playername, progressionLevel);
@@ -156,7 +154,7 @@ public:
         Group* group = player->GetGroup();
 
         std::string playername = player->GetName();
-        uint32 currentState = player->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value;
+        uint32 currentState = sIndividualProgression->GetPlayerProgressionFromQuests(player);
         uint32 currentArea = player->GetAreaId();
 
         if (!group)
@@ -172,12 +170,122 @@ public:
                 continue;
 
             sIndividualProgression->ForceUpdateProgressionState(member, static_cast<ProgressionState>(currentState));
-            sIndividualProgression->UpdateProgressionQuests(member);
             sIndividualProgression->CheckAdjustments(member);
             sIndividualProgression->checkIPPhasing(member, currentArea);
         }
 
-        handler->PSendSysMessage("Updated Progression Level for all bots = |cff00ffff{}|r", currentState);
+        handler->PSendSysMessage("Updated Progression Level for all RND bots = |cff00ffff{}|r", currentState);
+        return true;
+    }
+
+    static bool HandleSetRepIndividualProgressionCommand(ChatHandler* handler)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+        uint32 accountId = handler->GetSession()->GetAccountId();
+        
+        if (!player || !accountId)
+            return false;
+
+        Group* group = player->GetGroup();
+        
+        if (!sIndividualProgression->EnableSetRepCommand)
+        {
+            handler->SendSysMessage("The .ip setrep command is currently disabled.");
+            return false;
+        }
+        
+        if (!group)
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("You need to be in a group to use this command.");
+            return false;
+        }
+
+        static constexpr std::array<uint32, 26> Shared_Checklist =
+        {
+            59,   // Thorium Brotherhood
+            270,  // Zandalar Tribe
+            349,  // Ravenholdt
+            529,  // Argent Dawn
+            576,  // Timbermaw Hold
+            609,  // Cenarion Circle
+            749,  // Hydraxian Waterlords
+            909,  // Darkmoon Faire
+            933,  // The Consortium
+            942,  // Cenarion Expedition
+            967,  // The Violet Eye
+            970,  // Sporeggar
+            989,  // Keepers of Time
+            990,  // The Scale of the Sands
+            1011, // Lower City
+            1012, // Ashtongue Deathsworn
+            1015, // Netherwing
+            1031, // Sha'tari Skyguard
+            1038, // Ogri'la
+            1073, // The Kalu'ak
+            1077, // Shattered Sun Offensive
+            1090, // Kirin Tor
+            1091, // The Wyrmrest Accord
+            1098, // Knights of the Ebon Blade
+            1119, // The Sons of Hodir
+            1156  // The Ashen Verdict
+        };
+
+        static constexpr std::array<uint32, 8> Alliance_Checklist =
+        {
+            509,  // The League of Arathor
+            589,  // Wintersaber Trainers
+            730,  // Stormpike Guard
+            890,  // Silverwing Sentinels
+            946,  // Honor Hold
+            978,  // Kurenai
+            1037, // Alliance Vanguard
+            1094  // The Silver Covenant
+        };
+
+        static constexpr std::array<uint32, 8> Horde_Checklist =
+        {
+            510,  // The Defilers
+            729,  // Frostwolf Clan
+            889,  // Warsong Outriders
+            922,  // Tranquillien
+            941,  // Mag'har
+            947,  // Thrallmar
+            1052, // Horde Expedition
+            1124  // The Sunreavers
+        };
+
+        std::regex sharedFactionIdsRegex(sIndividualProgression->sharedFactionIdsRegex);
+
+        TeamId teamId = player->GetTeamId(true);
+        if (teamId == TEAM_ALLIANCE)
+        {
+            for (uint32 factionId : Shared_Checklist)
+            {
+                if (std::regex_match(std::to_string(factionId), sharedFactionIdsRegex))
+                    sIndividualProgression->UpdateAccountReputation(factionId, accountId, player);
+            }
+
+            for (uint32 factionId : Alliance_Checklist)
+            {
+                if (std::regex_match(std::to_string(factionId), sharedFactionIdsRegex))
+                    sIndividualProgression->UpdateAccountReputation(factionId, accountId, player);
+            }
+        }
+        if (teamId == TEAM_HORDE)
+        {
+            for (uint32 factionId : Shared_Checklist)
+            {
+                if (std::regex_match(std::to_string(factionId), sharedFactionIdsRegex))
+                    sIndividualProgression->UpdateAccountReputation(factionId, accountId, player);
+            }
+
+            for (uint32 factionId : Horde_Checklist)
+            {
+                if (std::regex_match(std::to_string(factionId), sharedFactionIdsRegex))
+                    sIndividualProgression->UpdateAccountReputation(factionId, accountId, player);
+            }
+        }
+
         return true;
     }
 
@@ -191,12 +299,12 @@ public:
 
         player = PlayerIdentifier::FromTargetOrSelf(handler);
         Player* target = player->GetConnectedPlayer();
-        uint32 progressionLevel = target->GetPlayerSetting("mod-individual-progression", SETTING_PROGRESSION_STATE).value;
+        uint32 progressionLevel = sIndividualProgression->GetPlayerProgressionFromQuests(target);
         std::string playername = target->GetName();
 
         if (location == "naxx" || location == "naxx40")
         {
-			if ((progressionLevel < PROGRESSION_TBC_TIER_5) && (target->GetLevel() <= IP_LEVEL_TBC))
+ 			if ((progressionLevel < PROGRESSION_TBC_TIER_5) && (target->GetLevel() <= IP_LEVEL_TBC))
             {
                 if (sIndividualProgression->isAttuned(target) || sIndividualProgression->isExcludedFromProgression(target))
                 {
