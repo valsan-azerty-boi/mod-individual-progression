@@ -217,7 +217,6 @@ enum ProgressionAreas
     AREA_AMANI_PASS                      = 3508,
     AREA_AMMEN_VALE                      = 3526,
     AREA_TERRACE_OF_LIGHT                = 3897,
-    AREA_SILVERMOON_S_PRIDE              = 4083,
     AREA_GREENGILL_COAST                 = 4091,
     AREA_MAGISTERS_TERRACE_EXTERIOR      = 4095,
     AREA_ARGENT_SUNREAVER_PAVILION       = 4666,

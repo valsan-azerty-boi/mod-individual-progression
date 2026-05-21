@@ -1017,7 +1017,7 @@ public:
         {
             if (sIndividualProgression->enforceGroupRules)
             {
-                if (groupLeaderState < PROGRESSION_PRE_TBC) // Group leader is in Vanilla
+                if (groupLeaderState < PROGRESSION_NAXX) // Group leader is in Vanilla
                 {
                     if (player->GetLevel() <= IP_LEVEL_VANILLA) // invited player is in Vanilla
                     {
@@ -1027,7 +1027,7 @@ public:
                     else
                         return false;
                 }
-                else if (groupLeaderState >= PROGRESSION_PRE_TBC && groupLeaderState < PROGRESSION_TBC_TIER_5) // Group leader is in TBC
+                else if (groupLeaderState >= PROGRESSION_NAXX && groupLeaderState < PROGRESSION_TBC_TIER_5) // Group leader is in TBC
                 {
                     if (player->GetLevel() > IP_LEVEL_VANILLA && player->GetLevel() <= IP_LEVEL_TBC) // invited excluded player is in TBC
                     {
