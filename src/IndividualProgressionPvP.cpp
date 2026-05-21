@@ -15,7 +15,7 @@ public:
             Player* target = ObjectAccessor::FindConnectedPlayer(player->GetGUID());
 			uint32 PVP_RANK6_QUEST = 66106;
 
-            if (player->IsGameMaster() || !sIndividualProgression->enabled || sIndividualProgression->isExcludedFromProgression(target) || sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40))
+            if (player->IsGameMaster() || !sIndividualProgression->enabled || sIndividualProgression->isBotAccount(target) || sIndividualProgression->isExcludedFromProgression(target) || sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40))
                 return false;
 
             if (target->GetQuestStatus(PVP_RANK6_QUEST) == QUEST_STATUS_REWARDED || target->GetLevel() > IP_LEVEL_VANILLA || player->getClass() == CLASS_DEATH_KNIGHT)
@@ -45,7 +45,7 @@ public:
             Player* target = ObjectAccessor::FindConnectedPlayer(player->GetGUID());
 			uint32 PVP_RANK6_QUEST = 66106;
 
-            if (player->IsGameMaster() || !sIndividualProgression->enabled || sIndividualProgression->isExcludedFromProgression(target) || sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40))
+            if (player->IsGameMaster() || !sIndividualProgression->enabled || sIndividualProgression->isBotAccount(target) || sIndividualProgression->isExcludedFromProgression(target) || sIndividualProgression->hasPassedProgression(target, PROGRESSION_NAXX40))
                 return true;
 
             if (target->GetQuestStatus(PVP_RANK6_QUEST) == QUEST_STATUS_REWARDED || target->GetLevel() > IP_LEVEL_VANILLA || player->getClass() == CLASS_DEATH_KNIGHT)

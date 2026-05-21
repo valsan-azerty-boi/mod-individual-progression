@@ -48,7 +48,10 @@ enum ProgressionBossIDs
     HALION               = 39863,
     RHAHK_ZOR            = 644,
     SNEED                = 643,
-    GILNID               = 1763
+    GILNID               = 1763,
+    COLOSSUS_ZORA        = 15740,
+    COLOSSUS_REGAL       = 15741,
+    COLOSSUS_ASHI        = 15742
 };
 
 enum BuffSpells
@@ -83,7 +86,10 @@ enum ProgressionQuestIDs
     BATTLE_UNDERCITY_HORDE    = 13267,
     BATTLE_UNDERCITY_ALLIANCE = 13377,
     SIMPLY_BANG_A_GONG        = 108743,
-    CHAOS_AND_DESTRUCTION     = 108744
+    CHAOS_AND_DESTRUCTION     = 108744,
+    QUEST_COLOSSUS_ZORA       = 108745,
+    QUEST_COLOSSUS_REGAL      = 108746,
+    QUEST_COLOSSUS_ASHI       = 108747
 };
 
 enum ProgressionQuests
@@ -230,6 +236,7 @@ enum DungeonKeys
 enum ShatteredSunOffensive
 {
     FACTION_SHATTERED_SUN                = 1077,
+    AREA_SILVERMOONS_PRIDE               = 4083,
     AREA_SHATTERED_SUN_STAGING           = 4085,
     AREA_SUNS_REACH_SANCTUM              = 4086,
     AREA_SUNS_REACH_HARBOR               = 4087,
@@ -428,10 +435,10 @@ public:
     std::map<uint32, uint8> customProgressionMap;
     questXpMapType questXpMap;
     float vanillaPowerAdjustment, vanillaHealthAdjustment, tbcPowerAdjustment, tbcHealthAdjustment, vanillaHealingAdjustment, tbcHealingAdjustment;
-    bool enabled, questXpFix, hunterPetLevelFix, moltenCoreOnySamePhase, requirePreAQQuests, enforceGroupRules, EnableSetRepCommand, fishingFix, simpleConfigOverride, questMoneyAtLevelCap, repeatableVanillaQuestsXp, disableDefaultProgression, earlyDungeonSet2, earlyScourgeBosses, requireNaxxStrath, naxxExitViaPortals, naxxSkipToSaphiron, doableNaxx40Bosses, DisableQuestMarkers, DisableRDF, excludeAccounts, VanillaPvpTitlesKeepPostVanilla, VanillaPvpTitlesEarnPostVanilla, ExcludedAccountsEarnPvPTitles;
-    int progressionLimit, startingProgression, tbcRacesProgressionLevel, tbcRacesStartingProgression, deathKnightProgressionLevel, deathKnightStartingProgression, RequiredZulGurubProgression, tbcArenaSeason, wotlkArenaSeason, ExcludedAccountsMaxLevel;
+    bool enabled, questXpFix, hunterPetLevelFix, moltenCoreOnySamePhase, requirePreAQQuests, enforceGroupRules, EnableSetRepCommand, LimitedSetRepCommand, fishingFix, simpleConfigOverride, MaxMonsterSight, questMoneyAtLevelCap, repeatableVanillaQuestsXp, disableDefaultProgression, earlyDungeonSet2, earlyScourgeBosses, requireNaxxStrath, naxxExitViaPortals, naxxSkipToSaphiron, doableNaxx40Bosses, DisableQuestMarkers, DisableRDF, excludeAccounts, VanillaPvpTitlesKeepPostVanilla, VanillaPvpTitlesEarnPostVanilla, BotAccountsEarnPvPTitles, BotOnlyAdjustments;
+    int progressionLimit, startingProgression, tbcRacesProgressionLevel, tbcRacesStartingProgression, deathKnightProgressionLevel, deathKnightStartingProgression, RequiredZulGurubProgression, tbcArenaSeason, wotlkArenaSeason, BotAccountsMaxLevel;
     uint32 VanillaPvpKillRank1, VanillaPvpKillRank2, VanillaPvpKillRank3, VanillaPvpKillRank4, VanillaPvpKillRank5, VanillaPvpKillRank6, VanillaPvpKillRank7, VanillaPvpKillRank8, VanillaPvpKillRank9, VanillaPvpKillRank10, VanillaPvpKillRank11, VanillaPvpKillRank12, VanillaPvpKillRank13, VanillaPvpKillRank14;
-    std::string excludedAccountsRegex, sharedFactionIdsRegex;
+    std::string excludedAccountsRegex, botAccountsRegex, sharedFactionIdsRegex;
 
     // progression is derived from rewarded hidden quests (IDs 66000 + progression)
     uint8 GetPlayerProgressionFromQuests(Player* player) const;
@@ -446,9 +453,12 @@ public:
     //void AdjustTBCStats(Player* player) const;
     //void AdjustWotLKStats(Player* player) const;
     bool hasCustomProgressionValue(uint32 creatureEntry);
-    bool isExcludedFromProgression(Player* player);
+    bool isExcludedAccount(Player* player);
+    bool isBotAccount(Player* player);
+    bool isNormalAccount(Player* player);
     void SyncBotsProgressionToLeader(Group* group);
     bool isAttuned(Player* player);
+    bool isPlayerInDungeonOrRaid(Player* player);
     void checkIPPhasing(Player* player, uint32 newArea);
     void checkIPProgression(Player* player);
     void UpdateProgressionAchievements(Player* player, uint16 achievementID);

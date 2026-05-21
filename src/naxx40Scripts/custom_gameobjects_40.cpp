@@ -54,7 +54,7 @@ public:
         if (sIndividualProgression->isExcludedFromProgression(player) || player->IsGameMaster() || 
             ((!sIndividualProgression->requireNaxxStrath || player->GetQuestStatus(NAXX40_ENTRANCE_FLAG) == QUEST_STATUS_REWARDED)))
         {
-            if (sIndividualProgression->isAttuned(player) || sIndividualProgression->isExcludedFromProgression(player))
+            if (sIndividualProgression->isAttuned(player))
             {
                 //player->SetRaidDifficulty(RAID_DIFFICULTY_25MAN_HEROIC);
                 player->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);

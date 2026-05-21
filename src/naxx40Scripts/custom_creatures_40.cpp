@@ -26,7 +26,7 @@ public:
                 {   
                     if (!sIndividualProgression->groupHaveLevelDisparity(player)
                         && player->GetLevel() <= IP_LEVEL_TBC
-                        && (sIndividualProgression->isExcludedFromProgression(player)
+                        && (sIndividualProgression->isExcludedAccount(player)
                             || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
                             || sIndividualProgression->isAttuned(player)
                             || player->IsGameMaster()))
@@ -46,7 +46,7 @@ public:
                 {
                     if (!sIndividualProgression->groupHaveLevelDisparity(player)
                         && player->GetLevel() <= IP_LEVEL_TBC
-                        && (sIndividualProgression->isExcludedFromProgression(player)
+                        && (sIndividualProgression->isExcludedAccount(player)
                             || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40))
                             || sIndividualProgression->isAttuned(player)
                             || player->IsGameMaster())

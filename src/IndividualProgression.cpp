@@ -194,8 +194,12 @@ void IndividualProgression::UpdateAccountReputation(uint32 factionId, uint32 acc
 
     Group* group = player->GetGroup();
     uint32 account = player->GetSession()->GetAccountId();
+    std::string factionName = sFactionStore.LookupEntry(factionId)->name[0];
 
     if (!group)
+        return;
+
+    if (player->GetReputationRank(factionId) < REP_NEUTRAL) // don't increase rep unless the player is at least neutral with the faction
         return;
 
     uint32 curRep = player->GetReputationMgr().GetReputation(factionId);
@@ -207,22 +211,24 @@ void IndividualProgression::UpdateAccountReputation(uint32 factionId, uint32 acc
         if (!member || member->GetSession()->GetAccountId() != accountId)
             continue;
 
+        if (member->GetReputationRank(factionId) < REP_NEUTRAL)
+            continue;
+
         uint32 repAmount = member->GetReputationMgr().GetReputation(factionId);
 
         if (repAmount > newRep)
             newRep = repAmount;
     }
 
-    // ChatHandler(player->GetSession()).PSendSysMessage("Current {} Reputation = {}", factionId, curRep);
-    // ChatHandler(player->GetSession()).PSendSysMessage("Highest {} Reputation = {}", factionId, newRep);
+    ChatHandler(player->GetSession()).PSendSysMessage("Current {} Rep = {} ({})", factionId, curRep, factionName);
+    ChatHandler(player->GetSession()).PSendSysMessage("Highest {} Rep = {} ({})", factionId, newRep, factionName);
 
     if (newRep > curRep)
     {
-        std::string factionName = sFactionStore.LookupEntry(factionId)->name[0];
         uint32 addRep = newRep - curRep;
 
         player->GetReputationMgr().ModifyReputation(sFactionStore.LookupEntry(factionId), addRep);
-        ChatHandler(player->GetSession()).PSendSysMessage("Reputation with {} increased by {}.", factionName, addRep);
+        // ChatHandler(player->GetSession()).PSendSysMessage("Reputation with {} increased by {}.", factionName, addRep);
     }
 }
 
@@ -319,21 +325,54 @@ bool IndividualProgression::isAttuned(Player* player)
 
     if ((player->GetQuestStatus(NAXX40_ATTUNEMENT_1) == QUEST_STATUS_REWARDED) || (player->GetQuestStatus(NAXX40_ATTUNEMENT_2) == QUEST_STATUS_REWARDED) || (player->GetQuestStatus(NAXX40_ATTUNEMENT_3) == QUEST_STATUS_REWARDED)
         || player->IsGameMaster()
-        || sIndividualProgression->isExcludedFromProgression(player))
+        || sIndividualProgression->isExcludedAccount(player))
         return true;
     else
         return false;
 }
 
-bool IndividualProgression::isExcludedFromProgression(Player* player)
+bool IndividualProgression::isExcludedAccount(Player* player)
 {
-    if (!player || !sIndividualProgression->excludeAccounts)
+    if (!player)
         return false;
 
     std::string accountName;
     bool accountNameFound = AccountMgr::GetName(player->GetSession()->GetAccountId(), accountName);
     std::regex excludedAccountsRegex(sIndividualProgression->excludedAccountsRegex);
+
     return (accountNameFound && std::regex_match(accountName, excludedAccountsRegex));
+}
+
+bool IndividualProgression::isBotAccount(Player* player)
+{
+    if (!player)
+        return false;
+
+    std::string accountName;
+    bool accountNameFound = AccountMgr::GetName(player->GetSession()->GetAccountId(), accountName);
+    std::regex botAccountsRegex(sIndividualProgression->botAccountsRegex);
+
+    return (accountNameFound && std::regex_match(accountName, botAccountsRegex));
+}
+
+bool IndividualProgression::isNormalAccount(Player* player)
+{
+    if (!player)
+        return false;
+
+    if (sIndividualProgression->isExcludedAccount(player) || sIndividualProgression->isBotAccount(player))
+        return false;
+
+    return true;
+}
+
+bool IndividualProgression::isPlayerInDungeonOrRaid(Player* player)
+{
+    if (!player || !player->IsInWorld())
+        return false;
+
+    Map const* map = player->GetMap();
+    return (map && (map->IsDungeon() || map->IsRaid()));
 }
 
 void IndividualProgression::SyncBotsProgressionToLeader(Group* group)
@@ -346,7 +385,7 @@ void IndividualProgression::SyncBotsProgressionToLeader(Group* group)
         return;
 
     Player* leader = ObjectAccessor::FindPlayer(leaderGuid);
-    if (!leader || isExcludedFromProgression(leader))
+    if (!leader || !isNormalAccount(leader))
         return;
 
     uint8 refProgress = GetPlayerProgressionFromQuests(leader);
@@ -357,7 +396,7 @@ void IndividualProgression::SyncBotsProgressionToLeader(Group* group)
     for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
     {
         Player* member = itr->GetSource();
-        if (!member || !isExcludedFromProgression(member))
+        if (!member || isNormalAccount(member))
             continue;
 
         ForceUpdateProgressionState(member, static_cast<ProgressionState>(refProgress));
@@ -417,7 +456,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_JADEMIR_LAKE:
         case AREA_TWILIGHT_GROVE:
             if (sIndividualProgression->hasPassedProgression(player, PROGRESSION_ONYXIA)
-                || (sIndividualProgression->isExcludedFromProgression(player) && player->GetLevel() >= IP_LEVEL_VANILLA))
+                || (sIndividualProgression->isExcludedAccount(player) && player->GetLevel() >= IP_LEVEL_VANILLA))
             {
                 player->CastSpell(player, IPP_PHASE, false);
             }
@@ -444,7 +483,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_THE_MARRIS_STEAD:
             if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_AQ) && sIndividualProgression->isBeforeProgression(player, PROGRESSION_NAXX40))
                 || (sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5) && player->GetLevel() == IP_LEVEL_TBC)
-                || (sIndividualProgression->isExcludedFromProgression(player) && (player->GetLevel() == IP_LEVEL_VANILLA || player->GetLevel() == IP_LEVEL_TBC)))
+                || (sIndividualProgression->isExcludedAccount(player) && (player->GetLevel() == IP_LEVEL_VANILLA || player->GetLevel() == IP_LEVEL_TBC)))
             {
                 player->CastSpell(player, IPP_PHASE, false);
             }
@@ -453,13 +492,13 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_BLASTED_LANDS:
         case AREA_RISE_OF_THE_DEFILER:
             if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40) && player->GetLevel() <= IP_LEVEL_VANILLA)
-                || (sIndividualProgression->isExcludedFromProgression(player) && player->GetLevel() == IP_LEVEL_VANILLA))
+                || (sIndividualProgression->isExcludedAccount(player) && player->GetLevel() == IP_LEVEL_VANILLA))
             {
                 player->CastSpell(player, IPP_PHASE_II, false);
             }
             else if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_AQ) && sIndividualProgression->isBeforeProgression(player, PROGRESSION_NAXX40))
                 || (sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5) && player->GetLevel() == IP_LEVEL_TBC)
-                || (sIndividualProgression->isExcludedFromProgression(player) && player->GetLevel() == IP_LEVEL_TBC))
+                || (sIndividualProgression->isExcludedAccount(player) && player->GetLevel() == IP_LEVEL_TBC))
             {
                 player->CastSpell(player, IPP_PHASE, false);
             }
@@ -487,7 +526,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_RUINS_OF_THAURISSAN:
             if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_AQ)) && (sIndividualProgression->isBeforeProgression(player, PROGRESSION_NAXX40))
                 || (sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5) && player->GetLevel() == IP_LEVEL_TBC)
-                || (sIndividualProgression->isExcludedFromProgression(player) && (player->GetLevel() == IP_LEVEL_VANILLA || player->GetLevel() == IP_LEVEL_TBC)))
+                || (sIndividualProgression->isExcludedAccount(player) && (player->GetLevel() == IP_LEVEL_VANILLA || player->GetLevel() == IP_LEVEL_TBC)))
             {
                 player->CastSpell(player, IPP_PHASE, false);
             }
@@ -502,7 +541,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_THE_HORDE_VALIANTS_RING:
         case AREA_ARGENT_PAVILION:
             if (sIndividualProgression->hasPassedProgression(player, PROGRESSION_WOTLK_TIER_2)
-                || (sIndividualProgression->isExcludedFromProgression(player) && player->GetLevel() >= IP_LEVEL_WOTLK))
+                || (sIndividualProgression->isExcludedAccount(player) && player->GetLevel() >= IP_LEVEL_WOTLK))
             {
                 player->CastSpell(player, IPP_PHASE, false);
             }
@@ -515,6 +554,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_ISLE_OF_QUEL_DANAS:
         case AREA_MAGISTERS_TERRACE:
         case AREA_SHATTERED_SUN_STAGING:
+        case AREA_SILVERMOONS_PRIDE:
         case AREA_SUNS_REACH_SANCTUM:
         case AREA_SUNS_REACH_HARBOR:
         case AREA_SUNS_REACH_ARMORY:
@@ -522,16 +562,17 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_THE_DAWNING_SQUARE:
             player->RemoveAura(SONG_OF_VICTORY);
 
-            if (player->GetReputationRank(FACTION_SHATTERED_SUN) >= REP_REVERED
+            if (isBotAccount(player) || player->GetReputationRank(FACTION_SHATTERED_SUN) >= REP_REVERED
                 || player->GetLevel() > IP_LEVEL_TBC
                 || sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5)
-                || sIndividualProgression->isExcludedFromProgression(player))
+                || sIndividualProgression->isExcludedAccount(player))
             {
                 player->CastSpell(player, IPP_PHASE_II, false);
                 player->CastSpell(player, IPP_PHASE_III, false);
                 player->CastSpell(player, IPP_PHASE_IV, false);
 
-                if (isExcludedFromProgression(player) ||
+                if (isBotAccount(player) ||
+                    isExcludedAccount(player) ||
                     (player->GetQuestStatus(QUEST_CRUSH_DAWNBLADE) == QUEST_STATUS_REWARDED &&
                      player->GetQuestStatus(QUEST_GREENGILL_COAST) == QUEST_STATUS_REWARDED &&
                      player->GetQuestStatus(QUEST_ENEMY_AT_BAY) == QUEST_STATUS_REWARDED))
@@ -562,12 +603,12 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
 
             if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_AQ) && sIndividualProgression->isBeforeProgression(player, PROGRESSION_NAXX40))
                 || (sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5) && player->GetLevel() == IP_LEVEL_TBC)
-                || (sIndividualProgression->isExcludedFromProgression(player) && player->GetLevel() == IP_LEVEL_TBC))
+                || (sIndividualProgression->isExcludedAccount(player) && player->GetLevel() == IP_LEVEL_TBC))
             {
                 player->CastSpell(player, IPP_PHASE, false);
             }
             else if ((sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40) && player->GetLevel() <= IP_LEVEL_VANILLA)
-                || (sIndividualProgression->isExcludedFromProgression(player) && player->GetLevel() == IP_LEVEL_VANILLA))
+                || (sIndividualProgression->isExcludedAccount(player) && player->GetLevel() == IP_LEVEL_VANILLA))
             {
                 player->CastSpell(player, IPP_PHASE_II, false);
             }
@@ -590,7 +631,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
             break;
         case AREA_LIGHTS_HOPE:
             if (sIndividualProgression->hasPassedProgression(player, PROGRESSION_AQ)
-                || (sIndividualProgression->isExcludedFromProgression(player) && player->GetLevel() >= IP_LEVEL_VANILLA))
+                || (sIndividualProgression->isExcludedAccount(player) && player->GetLevel() >= IP_LEVEL_VANILLA))
             {
                 player->CastSpell(player, IPP_PHASE, false);
             }
@@ -598,7 +639,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_TERRACE_OF_LIGHT:
         case AREA_SHATTRATH_CITY:
             if (hasPassedProgression(player, PROGRESSION_TBC_TIER_4)
-                || (sIndividualProgression->isExcludedFromProgression(player) && player->GetLevel() >= IP_LEVEL_TBC))
+                || (sIndividualProgression->isExcludedAccount(player) && player->GetLevel() >= IP_LEVEL_TBC))
             {
                 player->CastSpell(player, IPP_PHASE, false);
             }
@@ -643,7 +684,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_HATCHET_HILLS:
         case AREA_AMANI_PASS:
             if (sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_3)
-                || (sIndividualProgression->isExcludedFromProgression(player) && player->GetLevel() >= IP_LEVEL_TBC))
+                || (sIndividualProgression->isExcludedAccount(player) && player->GetLevel() >= IP_LEVEL_TBC))
             {
                 player->CastSpell(player, IPP_PHASE_II, false);
             }
@@ -665,7 +706,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
                     player->CastSpell(player, IPP_PHASE_II, false);
                     break;
                 }
-                else if (hasPassedProgression(player, PROGRESSION_WOTLK_TIER_3) || sIndividualProgression->isExcludedFromProgression(player))
+                else if (hasPassedProgression(player, PROGRESSION_WOTLK_TIER_3) || sIndividualProgression->isExcludedAccount(player))
                 {
                     player->CastSpell(player, IPP_PHASE, false);
                     player->CastSpell(player, IPP_PHASE_II, false);
@@ -677,7 +718,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
             {
                 player->RemoveAura(SONG_OF_VICTORY);
 
-                if (isExcludedFromProgression(player) ||
+                if (isBotAccount(player) ||
                     (player->GetQuestStatus(QUEST_CRUSH_DAWNBLADE) == QUEST_STATUS_REWARDED &&
                      player->GetQuestStatus(QUEST_GREENGILL_COAST) == QUEST_STATUS_REWARDED &&
                      player->GetQuestStatus(QUEST_ENEMY_AT_BAY) == QUEST_STATUS_REWARDED))
@@ -695,7 +736,7 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
             {
                 if (earlyScourgeBosses || (hasPassedProgression(player, PROGRESSION_AQ) && isBeforeProgression(player, PROGRESSION_NAXX40))
                     || (sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5) && player->GetLevel() == IP_LEVEL_TBC)
-                    || (sIndividualProgression->isExcludedFromProgression(player) && (player->GetLevel() == IP_LEVEL_VANILLA || player->GetLevel() == IP_LEVEL_TBC)))
+                    || (sIndividualProgression->isExcludedAccount(player) && (player->GetLevel() == IP_LEVEL_VANILLA || player->GetLevel() == IP_LEVEL_TBC)))
                 {
                     player->CastSpell(player, IPP_PHASE, false);
                     break;
@@ -943,18 +984,21 @@ void IndividualProgression::AwardEarnedVanillaPvpTitles(Player* player)
                 {
                     player->SetTitle(sCharTitlesStore.LookupEntry(title.TitleId));
                     highestTitle = title.TitleId;
-                        
-                    if (teamId == 0)
-                        player->SetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK, title.TitleId + 4);
-                    else // teamId == 1
-                        player->SetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK, title.TitleId - 10);
+                    
+                    constexpr int ALLIANCE_PVP_RANK_OFFSET = 4; // rank 1-4 are not used, need to add 4 to align with rank 1 = title ID 5
+                    constexpr int HORDE_PVP_RANK_OFFSET = 10;  // horde titles start at ID 15, need to subtract 10 to align with rank 1 = title ID 5
+
+                    if (teamId == TEAM_ALLIANCE)
+                        player->SetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK, title.TitleId + ALLIANCE_PVP_RANK_OFFSET);
+                    else // teamId == TEAM_HORDE
+                        player->SetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK, title.TitleId - HORDE_PVP_RANK_OFFSET);
                                 
                     break;
                 }
             }
 
             const uint32_t chosenTitleId = player->GetUInt32Value(PLAYER_CHOSEN_TITLE);
-            const bool usesPvPTitle = ((chosenTitleId != 0 && chosenTitleId < 29) || isExcludedFromProgression(player)); // PvP Titles go from 1 to 28.
+            const bool usesPvPTitle = ((chosenTitleId != 0 && chosenTitleId < 29) || isBotAccount(player) || isExcludedAccount(player)); // PvP Titles go from 1 to 28.
 
             // remove all titles except highest
             for (IppPvPTitles title : pvpTitlesList)
@@ -993,7 +1037,6 @@ private:
         sIndividualProgression->naxxSkipToSaphiron = sConfigMgr->GetOption<bool>("IndividualProgression.NaxxSkipToSaphiron", false);
         sIndividualProgression->doableNaxx40Bosses = sConfigMgr->GetOption<bool>("IndividualProgression.doableNaxx40Bosses", false);
         sIndividualProgression->enforceGroupRules = sConfigMgr->GetOption<bool>("IndividualProgression.EnforceGroupRules", true);
-        sIndividualProgression->EnableSetRepCommand = sConfigMgr->GetOption<bool>("IndividualProgression.EnableSetRepCommand", false);
         sIndividualProgression->fishingFix = sConfigMgr->GetOption<bool>("IndividualProgression.FishingFix", true);
         sIndividualProgression->simpleConfigOverride = sConfigMgr->GetOption<bool>("IndividualProgression.SimpleConfigOverride", true);
         sIndividualProgression->progressionLimit = sConfigMgr->GetOption<uint8>("IndividualProgression.ProgressionLimit", 0);
@@ -1029,13 +1072,17 @@ private:
         sIndividualProgression->VanillaPvpKillRank14 = sConfigMgr->GetOption<uint32>("IndividualProgression.VanillaPvpKillRequirement.Rank14", 24000);
         sIndividualProgression->VanillaPvpTitlesKeepPostVanilla = sConfigMgr->GetOption<bool>("IndividualProgression.VanillaPvpTitlesPersistAfterVanilla", true);
         sIndividualProgression->VanillaPvpTitlesEarnPostVanilla = sConfigMgr->GetOption<bool>("IndividualProgression.VanillaPvpEarnTitlesAfterVanilla", false);
-        sIndividualProgression->ExcludedAccountsEarnPvPTitles = sConfigMgr->GetOption<bool>("IndividualProgression.ExcludedAccountsEarnPvPTitles", false);
+        sIndividualProgression->BotAccountsEarnPvPTitles = sConfigMgr->GetOption<bool>("IndividualProgression.BotAccountsEarnPvPTitles", false);
         sIndividualProgression->DisableRDF = sConfigMgr->GetOption<bool>("IndividualProgression.DisableRDF", false);
         sIndividualProgression->DisableQuestMarkers = sConfigMgr->GetOption<bool>("IndividualProgression.DisableQuestMarkers", true);
-        sIndividualProgression->excludeAccounts = sConfigMgr->GetOption<bool>("IndividualProgression.ExcludeAccounts", true);
-        sIndividualProgression->excludedAccountsRegex = sConfigMgr->GetOption<std::string>("IndividualProgression.ExcludedAccountsRegex", "^RNDBOT.*");
+        sIndividualProgression->MaxMonsterSight = sConfigMgr->GetOption<bool>("IndividualProgression.MaxMonsterSight", true);
+        sIndividualProgression->BotOnlyAdjustments = sConfigMgr->GetOption<bool>("IndividualProgression.BotOnlyAdjustments", false);
+        sIndividualProgression->excludedAccountsRegex = sConfigMgr->GetOption<std::string>("IndividualProgression.ExcludedAccountsRegex", "");
+        sIndividualProgression->botAccountsRegex = sConfigMgr->GetOption<std::string>("IndividualProgression.BotAccountsRegex", "^RNDBOT.*");
+        sIndividualProgression->EnableSetRepCommand = sConfigMgr->GetOption<bool>("IndividualProgression.EnableSetRepCommand", false);
+        sIndividualProgression->LimitedSetRepCommand = sConfigMgr->GetOption<bool>("IndividualProgression.LimitedSetRepCommand", true);
         sIndividualProgression->sharedFactionIdsRegex = sConfigMgr->GetOption<std::string>("IndividualProgression.sharedFactionIdsRegex", "59|270|349|509|510|529|576|589|609|729|730|749|889|890|909");
-        sIndividualProgression->ExcludedAccountsMaxLevel = sConfigMgr->GetOption<uint8>("IndividualProgression.ExcludedAccountsMaxLevel", 80);
+        sIndividualProgression->BotAccountsMaxLevel = sConfigMgr->GetOption<uint8>("IndividualProgression.BotAccountsMaxLevel", 80);
     }
 
     static void LoadXpValues()
@@ -1078,6 +1125,9 @@ public:
             sWorld->setBoolConfig(CONFIG_DBC_ENFORCE_ITEM_ATTRIBUTES, false);
         }
 
+        if (sIndividualProgression->MaxMonsterSight)
+            sWorld->setFloatConfig(CONFIG_SIGHT_MONSTER, 80.0f);
+        
         if (sIndividualProgression->DisableRDF)
             sWorld->setIntConfig(CONFIG_LFG_OPTIONSMASK, 4);
 
