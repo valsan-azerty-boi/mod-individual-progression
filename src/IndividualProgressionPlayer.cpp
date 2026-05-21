@@ -81,7 +81,7 @@ public:
 
     /* void OnPlayerSetMaxLevel(Player* player, uint32& maxPlayerLevel) override
     {
-        if (!sIndividualProgression->enabled || !maxPlayerLevel || !player || !player->IsInWorld() || sIndividualProgression->isExcludedFromProgression(player))
+        if (!sIndividualProgression->enabled || !maxPlayerLevel || !player || !player->IsInWorld() || sIndividualProgression->isExcludedAccount(player))
             return;
 
         if (!sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40))
@@ -1236,7 +1236,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 6:
@@ -1254,7 +1254,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 7:
@@ -1271,7 +1271,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 8:
@@ -1287,7 +1287,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 9:
@@ -1302,7 +1302,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 10:
@@ -1316,7 +1316,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 11:
@@ -1329,7 +1329,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 12:
@@ -1341,7 +1341,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 13:
@@ -1352,7 +1352,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 14:
@@ -1362,7 +1362,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 15:
@@ -1371,7 +1371,7 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 16:
@@ -1379,20 +1379,20 @@ public:
                     player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) || 
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 17:
                 if (!(player->HasTitle(FIELD_MARSHAL) || player->HasTitle(WARLORD) ||
                     player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             case 18:
                 if (!(player->HasTitle(GRAND_MARSHAL) || player->HasTitle(HIGH_WARLORD)
                     || sIndividualProgression->hasPassedProgression(player, PROGRESSION_NAXX40)
-                    || sIndividualProgression->isExcludedFromProgression(player)))
+                    || sIndividualProgression->isExcludedAccount(player)))
                     return false;
                 break;
             default:

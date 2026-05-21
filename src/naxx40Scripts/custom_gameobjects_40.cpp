@@ -51,7 +51,7 @@ public:
             return false;
         }
 
-        if (sIndividualProgression->isExcludedFromProgression(player) || player->IsGameMaster() || 
+        if (sIndividualProgression->isExcludedAccount(player) || player->IsGameMaster() || 
             ((!sIndividualProgression->requireNaxxStrath || player->GetQuestStatus(NAXX40_ENTRANCE_FLAG) == QUEST_STATUS_REWARDED)))
         {
             if (sIndividualProgression->isAttuned(player))
