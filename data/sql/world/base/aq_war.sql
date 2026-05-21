@@ -138,7 +138,7 @@ INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, 
 UPDATE `gameobject_template_addon` SET `flags` = 16 WHERE `entry` = 180810;
 
 /* Reduce Colossus scale for gameplay purpose (not Blizzlike) */
-UPDATE `creature_template` SET `scale` = 0.5 WHERE `entry` IN (15740, 15741, 15742);
+-- UPDATE `creature_template` SET `scale` = 0.5 WHERE `entry` IN (15740, 15741, 15742); -- Outdated
 
 -- add loot to Colossus of Zora, Regal and Ashi
 DELETE FROM `creature_loot_template` WHERE `entry` = 15740;
