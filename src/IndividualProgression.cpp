@@ -57,16 +57,17 @@ void IndividualProgression::UpdateProgressionState(Player* player, ProgressionSt
     uint8 currentState = GetPlayerProgressionFromQuests(player);
     if (newState > currentState)
     {
-        uint32 PROGRESSION_QUEST = 66000 + newState;
-        if (player->GetQuestStatus(PROGRESSION_QUEST) != QUEST_STATUS_REWARDED)
+        for (uint8 i = currentState; i <= newState; ++i)
         {
+            uint32 PROGRESSION_QUEST = 66000 + i;
             Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_QUEST);
-            if (quest)
-            {
-                player->AddQuest(quest, nullptr);
-                player->CompleteQuest(PROGRESSION_QUEST);
-                player->RewardQuest(quest, 0, player, false, false);
-            }
+
+            if (!quest)
+                continue;
+
+            player->AddQuest(quest, nullptr);
+            player->CompleteQuest(PROGRESSION_QUEST);
+            player->RewardQuest(quest, 0, player, false, false);
         }
     }
 
@@ -85,6 +86,9 @@ void IndividualProgression::ForceUpdateProgressionState(Player* player, Progress
     if (!player || !player->IsInWorld())
         return;
 
+    if (!newState)
+        return;
+
     // remove all hidden progression quests first
     for (uint8 i = PROGRESSION_MOLTEN_CORE; i <= PROGRESSION_WOTLK_TIER_5; ++i)
     {
@@ -93,17 +97,17 @@ void IndividualProgression::ForceUpdateProgressionState(Player* player, Progress
             player->RemoveRewardedQuest(PROGRESSION_QUEST);
     }
 
-    // if newState is non-zero, add the corresponding progression quest
-    if (newState)
+    for (uint8 i = PROGRESSION_MOLTEN_CORE; i <= newState; ++i)
     {
-        uint32 PROGRESSION_QUEST = 66000 + newState;
+        uint32 PROGRESSION_QUEST = 66000 + i;
         Quest const* quest = sObjectMgr->GetQuestTemplate(PROGRESSION_QUEST);
-        if (quest)
-        {
-            player->AddQuest(quest, nullptr);
-            player->CompleteQuest(PROGRESSION_QUEST);
-            player->RewardQuest(quest, 0, player, false, false);
-        }
+
+        if (!quest)
+            continue;
+
+        player->AddQuest(quest, nullptr);
+        player->CompleteQuest(PROGRESSION_QUEST);
+        player->RewardQuest(quest, 0, player, false, false);
     }
 }
 
@@ -761,8 +765,8 @@ void IndividualProgression::checkIPProgression(Player* killer)
         { ANUB_ARAK_KILL,     PROGRESSION_WOTLK_TIER_3   },
         { KEL_THUZAD_KILL,    PROGRESSION_WOTLK_TIER_1   },
         { KIL_JAEDEN_KILL,    PROGRESSION_TBC_TIER_5     },
-        { ZUL_JIN_KILL,       PROGRESSION_TBC_TIER_4     },
-        { ILLIDAN_KILL,       PROGRESSION_TBC_TIER_3     },
+      //{ ZUL_JIN_KILL,       PROGRESSION_TBC_TIER_4     },
+        { ILLIDAN_KILL,       PROGRESSION_TBC_TIER_4     },
         { KAEL_THAS_KILL,     PROGRESSION_TBC_TIER_2     },
         { MALCHEZAAR_KILL,    PROGRESSION_TBC_TIER_1     },
         { KEL_THUZAD_40_KILL, PROGRESSION_NAXX40         },
@@ -811,8 +815,8 @@ void IndividualProgression::checkKillProgression(Player* killer, Creature* kille
         { KELTHUZAD_40, PROGRESSION_NAXX40         },
         { MALCHEZAAR,   PROGRESSION_TBC_TIER_1     },
         { KAELTHAS,     PROGRESSION_TBC_TIER_2     },
-        { ILLIDAN,      PROGRESSION_TBC_TIER_3     },
-        { ZULJIN,       PROGRESSION_TBC_TIER_4     },
+        { ILLIDAN,      PROGRESSION_TBC_TIER_4     },
+//      { ZULJIN,       PROGRESSION_TBC_TIER_4     },
         { KILJAEDEN,    PROGRESSION_TBC_TIER_5     },
         { KELTHUZAD,    PROGRESSION_WOTLK_TIER_1   },
         { YOGGSARON,    PROGRESSION_WOTLK_TIER_2   },
@@ -1050,6 +1054,7 @@ private:
         sIndividualProgression->deathKnightProgressionLevel = sConfigMgr->GetOption<uint8>("IndividualProgression.DeathKnightUnlockProgression", 13);
         sIndividualProgression->deathKnightStartingProgression = sConfigMgr->GetOption<uint8>("IndividualProgression.DeathKnightStartingProgression", 13);
         sIndividualProgression->RequiredZulGurubProgression = sConfigMgr->GetOption<uint8>("IndividualProgression.RequiredZulGurubProgression", 3);
+        sIndividualProgression->RequiredZulAmanProgression = sConfigMgr->GetOption<uint8>("IndividualProgression.RequiredZulAmanProgression", 12);
         sIndividualProgression->LoadCustomProgressionEntries(sConfigMgr->GetOption<std::string>("IndividualProgression.CustomProgression", ""));
         sIndividualProgression->earlyDungeonSet2 = sConfigMgr->GetOption<bool>("IndividualProgression.AllowEarlyDungeonSet2", false);
         sIndividualProgression->earlyScourgeBosses = sConfigMgr->GetOption<bool>("IndividualProgression.AllowEarlyScourgeBosses", false);

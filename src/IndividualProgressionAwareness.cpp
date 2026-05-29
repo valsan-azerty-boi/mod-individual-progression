@@ -1274,6 +1274,126 @@ public:
     }
 };
 
+class npc_ipp_tbc_pre_t3 : public CreatureScript
+{
+public:
+    npc_ipp_tbc_pre_t3() : CreatureScript("npc_ipp_tbc_pre_t3") { }
+
+    struct npc_ipp_tbc_pre_t3AI: ScriptedAI
+    {
+        explicit npc_ipp_tbc_pre_t3AI(Creature* creature) : ScriptedAI(creature) { };
+
+        bool CanBeSeen(Player const* player) override
+        {
+            if (player->IsGameMaster())
+                return true;
+
+            Player* target = ObjectAccessor::FindConnectedPlayer(player->GetGUID());
+            if (!sIndividualProgression->hasPassedProgression(target,PROGRESSION_TBC_TIER_2))
+                return true;
+            else
+                return false;
+        }
+
+        protected:
+            void MoveInLineOfSight(Unit* who) override
+            {
+                if (!who)
+                    return;
+
+                if (sIndividualProgression->enabled
+                    && who->IsPlayer()
+                    && !sIndividualProgression->isBeforeProgression(who->ToPlayer(), PROGRESSION_TBC_TIER_3))
+                {
+                    return;
+                }
+
+                ScriptedAI::MoveInLineOfSight(who);
+            }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return new npc_ipp_tbc_pre_t3AI(creature);
+    }
+};
+
+class npc_ipp_tbc_t3 : public CreatureScript
+{
+public:
+    npc_ipp_tbc_t3() : CreatureScript("npc_ipp_tbc_t3") { }
+
+    struct npc_ipp_tbc_t3AI: ScriptedAI
+    {
+        explicit npc_ipp_tbc_t3AI(Creature* creature) : ScriptedAI(creature) { };
+
+        bool CanBeSeen(Player const* player) override
+        {
+            if (player->IsGameMaster() || !sIndividualProgression->enabled)
+                return true;
+
+            Player* target = ObjectAccessor::FindConnectedPlayer(player->GetGUID());
+            if (sIndividualProgression->hasPassedProgression(target, PROGRESSION_TBC_TIER_2))
+                return true;
+            else
+                return false;
+        }
+
+        protected:
+            void MoveInLineOfSight(Unit* who) override
+            {
+                if (!who)
+                    return;
+
+                if (sIndividualProgression->enabled
+                    && who->IsPlayer()
+                    && !sIndividualProgression->hasPassedProgression(who->ToPlayer(), PROGRESSION_TBC_TIER_3))
+                {
+                    return;
+                }
+
+                ScriptedAI::MoveInLineOfSight(who);
+            }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return new npc_ipp_tbc_t3AI(creature);
+    }
+};
+
+class npc_ipp_za : public CreatureScript
+{
+public:
+    npc_ipp_za() : CreatureScript("npc_ipp_za") { }
+
+    struct npc_ipp_zaAI: ScriptedAI
+    {
+        explicit npc_ipp_zaAI(Creature* creature) : ScriptedAI(creature) { };
+
+        bool CanBeSeen(Player const* player) override
+        {
+            if (player->IsGameMaster() || !sIndividualProgression->enabled)
+                return true;
+
+            Player* target = ObjectAccessor::FindConnectedPlayer(player->GetGUID());
+
+            uint32 PLAYER_PROGRESSION = sIndividualProgression->GetPlayerProgressionFromQuests(target);
+            ProgressionState REQUIRED_ZA_PROGRESSION = static_cast<ProgressionState>(sIndividualProgression->RequiredZulAmanProgression);
+
+            if (PLAYER_PROGRESSION >= REQUIRED_ZA_PROGRESSION)
+                return true;
+            else
+                return false;
+        }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return new npc_ipp_zaAI(creature);
+    }
+};
+
 class npc_ipp_tbc_t5 : public CreatureScript
 {
 public:
@@ -1723,8 +1843,11 @@ void AddSC_mod_individual_progression_awareness()
     new npc_ipp_naxx40();
     new npc_ipp_pre_tbc();            // NPCS only visible before TBC
     new npc_ipp_tbc();
+    new npc_ipp_tbc_pre_t3();         // TBC leatherworking vendors
+    new npc_ipp_tbc_t3();             // TBC leatherworking vendors
+    new npc_ipp_za();
+    new npc_ipp_pre_wotlk();
     new npc_ipp_tbc_class_trainer();
-    new npc_ipp_tbc_t3();
     new npc_ipp_tbc_pre_t4();
     new npc_ipp_tbc_t4();
     new npc_ipp_tbc_t5();

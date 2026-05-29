@@ -710,10 +710,16 @@ public:
                 return false;
             }
         }
-        if (mapid == MAP_ZUL_AMAN && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_3))
+        if (mapid == MAP_ZUL_AMAN)
         {
-            //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_3);
-            return false;
+            uint32 PLAYER_PROGRESSION = sIndividualProgression->GetPlayerProgressionFromQuests(player);
+            ProgressionState REQUIRED_ZA_PROGRESSION = static_cast<ProgressionState>(sIndividualProgression->RequiredZulAmanProgression);
+
+            if (PLAYER_PROGRESSION < REQUIRED_ZA_PROGRESSION)
+            {
+                //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", REQUIRED_ZA_PROGRESSION);
+                return false;
+            }
         }
         if (mapid == MAP_NORTHREND && !sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_5))
         {
@@ -1139,11 +1145,40 @@ public:
         if (killed->GetCreatureTemplate()->rank > CREATURE_ELITE_NORMAL)
         {
             Group* group = killer->GetGroup();
-
-            if (!group)
-                return;
-
+            
             if (killed->GetEntry() == COLOSSUS_ZORA || killed->GetEntry() == COLOSSUS_REGAL || killed->GetEntry() == COLOSSUS_ASHI)
+            {
+                // no group
+                if (killed->GetEntry() == COLOSSUS_ZORA)
+                    killer->CompleteQuest(QUEST_COLOSSUS_ZORA);
+                else if (killed->GetEntry() == COLOSSUS_REGAL)
+                    killer->CompleteQuest(QUEST_COLOSSUS_REGAL);
+                else if (killed->GetEntry() == COLOSSUS_ASHI)
+                    killer->CompleteQuest(QUEST_COLOSSUS_ASHI);    
+               
+                if (group)
+                {
+                    for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
+                    {
+                        Player* member = itr->GetSource();
+                        if (!member || !sIndividualProgression->isNormalAccount(member))
+                            continue;
+
+                        if (killed->GetEntry() == COLOSSUS_ZORA)
+                            member->CompleteQuest(QUEST_COLOSSUS_ZORA);
+                        else if (killed->GetEntry() == COLOSSUS_REGAL)
+                            member->CompleteQuest(QUEST_COLOSSUS_REGAL);
+                        else if (killed->GetEntry() == COLOSSUS_ASHI)
+                            member->CompleteQuest(QUEST_COLOSSUS_ASHI);
+                    }
+                }
+
+                return;
+            }
+
+            sIndividualProgression->checkKillProgression(killer, killed); // no group
+
+            if (group)
             {
                 for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
                 {
@@ -1151,26 +1186,9 @@ public:
                     if (!member || !sIndividualProgression->isNormalAccount(member))
                         continue;
 
-                    if (killed->GetEntry() == COLOSSUS_ZORA)
-                        member->CompleteQuest(QUEST_COLOSSUS_ZORA);
-                    else if (killed->GetEntry() == COLOSSUS_REGAL)
-                        member->CompleteQuest(QUEST_COLOSSUS_REGAL);
-                    else if (killed->GetEntry() == COLOSSUS_ASHI)
-                        member->CompleteQuest(QUEST_COLOSSUS_ASHI);
+                    if (killer->IsAtLootRewardDistance(member))
+                        sIndividualProgression->checkKillProgression(member, killed);
                 }
-                return;
-            }
-
-            sIndividualProgression->checkKillProgression(killer, killed);
-
-            for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
-            {
-                Player* member = itr->GetSource();
-                if (!member || !sIndividualProgression->isNormalAccount(member))
-                    continue;
-
-                if (killer->IsAtLootRewardDistance(member))
-                    sIndividualProgression->checkKillProgression(member, killed);
             }
         }
     }
@@ -1194,22 +1212,25 @@ public:
         if (!player || !player->IsInWorld() || !newArea)
             return;
 
-        if (!sIndividualProgression->enabled || player->IsGameMaster() || !sIndividualProgression->isNormalAccount(player))
+        if (!sIndividualProgression->enabled || player->IsGameMaster())
             return;
 
         uint32 mapid = player->GetMap()->GetId();
 
         if (mapid && mapid == MAP_OUTLAND) // prevent entering Sun's Reach Harbor in Quel'Danas without proper progression
         {
-            if (!sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_4) && newArea == 4087) // Sun's Reach Harbor
+            if (sIndividualProgression->isNormalAccount(player))
             {
-                //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_4);
+                if (!sIndividualProgression->hasPassedProgression(player, PROGRESSION_TBC_TIER_4) && newArea == 4087) // Sun's Reach Harbor
+                {
+                    //ChatHandler(player->GetSession()).PSendSysMessage("Progression Level Required = |cff00ffff{}|r", PROGRESSION_TBC_TIER_4);
 
-                TeamId teamId = player->GetTeamId(true);
-                if (teamId == TEAM_ALLIANCE)
-                    player->TeleportTo(0, 2270.32f, -5341.56f, 87, 1.34946f); // Light's Hope Chapel
-                else // Horde
-                    player->TeleportTo(530, 9373.69f, -7168.46f, 9.17572f, 1.04876f); // Eversong Woods
+                    TeamId teamId = player->GetTeamId(true);
+                    if (teamId == TEAM_ALLIANCE)
+                        player->TeleportTo(0, 2270.32f, -5341.56f, 87, 1.34946f); // Light's Hope Chapel
+                    else // Horde
+                        player->TeleportTo(530, 9373.69f, -7168.46f, 9.17572f, 1.04876f); // Eversong Woods
+                }
             }
         }
 
