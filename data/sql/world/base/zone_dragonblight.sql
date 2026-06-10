@@ -31,3 +31,7 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (1072390, 20, 3717.607, -422.6472, 152.2853, NULL, 0, 0, 0, 0, 0),
 (1072390, 21, 3717.607, -418.6472, 151.5353, NULL, 0, 0, 0, 0, 0),
 (1072390, 22, 3717.857, -415.6472, 151.0353, NULL, 10000, 0, 0, 100, 0);
+
+-- Fix by Vortikai: fix Overlord Agmar position
+-- Overlord Agmar. Defaults: position_z = 92.0606 and position_y = 1486.62
+UPDATE `creature` SET `position_y` = 1487.5, `position_z` = 92.6606 WHERE `guid` = 97430 AND `id1` = 26379;
