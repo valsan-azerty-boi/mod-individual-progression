@@ -99,14 +99,6 @@ public:
         }
     } */
 
-    void OnPlayerUpdateZone(Player* player, uint32 /*newZone*/, uint32 newArea) override
-    {
-        if (!sIndividualProgression->enabled || !player || !player->IsInWorld() || !newArea)
-            return;
-
-        sIndividualProgression->checkIPPhasing(player, newArea);
-    }
-
     void OnPlayerEquip(Player* player, Item* /*it*/, uint8 /*bag*/, uint8 /*slot*/, bool /*update*/) override
     {
         if (!player || !player->IsInWorld())
