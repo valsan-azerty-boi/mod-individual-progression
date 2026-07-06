@@ -25,15 +25,15 @@ INSERT INTO `areatrigger_scripts` (`entry`, `ScriptName`) VALUES
 (5194, 'naxx_northrend_entrance');
 
 UPDATE `creature` SET `spawnMask` = 3 WHERE `spawnMask` = 7 AND `map` = 533;   -- Update spawnMask of all creatures to 10man + 25man
-UPDATE `creature` SET `spawnMask` = `spawnMask`| 4 WHERE `id1` = 16980;        -- Lich King uses same entry in Naxx WotLK and Naxx40 - Allow spawning in all versions
-UPDATE `creature` SET `spawnMask` = `spawnMask`| 4 WHERE `id1` = 16082;        -- Naxxramas Trigger (frogger) should also spawn in Naxx40
+UPDATE `creature` SET `spawnMask` = `spawnMask`| 4 WHERE `id` = 16980;        -- Lich King uses same entry in Naxx WotLK and Naxx40 - Allow spawning in all versions
+UPDATE `creature` SET `spawnMask` = `spawnMask`| 4 WHERE `id` = 16082;        -- Naxxramas Trigger (frogger) should also spawn in Naxx40
 
 UPDATE `gameobject` SET `spawnMask` = 7 WHERE `spawnMask` = 3 AND `map` = 533; -- Update spawnMask of all gameobjects to all
 UPDATE `gameobject` SET `spawnMask` = 3 WHERE `id` IN (202278, 202277);        -- Orb of Naxxramas does not exist in classic
 
 DELETE FROM `dungeon_access_template` WHERE `id` = 122;
 INSERT INTO `dungeon_access_template` (`id`, `map_id`, `difficulty`, `min_level`, `max_level`, `min_avg_item_level`, `comment`) VALUES 
-(122, 533, 2, 60, 0, 0, 'Naxxramas - 40man');
+(122, 533, 2, 60, 70, 0, 'Naxxramas - 40man');
 
 -- Naxx40 Dungeon DBC entries (helps Autobalance work correctly)
 DELETE FROM `lfgdungeons_dbc` WHERE `ID` = 1001;

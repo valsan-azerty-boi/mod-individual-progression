@@ -1,7 +1,7 @@
 -- Restore M'uru
 SET @MURU_GUID := 352043;
 DELETE FROM `creature` WHERE `guid` = @MURU_GUID;
-INSERT INTO `creature` (`guid`, `id1`, `map`, `position_x`, `position_y`, `position_z`, `orientation`) VALUES
+INSERT INTO `creature` (`guid`, `id`, `map`, `position_x`, `position_y`, `position_z`, `orientation`) VALUES
 (@MURU_GUID, 17544, 530, 9850.99, -7522.666, -9.157837, 1.537163);
 
 UPDATE `creature_template` SET `rank` = 3, `type_flags` = 4 WHERE `entry` = 17544; -- M'uru
@@ -14,6 +14,8 @@ INSERT INTO `quest_template` (`ID`, `QuestType`, `QuestLevel`, `MinLevel`, `Ques
 (9684,   2, -1, 12, -141, 9685, 3, 24157, 128, 512, 'Claiming the Light', 'Return to Knight-Lord Bloodvalor in Eversong Woods.', 24156, 1, 12340),
 (109681, 2, -1, 12, -141, 9684, 3, 0, 136, 512, 'A Study in Power', NULL, 0, 0, 12340),
 (109684, 2, -1, 12, -141, 9685, 3, 24157, 128, 512, 'Claiming the Light', 'Return to Knight-Lord Bloodvalor in Eversong Woods.', 24156, 1, 12340);
+
+UPDATE `quest_template_addon` SET `NextQuestID` = 9685 WHERE `ID` IN (9684, 109684);
 
 UPDATE `quest_template` SET 
 `QuestDescription` = 'Do not think me unduly harsh, $N. Stillblade knew well what he was being sent to do. He understood and accepted his duty and is an example for all aspiring Blood Knights.$B$BMy words are no eulogy, $N. Stillblade\'s service to us is far from over and you will be the instrument of his resurrection.$B$BYour education in the order\'s ways has just begun. With the betrayal of Kael\'thas and the loss of our power source, you must learn new methods of wielding the Light. Seek out Magister Astalor Bloodsworn.'
@@ -157,10 +159,10 @@ UPDATE `conditions` SET `ConditionValue2` = 17544 WHERE `SourceTypeOrReferenceId
 
 -- Restore Lady Liadrin and move Magister Astalor Bloodsworn a bit.
 DELETE FROM `creature` WHERE `guid` IN (96976, 617076);
-INSERT INTO `creature` (`guid`, `id1`, `id2`, `id3`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, 
+INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, 
 `wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`) VALUES 
-(96976,  17718, 0, 0, 530, 0, 0, 1, 1, 0, 9859.45, -7519.19, -8.06573, 1.69273, 180, 0, 0, 3484, 5751, 0, 0, 0, 0, '', 0, 0, NULL),        -- Magister Astalor Bloodsworn
-(617076, 17076, 0, 0, 530, 0, 0, 1, 1, 0, 9862.12, -7518.44, -8.06524, 1.86945, 300, 0, 0, 1214000, 33870, 0, 0, 0, 0, '', NULL, 0, NULL); -- Lady Liadrin
+(96976,  17718, 530, 0, 0, 1, 1, 0, 9859.45, -7519.19, -8.06573, 1.69273, 180, 0, 0, 3484, 5751, 0, 0, 0, 0, '', 0, 0, NULL),        -- Magister Astalor Bloodsworn
+(617076, 17076, 530, 0, 0, 1, 1, 0, 9862.12, -7518.44, -8.06524, 1.86945, 300, 0, 0, 1214000, 33870, 0, 0, 0, 0, '', NULL, 0, NULL); -- Lady Liadrin
 
 UPDATE `creature_template` SET `gossip_menu_id` = 0 WHERE `entry` = 17718; -- was 9142
 

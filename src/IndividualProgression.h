@@ -243,12 +243,17 @@ enum ShatteredSunOffensive
     AREA_DAWNSTAR_VILLAGE                = 4089,
     AREA_THE_DAWNING_SQUARE              = 4090,
     AREA_SUNWELL_PLATEAU_B               = 4094,
+    QUEST_SANCTUM_WARDS                  = 11496,
     QUEST_MANA_CELLS                     = 11513,
     QUEST_DISCOVERING_ROOTS              = 11520,
+    QUEST_ERRATIC_BEHAVIOR               = 11524,
+    QUEST_MISSING_MAGISTRIX              = 11526,
+    QUEST_DISTRACTION_DEAD_SCAR          = 11532,
     QUEST_MAKING_READY                   = 11535,
-    QUEST_CRUSH_DAWNBLADE                = 11540,
-    QUEST_GREENGILL_COAST                = 11541,
-    QUEST_ENEMY_AT_BAY                   = 11543,
+    QUEST_BATTLE_FOR_ARMORY              = 11538,
+    QUEST_TAKING_THE_HARBOR              = 11539,
+    QUEST_INTERCEPT_REINFORCEMENTS       = 11542,
+    QUEST_ATAMAL_ARMAMENTS               = 11544,
     QUEST_CHARITABLE_DONATION            = 11545,
     SONG_OF_VICTORY                      = 46302
 };
@@ -434,7 +439,7 @@ public:
     std::map<uint32, uint8> customProgressionMap;
     questXpMapType questXpMap;
     float vanillaPowerAdjustment, vanillaHealthAdjustment, tbcPowerAdjustment, tbcHealthAdjustment, vanillaHealingAdjustment, tbcHealingAdjustment;
-    bool enabled, questXpFix, hunterPetLevelFix, moltenCoreOnySamePhase, requirePreAQQuests, enforceGroupRules, EnableSetRepCommand, LimitedSetRepCommand, fishingFix, simpleConfigOverride, MaxMonsterSight, questMoneyAtLevelCap, repeatableVanillaQuestsXp, disableDefaultProgression, earlyDungeonSet2, earlyScourgeBosses, requireNaxxStrath, naxxExitViaPortals, naxxSkipToSaphiron, doableNaxx40Bosses, DisableQuestMarkers, DisableRDF, excludeAccounts, VanillaPvpTitlesKeepPostVanilla, VanillaPvpTitlesEarnPostVanilla, BotAccountsEarnPvPTitles, BotOnlyAdjustments;
+    bool enabled, questXpFix, hunterPetLevelFix, moltenCoreOnySamePhase, requirePreAQQuests, enforceGroupRules, EnableSetRepCommand, EnableAllSpellRanks, LimitedSetRepCommand, fishingFix, simpleConfigOverride, MaxMonsterSight, questMoneyAtLevelCap, repeatableVanillaQuestsXp, disableDefaultProgression, earlyDungeonSet2, earlyScourgeBosses, requireNaxxStrath, naxxExitViaPortals, naxxSkipToSaphiron, doableNaxx40Bosses_4H, doableNaxx40Bosses_Gluth, doableNaxx40Bosses_Patchwerk, doableNaxx40Bosses_Razuvious, DisableQuestMarkers, DisableRDF, excludeAccounts, VanillaPvpTitlesKeepPostVanilla, VanillaPvpTitlesEarnPostVanilla, BotAccountsEarnPvPTitles, BotOnlyAdjustments;
     int progressionLimit, startingProgression, tbcRacesProgressionLevel, tbcRacesStartingProgression, deathKnightProgressionLevel, deathKnightStartingProgression, RequiredZulGurubProgression, RequiredZulAmanProgression, tbcArenaSeason, wotlkArenaSeason, BotAccountsMaxLevel;
     uint32 VanillaPvpKillRank1, VanillaPvpKillRank2, VanillaPvpKillRank3, VanillaPvpKillRank4, VanillaPvpKillRank5, VanillaPvpKillRank6, VanillaPvpKillRank7, VanillaPvpKillRank8, VanillaPvpKillRank9, VanillaPvpKillRank10, VanillaPvpKillRank11, VanillaPvpKillRank12, VanillaPvpKillRank13, VanillaPvpKillRank14;
     std::string excludedAccountsRegex, botAccountsRegex, sharedFactionIdsRegex;
@@ -461,7 +466,10 @@ public:
     void checkIPPhasing(Player* player, uint32 newArea);
     void checkIPProgression(Player* player);
     void UpdateProgressionAchievements(Player* player, uint16 achievementID);
+    void UpdateGroupAttunement(Player* player, std::string location);
+    void UpdateRNDbotSpells(Player* player);
     void checkKillProgression(Player* player, Creature* killed);
+    bool checkCustomKillProgression(Player* killer, Creature* killed);
 	void UpdateAccountReputation(uint32 factionId, uint32 accountId, Player* player);
     void CleanUpVanillaPvpTitles(Player* player);
     void AwardEarnedVanillaPvpTitles(Player* player);

@@ -63,7 +63,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_tbc' WHERE `entry` IN (
 SET @IPPPHASE     := 65536;
 
 -- Forest Song - Ashenvale - Draenei camp
-UPDATE `creature` SET `phaseMask` = @IPPPHASE WHERE `id1` IN (17291, 17303, 17406, 17409, 17412, 17541, 22935, 22936);
+UPDATE `creature` SET `phaseMask` = @IPPPHASE WHERE `id` IN (17291, 17303, 17406, 17409, 17412, 17541, 22935, 22936);
 
 /* Remove interactions between Cersei, Lorrin and the orcs in Stonard */
 UPDATE `creature_template` SET `AIName` = '' WHERE `entry` IN (12807, 17109, 27705);
@@ -73,7 +73,17 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `entry` IN (
 29346 -- Apothecary Karlov, Orgrimmar
 );
 
--- Hide Inscription vendors and trainers
+-- Hide Jewelcrafting vendors and trainers until TBC
+/* UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_tbc' WHERE `entry` IN (
+17512, -- Arred, <JC Supplies> Exodar
+19778, -- Farri, <JC Trainer> Exodar
+16727, -- Padaar <Apprentice JC> Exodar
+16624, -- Gelanthis, <JC Supplies> Silvermoon
+19775, -- Kalinda, <JC Trainer> Silvermoon
+16703  -- Amin <Apprentice JC> Silvermoon
+); */
+
+-- Hide Inscription vendors and trainers until WOTLK
 UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `entry` IN (
 30706, -- Jo'mah <Inscription Trainer>, Orgrimmar
 30709, -- Poshken Hardbinder <Inscription Trainer>, Thunder Bluff
@@ -194,7 +204,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_aq' WHERE `entry` = 17249
 (12496, 12497, 14641, 17352, 17353, 20621, 41911, 41912, 41913, 41914, 44709, 44710, 44711, 44713, 44714, 44715, 44716, 45029, 45030, 45069, 45132, 49095, 49804, 49821, 49822, 50356, 50357); */
 
 /* Hide barber in Kalimdor/Eastern Kingdom/Outland until WotLK - disabled by default, because most players will expect barbers to be there */
-/* UPDATE `creature` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `map` IN (0, 1, 530) AND `id1` IN (29139, 29141, 29142, 29143, 29145);
+/* UPDATE `creature` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `map` IN (0, 1, 530) AND `id` IN (29139, 29141, 29142, 29143, 29145);
 UPDATE `gameobject` SET `ScriptName` = 'gobject_ipp_wotlk' WHERE `map` IN (0, 1, 530) AND `id` IN (190683, 190684, 190697, 190698, 190699, 190704, 190710, 190711, 190712, 191028, 191029, 191030); */
 
 /* CUSTOM additions */
@@ -202,7 +212,7 @@ UPDATE `gameobject` SET `ScriptName` = 'gobject_ipp_wotlk' WHERE `map` IN (0, 1,
 UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_naxx40' WHERE `entry` IN (10583, 16227);
  
 /* Hide barber in Kalimdor/Eastern Kingdom/Outland until WotLK - disabled by default, because most players will expect barbers to be there */
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `map` IN (0, 1, 530) AND `id1` IN (29139, 29141, 29142, 29143, 29145);
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `map` IN (0, 1, 530) AND `id` IN (29139, 29141, 29142, 29143, 29145);
 UPDATE `gameobject_template` SET `ScriptName` = 'gobject_ipp_wotlk' WHERE `type` = 32;
 
 /* Hide guild vaults until TBC (was introduced during 2.3) - disabled by default, because most players will expect these gobject to be there */
@@ -212,7 +222,7 @@ UPDATE `gameobject` SET `ScriptName` = 'gobject_ipp_tbc' WHERE `guid` IN
 UPDATE `gameobject` SET `ScriptName` = '' WHERE `guid` IN (12496, 44716);
 
 /* Hide training dummy in Kalimdor/Eastern Kingdom/Outland until WotLK - disabled by default, because most players will expect dummy to be there */
-UPDATE `creature` SET `ScriptName` = 'npc_training_dummy_ipp_wotlk' WHERE `map` IN (0, 1, 530) AND `id1` IN (31144, 31146, 32666, 32667);
+UPDATE `creature` SET `ScriptName` = 'npc_training_dummy_ipp_wotlk' WHERE `map` IN (0, 1, 530) AND `id` IN (31144, 31146, 32666, 32667);
 
 /* Vanilla battlemasters phasing in major cities */
 UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_bwl'

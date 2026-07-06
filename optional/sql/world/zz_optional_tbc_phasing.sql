@@ -4,7 +4,7 @@
 
 /* Patch 2.0 - The Burning Crusade */
 /* Phase Blood Elf Paladin & Draenei Chaman Trainer in Vanilla areas (stay visible for Blood Elf & Draenei) */
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_class_trainer' WHERE `id1` IN (
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_class_trainer' WHERE `id` IN (
 16287, -- Ambassador Sunsorrow, Undercity
 17105, -- Emissary Valustraa <Mage Trainer>, Darnassus
 23128, -- Master Pyreanor <Paladin Trainer>, Orgrimmar
@@ -17,7 +17,7 @@ UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_class_trainer' WHERE `id1` IN 
 
 /* Patch 2.3 - Zul Aman */
 /* Open world Zul Aman NPCs */
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_t4' WHERE `map` = 530 AND `id1` IN (
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_t4' WHERE `map` = 530 AND `id` IN (
 23559, -- Budd Nedreck, Ghostlands
 23560, -- Provisioner Ameenah <Reagents>, Ghostlands
 23565, -- Turgore, Ghostlands
@@ -36,7 +36,7 @@ UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_t4' WHERE `map` = 530 AND `id1
 24851 -- Kiz Coilspanner <Flight Master>, Ghostlands
 );
 /* Guards as @IPPPHASE 65536 */
-UPDATE `creature` SET `phaseMask` = 65536 WHERE `map` = 530 AND `id1` IN (
+UPDATE `creature` SET `phaseMask` = 65536 WHERE `map` = 530 AND `id` IN (
 25145 -- Budd's Bodyguard, Ghostlands
 );
 /* Open world Zul Aman gobjects, including meeting stone */
@@ -49,7 +49,7 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 
 /* 2.4 - Sunwell */
 /* Open world Sunwell NPCs, including quest/daily NPCs to prevent ppl from building up reputation before Sunwell phase */
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_t5' WHERE `ScriptName` != 'npc_suns_reach_reclamation' AND `map` = 530 AND `id1` IN (
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_t5' WHERE `ScriptName` != 'npc_suns_reach_reclamation' AND `map` = 530 AND `id` IN (
 19202, -- Emissary Mordin, Shattrath
 19475, -- Harbinger Haronem, Shattrath
 -- 24813, -- Exarch Larethor, Isle of Quel Danas
@@ -70,7 +70,7 @@ UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_t5' WHERE `ScriptName` != 'npc
 27667 -- Anwehu, Shattrath
 );
 /* NPCs with special behaviours as @IPPPHASE 65536 */
-UPDATE `creature` SET `phaseMask` = 65536 WHERE `map` = 530 AND `id1` IN (
+UPDATE `creature` SET `phaseMask` = 65536 WHERE `map` = 530 AND `id` IN (
 5202, -- Archery Target, Shattrath & Isle of Quel Danas
 24932, -- Exarch Nasuun, Shattrath
 24938, -- Shattered Sun Marksman, Shattrath + Isle of Quel Danas
@@ -98,7 +98,7 @@ UPDATE `creature` SET `phaseMask` = 65536 WHERE `map` = 530 AND `id1` IN (
 -- WIP
 /* Specific Friendly Quel Danas NPCs for late reputation progression phase */
 UPDATE `creature` SET `phaseMask` = 524288 WHERE `map` = 530 
-AND `id1` IN (24938, 24979, 25115, 25164) 
+AND `id` IN (24938, 24979, 25115, 25164) 
 AND `guid` IN (
 65682,
 65694, 65695, 65696, 65697, 65698, 65699, 65700, 65702, 
@@ -112,7 +112,7 @@ AND `guid` IN (
 -- TODO
 /* Specific Hostile Quel Danas NPCs for reputation progression phase */
 UPDATE `creature` SET `phaseMask` = 524288 WHERE `map` = 530 
-AND `id1` IN (24938, 24979, 25115, 25164) 
+AND `id` IN (24938, 24979, 25115, 25164) 
 AND `guid` IN (
 65682,
 65694, 65695, 65696, 65697, 65698, 65699, 65700, 65702, 
@@ -129,7 +129,7 @@ AND `guid` IN (
 UPDATE `gameobject` SET `ScriptName` = 'gobject_ipp_tbc_t5' WHERE `map` = 530 AND `id` IN (183318, 183435, 187057, 187058) AND `guid` IN (24152, 24154, 24155, 24341, 47197, 47198, 47199, 47200, 47201, 47202, 47203);
 
 /* 3.0 - Phasing WotLK NPCs in TBC areas */
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `ScriptName` != 'npc_suns_reach_reclamation' AND `map` = 530 AND `id1` IN (
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `ScriptName` != 'npc_suns_reach_reclamation' AND `map` = 530 AND `id` IN (
 34999, -- Jonru <Battlemaster>, Shattrath
 35000, -- Mijiri <Battlemaster>, Shattrath
 37523, -- Warden of the Sunwell, Isle of Quel Danas

@@ -4,7 +4,7 @@
     If you would like heirlooms to still be available, do not run this file. 
 */
 /*
-DELETE FROM `creature` WHERE `id1` IN (32509, 35507, 35508);
+DELETE FROM `creature` WHERE `id` IN (32509, 35507, 35508);
 DELETE FROM `creature_addon` WHERE `guid` IN (85227, 88108);
 
 DELETE FROM `npc_vendor` WHERE `item` IN 
@@ -17,7 +17,7 @@ UPDATE `quest_template` SET `RewardChoiceItemID1` = 0, `RewardChoiceItemQuantity
 /* Restore Heirloom vendors if needed */
 -- UPDATE `quest_template` SET `RewardChoiceItemID1` = 50255, `RewardChoiceItemQuantity1` = 1, `RewardChoiceItemID2` = 50287, `RewardChoiceItemQuantity2` = 1, `RewardItem1` = 0, `RewardAmount1` = 0 WHERE `id` = 24803;
 
--- DELETE FROM `creature` WHERE `id1` IN (32509, 35507, 35508);
+-- DELETE FROM `creature` WHERE `id` IN (32509, 35507, 35508);
 -- INSERT INTO `creature` VALUES
 -- (85227,35507,0,0,571,0,0,1,1,1,5758.4,745.385,653.748,4.27606,180,0,0,1,0,0,0,0,0,'',0,0,NULL),
 -- (88108,35508,0,0,571,0,0,1,1,1,5946.12,512.111,650.263,2.93215,180,0,0,1,0,0,0,0,0,'',0,0,NULL),

@@ -21,6 +21,7 @@ public:
             { "setbot", HandleSetBotIndividualProgressionCommand, SEC_GAMEMASTER,    Console::Yes },
             { "setrep", HandleSetRepIndividualProgressionCommand, SEC_GAMEMASTER,    Console::Yes },
             { "pvp",    HandlePVPIndividualProgressionCommand,    SEC_GAMEMASTER,    Console::Yes },
+            { "attune", HandleAttuneIndividualProgressionCommand, SEC_GAMEMASTER,    Console::Yes },
         };
 
         static ChatCommandTable commandTable =
@@ -348,7 +349,13 @@ public:
             {
                 if (sIndividualProgression->isAttuned(target))
                 {
-                    target->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
+                    Group* group = target->GetGroup();
+
+                    if (group)
+                        group->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
+                    else
+                        target->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
+
                     target->TeleportTo(533, 3005.51f, -3434.64f, 304.195f, 6.2831f);
                     return true;
                 }
@@ -370,7 +377,13 @@ public:
             {
                 if (target->HasItemCount(ITEM_DRAKEFIRE_AMULET))
                 {
-                    target->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
+                    Group* group = target->GetGroup();
+
+                    if (group)
+                        group->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
+                    else
+                        target->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
+                   
                     target->TeleportTo(249, 29.1607f, -71.3372f, -8.18032f, 4.58f);
                     return true;
                 }
@@ -388,6 +401,30 @@ public:
         }
 
         return false;
+    }
+
+    static bool HandleAttuneIndividualProgressionCommand(ChatHandler* handler, std::string location)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+
+        if (!player)
+        {
+            handler->SendSysMessage("Player not found.");
+            return false;
+        }
+
+        if (location.empty())
+            return false;
+        
+        if (location != "onyxia40" && location != "onyxia" && location != "bt" && location != "blacktemple")
+        {
+            handler->PSendSysMessage("|cff00ffff{}|r is not a valid attunement.", location);
+            return false;
+        }
+
+        sIndividualProgression->UpdateGroupAttunement(player, location);
+
+        return true;
     }
 
     static bool HandlePVPIndividualProgressionCommand(ChatHandler* handler, Optional<PlayerIdentifier> player)

@@ -191,6 +191,35 @@ uint8 IndividualProgression::GetAccountProgression(uint32 accountId)
     return progressionLevel;
 }
 
+void IndividualProgression::UpdateRNDbotSpells(Player* player)
+{
+    if (!player || !player->IsInWorld())
+        return;
+
+    if (!sIndividualProgression->isBotAccount(player))
+        return;
+
+    switch (player->getClass())
+    {
+    case CLASS_WARLOCK:
+        if (player->GetLevel() >= 40 && !player->HasSpell(7584)) // Summon Felsteed
+            player->learnSpell(7584, false);
+        break;
+    case CLASS_PALADIN:
+        if (player->GetLevel() >= 40 && !player->HasSpell(13819)) // Summon Warhorse
+            player->learnSpell(13819, false);
+        break;
+    case CLASS_DRUID:
+        if (player->GetLevel() >= 10 && !player->HasSpell(18960)) // Teleport: Moonglade
+            player->learnSpell(18960, false);
+        if (player->GetLevel() >= 16 && !player->HasSpell(1066)) // Aquatic Form
+            player->learnSpell(1066, false);
+        break;
+    default:
+        return;
+    }
+}
+
 void IndividualProgression::UpdateAccountReputation(uint32 factionId, uint32 accountId, Player* player)
 {
     if (!factionId || !accountId || !player || !player->IsInWorld())
@@ -233,6 +262,99 @@ void IndividualProgression::UpdateAccountReputation(uint32 factionId, uint32 acc
 
         player->GetReputationMgr().ModifyReputation(sFactionStore.LookupEntry(factionId), addRep);
         // ChatHandler(player->GetSession()).PSendSysMessage("Reputation with {} increased by {}.", factionName, addRep);
+    }
+}
+
+void IndividualProgression::UpdateGroupAttunement(Player* player, std::string location)
+{
+    if (!player || !player->IsInWorld() )
+        return;
+
+    if (location.empty())
+        return;
+
+    Group* group = player->GetGroup();
+
+    if (!group)
+        return;
+
+    if (location == "onyxia40" || location == "onyxia")
+    {
+        if (player->HasItemCount(ITEM_DRAKEFIRE_AMULET))
+        {
+            for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
+            {
+                Player* member = itr->GetSource();
+                if (!member || sIndividualProgression->isBotAccount(member))
+                    continue;
+
+                if (member->GetLevel() < 50)
+                {
+                    ChatHandler(player->GetSession()).PSendSysMessage("|cff00ffff{}|r needs to be at least level 50.", member->GetName());
+                    continue;
+                }
+
+                if (!member->HasItemCount(ITEM_DRAKEFIRE_AMULET))
+                {
+                    if (member->HasItemCount(ITEM_DRAKEFIRE_AMULET, 1, true))
+                    {
+                        ChatHandler(player->GetSession()).PSendSysMessage("|cff00ffff{}|r has the Drakefire Amulet in their bank.", member->GetName());
+                        continue;
+                    }
+
+                    member->AddItem(ITEM_DRAKEFIRE_AMULET, 1);
+                    ChatHandler(player->GetSession()).PSendSysMessage("|cff00ffff{}|r received the Drakefire Amulet.", member->GetName());
+                }
+            }
+            return;
+        }
+        else
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("You must have the Drakefire Amulet in your inventory to use this command.");
+            return;
+        }
+    }
+    else if (location == "bt" || location == "blacktemple")
+    {
+        if (player->HasItemCount(ITEM_MEDALLION_OF_KARABOR) || player->HasItemCount(ITEM_BLESSED_MEDALLION_OF_KARABOR))
+        {
+            for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
+            {
+                Player* member = itr->GetSource();
+                if (!member || sIndividualProgression->isBotAccount(member))
+                    continue;
+
+                if (member->GetLevel() < 70)
+                {
+                    ChatHandler(player->GetSession()).PSendSysMessage("|cff00ffff{}|r needs to be at least level 70.", member->GetName());
+                    continue;
+                }
+
+                if (isBeforeProgression(member, PROGRESSION_TBC_TIER_2))
+                {
+                    ChatHandler(player->GetSession()).PSendSysMessage("|cff00ffff{}|r needs to have progression level 10 (TBC Tier 2).", member->GetName());
+                    continue;
+                }
+
+                if (!member->HasItemCount(ITEM_MEDALLION_OF_KARABOR) && !member->HasItemCount(ITEM_BLESSED_MEDALLION_OF_KARABOR))
+                {
+                    if (member->HasItemCount(ITEM_MEDALLION_OF_KARABOR, 1, true) || member->HasItemCount(ITEM_BLESSED_MEDALLION_OF_KARABOR, 1, true))
+                    {
+                        ChatHandler(player->GetSession()).PSendSysMessage("|cff00ffff{}|r has the Medallion of Karabor in their bank.", member->GetName());
+                        continue;
+                    }
+
+                    member->AddItem(ITEM_MEDALLION_OF_KARABOR, 1);
+                    ChatHandler(player->GetSession()).PSendSysMessage("|cff00ffff{}|r received the Medallion of Karabor.", member->GetName());
+                }
+            }
+            return;
+        }
+        else
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("You must have the Medallion of Karabor in your inventory to use this command.");
+            return;
+        }
     }
 }
 
@@ -563,7 +685,8 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
         case AREA_SUNS_REACH_ARMORY:
         case AREA_DAWNSTAR_VILLAGE:
         case AREA_THE_DAWNING_SQUARE:
-            player->RemoveAura(SONG_OF_VICTORY);
+            if (!isBotAccount(player))
+                player->RemoveAura(SONG_OF_VICTORY);
 
             if (isBotAccount(player) || player->GetReputationRank(FACTION_SHATTERED_SUN) >= REP_REVERED
                 || player->GetLevel() > IP_LEVEL_TBC
@@ -575,12 +698,21 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
                 player->CastSpell(player, IPP_PHASE_IV, false);
 
                 if (isBotAccount(player) ||
-                    isExcludedAccount(player) ||
-                    (player->GetQuestStatus(QUEST_CRUSH_DAWNBLADE) == QUEST_STATUS_REWARDED &&
-                     player->GetQuestStatus(QUEST_GREENGILL_COAST) == QUEST_STATUS_REWARDED &&
-                     player->GetQuestStatus(QUEST_ENEMY_AT_BAY) == QUEST_STATUS_REWARDED))
+                    isExcludedAccount(player))
                 {
-                    player->CastSpell(player, SONG_OF_VICTORY, false);
+                    if (player->GetQuestStatus(QUEST_SANCTUM_WARDS) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_DISCOVERING_ROOTS) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_ERRATIC_BEHAVIOR) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_MISSING_MAGISTRIX) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_DISTRACTION_DEAD_SCAR) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_MAKING_READY) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_BATTLE_FOR_ARMORY) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_TAKING_THE_HARBOR) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_INTERCEPT_REINFORCEMENTS) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_ATAMAL_ARMAMENTS) == QUEST_STATUS_REWARDED)
+                    {
+                        player->AddAura(SONG_OF_VICTORY, player);
+                    }
                 }
             }
             else if (player->GetReputationRank(FACTION_SHATTERED_SUN) >= REP_HONORED)
@@ -719,14 +851,23 @@ void IndividualProgression::checkIPPhasing(Player* player, uint32 newArea)
             }
             if (mapid == MAP_MAGISTERS_TERRACE || mapid == MAP_THE_SUNWELL)
             {
-                player->RemoveAura(SONG_OF_VICTORY);
-
-                if (isBotAccount(player) ||
-                    (player->GetQuestStatus(QUEST_CRUSH_DAWNBLADE) == QUEST_STATUS_REWARDED &&
-                     player->GetQuestStatus(QUEST_GREENGILL_COAST) == QUEST_STATUS_REWARDED &&
-                     player->GetQuestStatus(QUEST_ENEMY_AT_BAY) == QUEST_STATUS_REWARDED))
+                if (!isBotAccount(player))
                 {
-                    player->CastSpell(player, SONG_OF_VICTORY, false);
+                    player->RemoveAura(SONG_OF_VICTORY);
+
+                    if (player->GetQuestStatus(QUEST_SANCTUM_WARDS) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_DISCOVERING_ROOTS) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_ERRATIC_BEHAVIOR) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_MISSING_MAGISTRIX) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_DISTRACTION_DEAD_SCAR) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_MAKING_READY) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_BATTLE_FOR_ARMORY) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_TAKING_THE_HARBOR) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_INTERCEPT_REINFORCEMENTS) == QUEST_STATUS_REWARDED &&
+                        player->GetQuestStatus(QUEST_ATAMAL_ARMAMENTS) == QUEST_STATUS_REWARDED)
+                    {
+                        player->AddAura(SONG_OF_VICTORY, player);
+                    }
                 }
             }
             if ((mapid == MAP_SHADOWFANG_KEEP) ||
@@ -787,6 +928,25 @@ void IndividualProgression::checkIPProgression(Player* killer)
     }
 }
 
+bool IndividualProgression::checkCustomKillProgression(Player* killer, Creature* killed)
+{
+    if (!enabled)
+        return false;
+
+    if (!killed || !killer || !killer->IsInWorld())
+        return false;
+
+    uint32 entry = killed->GetEntry();
+
+    if (hasCustomProgressionValue(entry))
+    {
+        UpdateProgressionState(killer, static_cast<ProgressionState>(customProgressionMap[entry]));
+        return true;
+    }
+
+    return false;
+}
+
 void IndividualProgression::checkKillProgression(Player* killer, Creature* killed)
 {
     if (!enabled)
@@ -797,6 +957,7 @@ void IndividualProgression::checkKillProgression(Player* killer, Creature* kille
 
     uint32 entry = killed->GetEntry();
 
+    /*
     if (hasCustomProgressionValue(entry))
     {
         UpdateProgressionState(killer, static_cast<ProgressionState>(customProgressionMap[entry]));
@@ -805,6 +966,7 @@ void IndividualProgression::checkKillProgression(Player* killer, Creature* kille
 
     if (disableDefaultProgression)
         return;
+    */
 
     static const std::unordered_map<uint32, ProgressionState> bossMap =
     {
@@ -1038,8 +1200,11 @@ private:
         sIndividualProgression->requireNaxxStrath = sConfigMgr->GetOption<bool>("IndividualProgression.RequireNaxxStrathEntrance", false);
         sIndividualProgression->naxxExitViaPortals = sConfigMgr->GetOption<bool>("IndividualProgression.NaxxExitViaPortals", false);
         sIndividualProgression->naxxSkipToSaphiron = sConfigMgr->GetOption<bool>("IndividualProgression.NaxxSkipToSaphiron", false);
-        sIndividualProgression->doableNaxx40Bosses = sConfigMgr->GetOption<bool>("IndividualProgression.doableNaxx40Bosses", false);
-        sIndividualProgression->enforceGroupRules = sConfigMgr->GetOption<bool>("IndividualProgression.EnforceGroupRules", true);
+        sIndividualProgression->doableNaxx40Bosses_4H = sConfigMgr->GetOption<bool>("IndividualProgression.doableNaxx40Bosses_4H", false);
+        sIndividualProgression->doableNaxx40Bosses_Gluth = sConfigMgr->GetOption<bool>("IndividualProgression.doableNaxx40Bosses_Gluth", false);
+        sIndividualProgression->doableNaxx40Bosses_Patchwerk = sConfigMgr->GetOption<bool>("IndividualProgression.doableNaxx40Bosses_Patchwerk", false);
+        sIndividualProgression->doableNaxx40Bosses_Razuvious = sConfigMgr->GetOption<bool>("IndividualProgression.doableNaxx40Bosses_Razuvious", false);
+        sIndividualProgression->enforceGroupRules = sConfigMgr->GetOption<bool>("IndividualProgression.EnforceGroupRules", false);
         sIndividualProgression->fishingFix = sConfigMgr->GetOption<bool>("IndividualProgression.FishingFix", true);
         sIndividualProgression->simpleConfigOverride = sConfigMgr->GetOption<bool>("IndividualProgression.SimpleConfigOverride", true);
         sIndividualProgression->progressionLimit = sConfigMgr->GetOption<uint8>("IndividualProgression.ProgressionLimit", 0);
@@ -1084,6 +1249,7 @@ private:
         sIndividualProgression->excludedAccountsRegex = sConfigMgr->GetOption<std::string>("IndividualProgression.ExcludedAccountsRegex", "");
         sIndividualProgression->botAccountsRegex = sConfigMgr->GetOption<std::string>("IndividualProgression.BotAccountsRegex", "^RNDBOT.*");
         sIndividualProgression->EnableSetRepCommand = sConfigMgr->GetOption<bool>("IndividualProgression.EnableSetRepCommand", false);
+        sIndividualProgression->EnableAllSpellRanks = sConfigMgr->GetOption<bool>("IndividualProgression.EnableAllSpellRanks", false);
         sIndividualProgression->LimitedSetRepCommand = sConfigMgr->GetOption<bool>("IndividualProgression.LimitedSetRepCommand", true);
         sIndividualProgression->sharedFactionIdsRegex = sConfigMgr->GetOption<std::string>("IndividualProgression.sharedFactionIdsRegex", "59|270|349|509|510|529|576|589|609|729|730|749|889|890|909");
         sIndividualProgression->BotAccountsMaxLevel = sConfigMgr->GetOption<uint8>("IndividualProgression.BotAccountsMaxLevel", 80);

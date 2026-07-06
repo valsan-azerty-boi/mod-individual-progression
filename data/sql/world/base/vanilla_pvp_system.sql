@@ -980,10 +980,10 @@ UPDATE `item_template` SET `BuyPrice` = 1000000 WHERE `entry` IN (19029,19030);
 -- Update Arathi stuff prices when price is missing
 UPDATE `item_template` SET `BuyPrice` = 13960 WHERE `entry` IN (20126,20129,20207,20210) AND `BuyPrice` = 0;
 
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_pvp_vendor_pre_tbc'   WHERE `id1` IN (12792, 12799, 14581, 112793, 112794, 112795, 112796);
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_pvp_vendor_pre_tbc'   WHERE `id1` IN (12777, 12805, 26394, 112781, 112785, 112783);
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_pre_wotlk' WHERE `id1` IN (112778); -- Lieutenant Rachel Vaccar <Outland Armor Quartermaster>, Stormwind (NPC wears TBC armor + possibly become pvp sellers later)
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_pre_wotlk' WHERE `id1` IN (12788); -- Legionnaire Teena <Outland Armor Quartermaster>, Orgrimmar (NPC wears TBC armor + possibly become pvp sellers later)
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_pvp_vendor_pre_tbc'   WHERE `id` IN (12792, 12799, 14581, 112793, 112794, 112795, 112796);
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_pvp_vendor_pre_tbc'   WHERE `id` IN (12777, 12805, 26394, 112781, 112785, 112783);
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_pre_wotlk' WHERE `id` IN (112778); -- Lieutenant Rachel Vaccar <Outland Armor Quartermaster>, Stormwind (NPC wears TBC armor + possibly become pvp sellers later)
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_pre_wotlk' WHERE `id` IN (12788); -- Legionnaire Teena <Outland Armor Quartermaster>, Orgrimmar (NPC wears TBC armor + possibly become pvp sellers later)
 
 -- Mark of honor change stack
 UPDATE `item_template` SET `maxcount` = 1000 WHERE `entry` IN (19322,20558,20559,20560);

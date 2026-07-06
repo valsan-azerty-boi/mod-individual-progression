@@ -1,6 +1,6 @@
 -- fix Dregmar Runebrand waypoints
 UPDATE `creature_template` SET `MovementType` = 0 WHERE `entry` = 27003;
-UPDATE `creature` SET `position_x` =  3671.979, `position_y` = -497.5903, `position_z` = 157.9536, `MovementType` = 2, `currentwaypoint` = 1 WHERE `id1` = 27003;
+UPDATE `creature` SET `position_x` =  3671.979, `position_y` = -497.5903, `position_z` = 157.9536, `MovementType` = 2, `currentwaypoint` = 1 WHERE `id` = 27003;
 
 DELETE FROM `creature_addon` WHERE `guid` = 107239;
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`) VALUES 
@@ -34,4 +34,4 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 
 -- Fix by Vortikai: fix Overlord Agmar position
 -- Overlord Agmar. Defaults: position_z = 92.0606 and position_y = 1486.62
-UPDATE `creature` SET `position_y` = 1487.5, `position_z` = 92.6606 WHERE `guid` = 97430 AND `id1` = 26379;
+UPDATE `creature` SET `position_y` = 1487.5, `position_z` = 92.6606 WHERE `guid` = 97430 AND `id` = 26379;

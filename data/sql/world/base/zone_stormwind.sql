@@ -50,11 +50,11 @@ UPDATE `creature_template` SET `npcflag` = 4224 WHERE `entry` IN (24671, 24672);
 UPDATE `creature_template_addon` SET `mount` = 0 WHERE `entry` = 12783;
 
 DELETE FROM `creature` WHERE `guid` IN (133928, 133926, 133929, 612781, 133927, 612783, 612785, 623446, 624671, 624672, 612777, 612778, 626394, 720278, 723396); -- 00_cleanup
-DELETE FROM `creature` WHERE `id1`  IN (7410, 7798, 12779, 12780, 12805, 14981, 15008, 32380, 32381, 34073, 34074, 34075, 34076, 34077, 34078, 40607);
+DELETE FROM `creature` WHERE `id`  IN (7410, 7798, 12779, 12780, 12805, 14981, 15008, 32380, 32381, 34073, 34074, 34075, 34076, 34077, 34078, 40607);
 DELETE FROM `creature` WHERE `guid` BETWEEN @CGUID+21 AND @CGUID+38;
 DELETE FROM `creature` WHERE `guid` BETWEEN @CGUID+121 AND @CGUID+142;
 
-INSERT INTO `creature` (`guid`, `id1`, `map`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`) VALUES 
+INSERT INTO `creature` (`guid`, `id`, `map`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`) VALUES 
 --
 (@CGUID+121, @Biggins, 0, 1, -8777.4, 417.124, 103.921, 6.23553, 180),  -- Master Sergeant Biggins <Officer Accessories Quartermaster>, Vanilla
 (@CGUID+122, 12781, 0, 1, -8777.4, 417.124, 103.921, 6.23553, 180),     -- Master Sergeant Biggins <Officer Accessories Quartermaster>, TBC
@@ -299,10 +299,16 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry
 --
 (23, 12783, 35906, 0, 0, 8, 0, 66008, 0, 0, 0, 0, 0, '', 'Lieutenant Karter will not sell Reins of the Black War Elekk until the player has completed PROGRESSION_PRE_TBC');
 
+-- Quest: Alicia's Poem (11451)
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 19 AND `SourceEntry` = 11451;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`, `SourceGroup`, `SourceEntry`, `SourceId`, `ElseGroup`, `ConditionTypeOrReference`, `ConditionTarget`,
+`ConditionValue1`, `ConditionValue2`, `ConditionValue3`, `NegativeCondition`, `ErrorType`, `ErrorTextId`, `ScriptName`, `Comment`) VALUES
+(19, 0, 11451, 0, 0, 8, 0, 66008, 0, 0, 0, 0, 0, '', 'Quest \'Alicia\'s Poem\' only available after the player has reached PROGRESSION_TBC_TIER_1');
+
 UPDATE `gameobject` SET `ScriptName` = 'gobject_ipp_pre_tbc' WHERE `guid` IN (61936, 61940, 61942, 61944, 61945, 61946, 61947, 61949, 61951);
 
 -- WotLK pvp vendors
-DELETE FROM `creature` WHERE `id1` IN 
+DELETE FROM `creature` WHERE `id` IN 
 (12782,  -- Captain O'Neal <Weapons Quartermaster>
  34081); -- Captain O'Neal <Jewelcrafting Quartermaster>
 
@@ -349,5 +355,5 @@ INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_
 (28347, 0, 1, 0, 10, 0, 100, 0, 1, 20, 30000, 60000, 1, 0, 1, 5, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0,            'Miles Sidney - OOC LOS - Say Line 5');
 
 UPDATE `npc_vendor` SET `ExtendedCost` = 0 WHERE `entry` IN (12777, 12805, 26394, 112781, 112785, 112783); -- Stormwind, Vanilla
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_pvp_vendor_pre_tbc' WHERE `id1` IN (12777, 12805, 26394, 112781, 112785, 112783);
-UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_pre_wotlk' WHERE `id1` IN (112778); -- Lieutenant Rachel Vaccar <Outland Armor Quartermaster>, Stormwind (NPC wears TBC armor + possibly become pvp sellers later)
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_pvp_vendor_pre_tbc' WHERE `id` IN (12777, 12805, 26394, 112781, 112785, 112783);
+UPDATE `creature` SET `ScriptName` = 'npc_ipp_tbc_pre_wotlk' WHERE `id` IN (112778); -- Lieutenant Rachel Vaccar <Outland Armor Quartermaster>, Stormwind (NPC wears TBC armor + possibly become pvp sellers later)
