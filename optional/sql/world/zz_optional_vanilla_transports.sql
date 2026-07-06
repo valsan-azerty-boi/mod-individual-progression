@@ -263,7 +263,7 @@ INSERT INTO `gameobject` VALUES
 -- UPDATE `broadcast_text` SET `FemaleText` = 'From this dock, The Bravery travels back and forth between Stormwind and Rut''theran Village.' WHERE `ID` = 28636;
 -- UPDATE `creature` SET `id` = 1434 WHERE `guid` IN (9449, 9518);   
 -- DELETE FROM `creature` WHERE `guid` IN (203462, 203463, 203464, 203465);
--- INSERT INTO `creature` VALUES (203462,6086,0,0,0,0,0,1,1,1,-8606.82,1239.39,5.33124,0.6379,275,0,0,3048,0,0,0,0,0,'',0,0,NULL), (203463,6086,0,0,0,0,0,1,1,1,-8592.74,1246.62,5.3304,3.63,275,0,0,3048,0,0,0,0,0,'',0,0,NULL), (203464,6086,0,0,0,0,0,1,1,1,-8645.35,1314.62,5.33226,0.43,275,0,0,3048,0,0,0,0,0,'',0,0,NULL), (203465,6086,0,0,0,0,0,1,1,1,-8633.03,1322.93,5.33226,3.8,275,0,0,3048,0,0,0,0,0,'',0,0,NULL);
+-- INSERT INTO `creature` VALUES (203462,6086,0,0,0,1,1,1,-8606.82,1239.39,5.33124,0.6379,275,0,0,3048,0,0,0,0,0,'',0,0,NULL), (203463,6086,0,0,0,0,0,1,1,1,-8592.74,1246.62,5.3304,3.63,275,0,0,3048,0,0,0,0,0,'',0,0,NULL), (203464,6086,0,0,0,0,0,1,1,1,-8645.35,1314.62,5.33226,0.43,275,0,0,3048,0,0,0,0,0,'',0,0,NULL), (203465,6086,0,0,0,0,0,1,1,1,-8633.03,1322.93,5.33226,3.8,275,0,0,3048,0,0,0,0,0,'',0,0,NULL);
 -- UPDATE `gameobject_template` SET `name` = "Boat to Stormwind" WHERE `entry` = 176364;
 -- DELETE FROM `taxipath_dbc` WHERE `ID` = 1981;
 -- DELETE FROM `taxipathnode_dbc` WHERE `PathID` = 1981;

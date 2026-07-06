@@ -182,4 +182,4 @@ UPDATE `quest_offer_reward_locale` SET `RewardText` = 'Que nos ennemis voient qu
 
 -- Garona, Ravenhold - Only visible during the beginning of Vanilla WoW
 DELETE FROM `creature` WHERE `id` = 6767 and `map` = 0;
-INSERT IGNORE INTO `creature` VALUES (9010596, 6767, 0, 0, 0, 0, 0, 1, 1, 1, -5.20263, -1604.79, 194.987, 5.51874, 300, 0, 0, 4121, 0, 0, 0, 0, 0, 'npc_ipp_pre_naxx40', 0, 0, NULL);
+INSERT IGNORE INTO `creature` VALUES (9010596, 6767, 0, 0, 0, 1, 1, 1, -5.20263, -1604.79, 194.987, 5.51874, 300, 0, 0, 4121, 0, 0, 0, 0, 0, 'npc_ipp_pre_naxx40', 0, 0, NULL);
