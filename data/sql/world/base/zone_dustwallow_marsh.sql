@@ -594,3 +594,7 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (314920, 49, -4456.45, -3273.31, 38.1311, 0, 0, 0, 0, 100, 0),
 (314920, 50, -4455.39, -3262.62, 37.1185, 0, 0, 0, 0, 100, 0),
 (314920, 51, -4461.18, -3249.08, 37.3316, 0, 0, 0, 0, 100, 0);
+
+UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_tbc' WHERE `entry` IN (
+23566, -- Calia Hastings, Theramore
+23602); -- Deserter Agitator, Theramore
