@@ -159,6 +159,7 @@ AND `id` IN (
 25103, -- Crewman Boltshine, Zep
 25104, -- Navigator Hatch, Zep
 25105, -- Sky-Captain Cableclamp, Zep
+27703, -- Ysuria, Theramore
 25106, -- Watcher Du'una, Zep
 25107, -- Watcher Umjin, Zep
 25111 -- Treasure, Boat

@@ -28,6 +28,23 @@ DELETE FROM `creature` WHERE `guid` = 88156 AND `id` IN (20278); -- Vixton Pinch
 
 /* the following edits are temporary */
 
+-- restore AC's Ironhand Guardians
+DELETE FROM `creature_template` WHERE `entry` IN (108982);
+DELETE FROM `creature_template_model` WHERE `CreatureID` = 108982; -- 00_cleanup
+UPDATE `creature_template` SET `ScriptName` = 'brd_ironhand_guardian' WHERE `entry` = 8982; -- 00_cleanup
+DELETE FROM `smart_scripts` WHERE `source_type` = 0 AND `entryorguid` IN (108982); -- 00_cleanup
+
+DELETE FROM `creature` WHERE `id` IN (8982, 108982); -- 00_cleanup
+INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, 
+`wander_distance`, `currentwaypoint`, `curhealth`, `curmana`, `MovementType`, `npcflag`, `unit_flags`, `dynamicflags`, `ScriptName`, `VerifiedBuild`, `CreateObject`, `Comment`) VALUES 
+--
+(47323, 8982, 230, 0, 0, 1, 1, 0, 1407.29, -587.299, -91.9711, 3.15905, 7200, 0, 0, 126, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(47442, 8982, 230, 0, 0, 1, 1, 0, 1353.43, -587.317, -91.9711, 0.15708, 7200, 0, 0, 126, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(47466, 8982, 230, 0, 0, 1, 1, 0, 1406.88, -632.438, -91.9711, 3.14159, 7200, 0, 0, 126, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(47472, 8982, 230, 0, 0, 1, 1, 0, 1353.92, -632.75, -91.9711, 0.122173, 7200, 0, 0, 126, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(47473, 8982, 230, 0, 0, 1, 1, 0, 1407.67, -677.718, -91.9711, 3.14159, 7200, 0, 0, 126, 0, 0, 0, 0, 0, '', 0, 0, NULL),
+(47474, 8982, 230, 0, 0, 1, 1, 0, 1353.16, -677.38, -91.9711, 0, 7200, 0, 0, 126, 0, 0, 0, 0, 0, '', 0, 0, NULL);
+
 -- remove pvp progression requirements to show pvp gear. added rank requirements back
 -- DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId` = 23 AND `ConditionTypeOrReference` = 8 AND `Comment` = "Vanilla PvP Ranked Gear (IPP)";
 
