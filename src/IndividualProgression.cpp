@@ -86,8 +86,8 @@ void IndividualProgression::ForceUpdateProgressionState(Player* player, Progress
     if (!player || !player->IsInWorld())
         return;
 
-    if (!newState)
-        return;
+    // if (!newState && newState != 0) // useless condition ?
+    //     return;
 
     // remove all hidden progression quests first
     for (uint8 i = PROGRESSION_MOLTEN_CORE; i <= PROGRESSION_WOTLK_TIER_5; ++i)
