@@ -214,6 +214,7 @@ UPDATE `broadcast_text_locale` SET `MaleText` = 'Salutations, $c. Je suis Rexxar
 
 /* Can't use displayId 11660 because since TBC it's now the displayId for Rokaro, instead we use the Rexxar TBC displayId 20918 */
 UPDATE `creature_template_model` SET `CreatureDisplayID` = 20918, `VerifiedBuild` = 0 WHERE `CreatureID` = 10182;
+UPDATE `creature_model_info` SET `DisplayID_Other_Gender` = 20918 WHERE `DisplayID` = 20918;
 
 DELETE FROM `creature` WHERE `guid` IN (29113, 610204);
 INSERT INTO `creature` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, `phaseMask`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `wander_distance`, 
@@ -232,7 +233,7 @@ INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Lan
 
 DELETE FROM `creature_addon` WHERE `guid` = 29113;
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `visibilityDistanceType`, `auras`) VALUES 
-(29113, 291130, 0, 0, 0, 0, 0, NULL);
+(29113, 291130, 0, 0, 1, 0, 0, NULL);
 
 DELETE FROM `waypoint_data` WHERE `id` = 291130;
 INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `orientation`, `delay`, `move_type`, `action`, `action_chance`, `wpguid`) VALUES 
