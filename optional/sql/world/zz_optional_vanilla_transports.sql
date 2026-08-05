@@ -110,6 +110,7 @@ AND `id` IN (
 24835, -- First Mate Kowalski, Boat
 24836, -- Abe the Cabin Boy, Boat
 24837, -- Navigator Mehran, Boat
+24838, -- Sailor Henders, Boat
 24839, -- Sailor Wicks, Boat
 24840, -- Sailor Vines, Boat
 24841, -- Marine Halters, Boat
