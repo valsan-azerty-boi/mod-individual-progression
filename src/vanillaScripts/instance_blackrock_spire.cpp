@@ -28,6 +28,7 @@
 #include "ScriptedCreature.h"
 #include "ScriptMgr.h"
 #include "SpellScript.h"
+#include "IndividualProgression.h"
 
 //uint32 const DragonspireRunes[7] = { GO_HALL_RUNE_1, GO_HALL_RUNE_2, GO_HALL_RUNE_3, GO_HALL_RUNE_4, GO_HALL_RUNE_5, GO_HALL_RUNE_6, GO_HALL_RUNE_7 };
 
@@ -823,16 +824,19 @@ public:
                 instance->SetData(AREATRIGGER_DRAGONSPIRE_HALL, DATA_DRAGONSPIRE_ROOM);
 
                 // If LFG, UBRS door always closed
-                bool canOpenDoor = true;
-                if (Group const* group = player->GetGroup())
-                {
-                    if (sLFGMgr->IsLfgGroup(group->GetGUID()))
-                    {
-                        canOpenDoor = false;
-                    }
-                }
+                // (disabled)
+                // bool canOpenDoor = true;
+                // if (Group const* group = player->GetGroup())
+                // {
+                //     if (sLFGMgr->IsLfgGroup(group->GetGUID()))
+                //     {
+                //         canOpenDoor = false;
+                //     }
+                // }
 
-                if (canOpenDoor && player->HasItemCount(ITEM_SEAL_OF_ASCENSION, 1))
+                // if (canOpenDoor && player->HasItemCount(ITEM_SEAL_OF_ASCENSION, 1))
+                if (player->HasItemCount(ITEM_SEAL_OF_ASCENSION, 1) 
+                    || ((sIndividualProgression->isBotAccount(player) || sIndividualProgression->isExcludedAccount(player)) && player->GetLevel() >= IP_LEVEL_VANILLA))
                 {
                     instance->SetData(AREATRIGGER_DRAGONSPIRE_HALL, DATA_UBRS_DOOR_OPEN);
                 }

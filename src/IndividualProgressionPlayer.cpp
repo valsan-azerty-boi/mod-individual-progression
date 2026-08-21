@@ -1326,52 +1326,69 @@ public:
         switch (pItem->GetTemplate()->RequiredHonorRank)
         {
         case 5:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 5);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 5 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 6:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 6);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 6 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 7:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 7);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 7 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 8:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 8);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 8 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 9:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 9);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 9 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 10:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 10);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 10 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 11:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 11);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 11 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 12:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 12);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 12 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 13:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 13);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 13 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 14:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 14);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 14 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 15:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 15);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 15 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 16:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 16);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 16 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 17:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 17);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 17 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         case 18:
-            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 18);
+            return (player->GetByteValue(PLAYER_FIELD_BYTES, PLAYER_FIELD_BYTES_OFFSET_LIFETIME_MAX_PVP_RANK) >= 18 || player->GetLevel() > IP_LEVEL_VANILLA);
             break;
         default:
             break;
         }
         return true;
     }
+
+    /*
+    * Player are dismounted before Wotlk/Ulduar if they are in water
+    * Not tested yet
+    */
+    // bool AnticheatCheckMovementInfo(Player* player, MovementInfo const& /*movementInfo*/, Unit* /*mover*/, bool /*jump*/) override
+    // { 
+    //     if (!sIndividualProgression->enabled || !player || !player->IsInWorld())
+    //         return;
+
+    //     if (sIndividualProgression->isBeforeProgression(player, PROGRESSION_TBC_TIER_5) 
+    //         && player->IsMounted() 
+    //         && player->isSwimming())
+    //         player->Dismount();
+
+    //     return true;
+    // }
 };
 
 class IndividualPlayerProgression_AccountScript : public AccountScript
