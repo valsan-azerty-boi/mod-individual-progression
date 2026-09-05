@@ -3,8 +3,8 @@
 #include "ScriptedCreature.h"
 #include "SpellAuraEffects.h"
 #include "SpellScript.h"
-#include "IndividualProgression.h"
 #include "naxxramas.h"
+#include "IndividualProgression.h"
 
 class NaxxPlayerScript : public PlayerScript
 {
@@ -27,6 +27,10 @@ public:
 
     bool OnTrigger(Player* player, AreaTrigger const* areaTrigger) override
     {
+        Group* group = player->GetGroup();
+        if (group && group->GetDifficulty(true) == RAID_DIFFICULTY_10MAN_HEROIC)
+            group->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_NORMAL);
+
         // Do not allow entrance to Naxx 40 from Northrend
         // Change 10 man heroic to regular 10 man, as when 10 man heroic is not available
         Difficulty diff = player->GetGroup() ? player->GetGroup()->GetDifficulty(true) : player->GetDifficulty(true);
@@ -113,6 +117,16 @@ public:
         // Check if mapId equals to Naxxramas (mapId: 533)
         if (map->GetId() != 533)
             return;
+
+        if (player->GetLevel() > IP_LEVEL_TBC)
+            return;
+
+        Group* group = player->GetGroup();
+
+        if (group)
+            group->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
+
+        player->SetRaidDifficulty(RAID_DIFFICULTY_10MAN_HEROIC);
 
         // Cast on player Naxxramas Entry Flag Trigger DND - Classic (spellID: 29296)
         if (player->GetQuestStatus(NAXX40_ENTRANCE_FLAG) != QUEST_STATUS_REWARDED)
