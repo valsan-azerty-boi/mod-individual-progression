@@ -1275,9 +1275,6 @@ int8 IndividualProgression::GetRecordedVanillaPvpRank(Player* player) const
 }
 
 // Removes the rank titles the player is not entitled to, leaving the one rank they currently hold.
-// AwardEarnedVanillaPvpTitles runs first and asks the core to credit the rank achievements while
-// the titles are known, so taking the lower ones back here costs the player nothing: a completed
-// achievement is never revoked. Keep that order if this is ever called from somewhere else.
 void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
 {
     if (!player || !player->IsInWorld())
@@ -1312,6 +1309,30 @@ void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
 
         if (titleEntry && player->HasTitle(titleEntry))
             player->SetTitle(titleEntry, true);
+    }
+
+    // The rank achievements follow the same rule as in Vanilla->WotLK transition: only the achievement of the rank the
+    // player holds is kept, the lower ones are taken back (unless VanillaPvpKeepAllEarnedTitles is on).
+    // RemovePlayerAchievement deletes the row from `character_achievement`, so the change shows up on
+    // the player's next login.
+
+    // Only the achievement of the rank the player holds is kept. It stays even when the titles are
+    // dropped after Vanilla, since it records what the player reached. Lower and higher rank
+    // achievements are removed, unless the server keeps every earned rank.
+    if (!VanillaPvpKeepAllEarnedTitles)
+    {
+        ObjectGuid::LowType playerGUID = player->GetGUID().GetCounter();
+
+        for (int8 rank = 0; rank < int8(IPP_PVP_RANK_COUNT); ++rank)
+        {
+            if (rank == heldRank)
+                continue;
+
+            uint32 achievementId = AchievementData[rank].AchievementId[teamId];
+
+            if (achievementId && player->HasAchieved(achievementId))
+                RemovePlayerAchievement(playerGUID, achievementId);
+        }
     }
 
     // Keep the hidden rank quests in step with the ranks the player still holds.
@@ -1351,12 +1372,18 @@ void IndividualProgression::AwardEarnedVanillaPvpTitles(Player* player)
     for (int8 rank = 0; rank <= earnedRank; ++rank)
     {
         // Vanilla showed the current rank and nothing else, so that is the only title handed out
-        // unless the server keeps all of them. A lower rank whose achievement is missing is still
-        // granted for this pass, because ACHIEVEMENT_CRITERIA_TYPE_OWN_RANK is credited off a known
-        // title. CleanUpVanillaPvpTitles takes it back straight after, and once the achievement is
-        // there the grant stops happening.
-        bool grantTitle = VanillaPvpKeepAllEarnedTitles || rank == earnedRank
-            || !player->HasAchieved(AchievementData[rank].AchievementId[teamId]);
+        // unless the server keeps all of them. Lower ranks are never handed out again: knowing their
+        // title would make the core credit their achievement back (ACHIEVEMENT_CRITERIA_TYPE_OWN_RANK
+        // is credited off a known title).
+        bool grantTitle = VanillaPvpKeepAllEarnedTitles || rank == earnedRank;
+
+        // // Vanilla showed the current rank and nothing else, so that is the only title handed out
+        // // unless the server keeps all of them. A lower rank whose achievement is missing is still
+        // // granted for this pass, because ACHIEVEMENT_CRITERIA_TYPE_OWN_RANK is credited off a known
+        // // title. CleanUpVanillaPvpTitles takes it back straight after, and once the achievement is
+        // // there the grant stops happening.
+        // bool grantTitle = VanillaPvpKeepAllEarnedTitles || rank == earnedRank
+        //     || !player->HasAchieved(AchievementData[rank].AchievementId[teamId]);
 
         if (grantTitle)
         {
