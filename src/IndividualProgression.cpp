@@ -521,7 +521,7 @@ bool IndividualProgression::isExcludedAccount(uint32 accountId)
     return GetAccountMatch(accountId).excluded;
 }
 
-bool IndividualProgression::isBotAccount(Player* player)
+bool IndividualProgression::isBotAccount(const Player* player)
 {
     if (!player)
         return false;

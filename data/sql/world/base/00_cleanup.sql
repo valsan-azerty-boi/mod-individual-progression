@@ -28,6 +28,9 @@ DELETE FROM `creature` WHERE `guid` = 88156 AND `id` IN (20278); -- Vixton Pinch
 
 /* the following edits are temporary */
 
+-- rank 2 was rank 1 during TBC, undo mistake thinking it didn't exist durint TBC
+UPDATE `trainer_spell` SET `ReqLevel` = 62 WHERE `TrainerId` = 7 AND `SpellId` = 34120;  -- Steady Shot (Rank 2), level 72 -> 62
+
 -- restore AC's Ironhand Guardians
 DELETE FROM `creature_template` WHERE `entry` IN (108982);
 DELETE FROM `creature_template_model` WHERE `CreatureID` = 108982; -- 00_cleanup
