@@ -43,7 +43,7 @@ INSERT INTO `gameobject` (`guid`, `id`, `map`, `zoneId`, `areaId`, `spawnMask`, 
 --
 (@OGUID+1, @TRANSPORTER_ENTRY, 0, 0, 0, 1, 1, @TRANSPORTER_X, @TRANSPORTER_Y, @TRANSPORTER_Z, @TRANSPORTER_O, 0, 0, -1, 0, 1, 0, 1, '', 0),
 (@OGUID+2, 181056, 0, 0, 0, 1, 1, 3067.1255, -3533.4387, -331.89944, 0, 0, 0, -1, 0, 900, 100, 1, '', 0),
-(@OGUID+3, 193166, 0, 0, 0, 1, 1, 3076.63, -3888.23, 131.227, 2.4011, 0.0, 0.0, -0.932238, -0.361845, 300, 0, 1, '', 0); -- Meeting Stone
+(@OGUID+3, 193166, 0, 0, 0, 1, 1, 3076.63, -3888.23, 131.227, 2.4011, 0.0, 0.0, -0.932239, -0.361844, 300, 0, 1, '', 0); -- Meeting Stone
 
 DELETE FROM `gameobject_template_locale` WHERE `entry` = @TRANSPORTER_ENTRY;
 INSERT INTO `gameobject_template_locale` (`entry`, `locale`, `name`, `castBarCaption`, `VerifiedBuild`) VALUES

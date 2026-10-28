@@ -18,6 +18,8 @@
 #include "AreaDefines.h"
 #include "IWorld.h"
 #include <regex>
+#include <shared_mutex>
+#include <unordered_map>
 
 typedef std::unordered_map<uint32, uint32> questXpMapType;
 
@@ -48,10 +50,7 @@ enum ProgressionBossIDs
     HALION               = 39863,
     RHAHK_ZOR            = 644,
     SNEED                = 643,
-    GILNID               = 1763,
-    COLOSSUS_ZORA        = 15740,
-    COLOSSUS_REGAL       = 15741,
-    COLOSSUS_ASHI        = 15742
+    GILNID               = 1763
 };
 
 enum BuffSpells
@@ -86,10 +85,7 @@ enum ProgressionQuestIDs
     BATTLE_UNDERCITY_HORDE    = 13267,
     BATTLE_UNDERCITY_ALLIANCE = 13377,
     SIMPLY_BANG_A_GONG        = 108743,
-    CHAOS_AND_DESTRUCTION     = 108744,
-    QUEST_COLOSSUS_ZORA       = 108745,
-    QUEST_COLOSSUS_REGAL      = 108746,
-    QUEST_COLOSSUS_ASHI       = 108747
+    CHAOS_AND_DESTRUCTION     = 108744
 };
 
 enum ProgressionQuests
@@ -302,9 +298,9 @@ struct IppPvPTitleData
     uint32 TitleId[2];
 };
 
-struct PvPTitleData
+struct IppPvPAchievementData
 {
-    uint32 TitleId[2];
+    uint32 AchievementId[2];
 };
 
 enum IppRanks
@@ -324,6 +320,13 @@ enum IppRanks
     RANK_THIRTEEN       = 12, // Field Marshal           &    Warlord
     RANK_FOURTEEN       = 13  // Grand Marshal           &    High Warlord
 };
+
+// Number of Vanilla PvP ranks, and the size of the TitleData table below.
+constexpr uint8 IPP_PVP_RANK_COUNT = 14;
+
+// Hidden quests IPP_PVP_QUEST_BASE + rank + 1 (66101 - 66114) record which ranks a player has
+// reached, so the `conditions` table can gate ranked PvP gear without a script.
+constexpr uint32 IPP_PVP_QUEST_BASE = 66100;
 
 enum PvPAchievements
 {
@@ -395,7 +398,7 @@ enum IppTitles
     HIGH_WARLORD             = 28
 };
 
-IppPvPTitleData const TitleData[14] =
+IppPvPTitleData const TitleData[IPP_PVP_RANK_COUNT] =
 {
     { PRIVATE,              SCOUT              },
     { CORPORAL,             GRUNT              },
@@ -413,7 +416,8 @@ IppPvPTitleData const TitleData[14] =
     { GRAND_MARSHAL,        HIGH_WARLORD       }
 };
 
-PvPTitleData const AchievementData[14] =
+// The achievement each rank grants, used to spot the ones a character is missing.
+IppPvPAchievementData const AchievementData[IPP_PVP_RANK_COUNT] =
 {
     { ACHIEVEMENT_PRIVATE,              ACHIEVEMENT_SCOUT              },
     { ACHIEVEMENT_CORPORAL,             ACHIEVEMENT_GRUNT              },
@@ -439,7 +443,7 @@ public:
     std::map<uint32, uint8> customProgressionMap;
     questXpMapType questXpMap;
     float vanillaPowerAdjustment, vanillaHealthAdjustment, tbcPowerAdjustment, tbcHealthAdjustment, vanillaHealingAdjustment, tbcHealingAdjustment;
-    bool enabled, questXpFix, hunterPetLevelFix, moltenCoreOnySamePhase, requirePreAQQuests, enforceGroupRules, EnableSetRepCommand, EnableAllSpellRanks, LimitedSetRepCommand, fishingFix, simpleConfigOverride, MaxMonsterSight, questMoneyAtLevelCap, repeatableVanillaQuestsXp, disableDefaultProgression, earlyDungeonSet2, earlyScourgeBosses, requireNaxxStrath, naxxExitViaPortals, naxxSkipToSaphiron, doableNaxx40Bosses_4H, doableNaxx40Bosses_Gluth, doableNaxx40Bosses_Patchwerk, doableNaxx40Bosses_Razuvious, DisableQuestMarkers, DisableRDF, excludeAccounts, VanillaPvpTitlesKeepPostVanilla, VanillaPvpTitlesEarnPostVanilla, BotAccountsEarnPvPTitles, BotOnlyAdjustments;
+    bool enabled, questXpFix, hunterPetLevelFix, moltenCoreOnySamePhase, requirePreAQQuests, enforceGroupRules, EnableSetRepCommand, EnableAllSpellRanks, LimitedSetRepCommand, fishingFix, simpleConfigOverride, MaxMonsterSight, questMoneyAtLevelCap, repeatableVanillaQuestsXp, disableDefaultProgression, earlyDungeonSet2, earlyScourgeBosses, requireNaxxStrath, naxxExitViaPortals, naxxSkipToSaphiron, doableNaxx40Bosses_4H, doableNaxx40Bosses_Gluth, doableNaxx40Bosses_Patchwerk, doableNaxx40Bosses_Razuvious, DisableQuestMarkers, DisableRDF, excludeAccounts, VanillaPvpTitlesKeepPostVanilla, VanillaPvpTitlesEarnPostVanilla, VanillaPvpKeepAllEarnedTitles, BotAccountsEarnPvPTitles, BotOnlyAdjustments;
     int progressionLimit, startingProgression, tbcRacesProgressionLevel, tbcRacesStartingProgression, deathKnightProgressionLevel, deathKnightStartingProgression, RequiredZulGurubProgression, RequiredZulAmanProgression, tbcArenaSeason, wotlkArenaSeason, BotAccountsMaxLevel;
     uint32 VanillaPvpKillRank1, VanillaPvpKillRank2, VanillaPvpKillRank3, VanillaPvpKillRank4, VanillaPvpKillRank5, VanillaPvpKillRank6, VanillaPvpKillRank7, VanillaPvpKillRank8, VanillaPvpKillRank9, VanillaPvpKillRank10, VanillaPvpKillRank11, VanillaPvpKillRank12, VanillaPvpKillRank13, VanillaPvpKillRank14;
     std::string excludedAccountsRegex, botAccountsRegex, sharedFactionIdsRegex;
@@ -458,8 +462,11 @@ public:
     //void AdjustWotLKStats(Player* player) const;
     bool hasCustomProgressionValue(uint32 creatureEntry);
     bool isExcludedAccount(Player* player);
+    bool isExcludedAccount(uint32 accountId);
     bool isBotAccount(Player* player);
+    bool isBotAccount(uint32 accountId);
     bool isNormalAccount(Player* player);
+    void LoadAccountRegexes();
     void SyncBotsProgressionToLeader(Group* group);
     bool isAttuned(Player* player);
     bool isPlayerInDungeonOrRaid(Player* player);
@@ -473,13 +480,31 @@ public:
 	void UpdateAccountReputation(uint32 factionId, uint32 accountId, Player* player);
     void CleanUpVanillaPvpTitles(Player* player);
     void AwardEarnedVanillaPvpTitles(Player* player);
+    uint32 GetVanillaPvpKillRequirement(uint8 rank) const;
+    int8 GetEarnedVanillaPvpRank(Player* player) const;
+    int8 GetRecordedVanillaPvpRank(Player* player) const;
     static void LoadCustomProgressionEntries(const std::string& customProgressionString);
-    static void RemovePlayerAchievement(uint16 playerGUID, uint16 achievementId);
+    static void RemovePlayerAchievement(ObjectGuid::LowType playerGUID, uint32 achievementId);
     static void AdjustStats(Player* player, float computedPowerAdjustment, float computedHealthAdjustment);
     static float ComputeVanillaAdjustment(uint8 playerLevel, float configAdjustmentValue);
     static uint8 GetAccountProgression(uint32 accountId);
     bool groupHaveLevelDisparity(Player* player);
     void TeleportOutsideRestoredRaid(Player *player);
+
+private:
+    struct AccountMatch
+    {
+        bool excluded = false;
+        bool bot = false;
+    };
+
+    AccountMatch GetAccountMatch(uint32 accountId);
+
+    // excludedAccountsRegex and botAccountsRegex compiled once per config load, and what each
+    // account name matched. The damage and healing hooks ask on map update threads.
+    std::regex _excludedAccountsRegex, _botAccountsRegex;
+    std::unordered_map<uint32, AccountMatch> _accountMatchCache;
+    std::shared_mutex _accountMatchLock;
 };
 
 #define sIndividualProgression IndividualProgression::instance()
