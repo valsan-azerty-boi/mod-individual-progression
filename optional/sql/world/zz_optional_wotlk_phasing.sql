@@ -30,6 +30,9 @@ INSERT INTO `gameobject` VALUES
 /* Ulduar raid portal phasing */
 UPDATE `gameobject` SET `ScriptName` = 'gobject_ipp_wotlk_ulduar' WHERE `map` = 571 AND `guid` IN (61102,66839) AND `id` IN (192512,192511);
 
+-- Maloric, The black knight squire
+UPDATE `creature_template` SET `ScriptName` = 'npc_ipp_wotlk_totc' WHERE `entry` = 33498;
+
 /* 3.2 - TotC */
 /* Open world TotC NPCs */
 -- UPDATE `creature` SET `ScriptName` = 'npc_ipp_wotlk' WHERE `map` = 1 AND `id` IN (
