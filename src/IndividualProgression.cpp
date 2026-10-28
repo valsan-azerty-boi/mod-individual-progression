@@ -1288,7 +1288,7 @@ void IndividualProgression::CleanUpVanillaPvpTitles(Player* player)
         return;
     
     // Ranks are given up entirely once the player leaves Vanilla, unless configured to persist.
-    bool dropAllRanks = !VanillaPvpTitlesKeepPostVanilla && hasPassedProgression(player, PROGRESSION_PRE_TBC);
+    bool dropAllRanks = !VanillaPvpTitlesKeepPostVanilla && hasPassedProgression(player, PROGRESSION_NAXX40);
 
     // What the player was actually granted, capped by what their kills still entitle them to so
     // that raising the configured requirements takes ranks back off them. Characters from before
@@ -1330,7 +1330,7 @@ void IndividualProgression::AwardEarnedVanillaPvpTitles(Player* player)
         return;
 
     // New ranks stop being earned at the Dark Portal unless the config extends it past Vanilla.
-    if (!isBeforeProgression(player, PROGRESSION_PRE_TBC) && !VanillaPvpTitlesEarnPostVanilla)
+    if (!isBeforeProgression(player, PROGRESSION_NAXX40) && !VanillaPvpTitlesEarnPostVanilla)
         return;
 
     TeamId teamId = player->GetTeamId(true);
